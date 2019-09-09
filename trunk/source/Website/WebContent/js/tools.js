@@ -308,7 +308,7 @@ function getResultTemplate(res)
         
         div = document.createElement('div');
         div.className = 'msg-text';
-        div.innerHTML = htmlEncode(res.longDesc);
+        div.innerHTML = res.longDesc;
         el.appendChild(div);
         
       msg.appendChild(el);
@@ -390,14 +390,6 @@ function wait(ms)
     }
 }
 
-function htmlEncode(value){
-  return $('<div />').text(value).html().replace(/(\r\n|\n|\r)/gm,"<br />").replace(/\t/g,"&nbsp;&nbsp;&nbsp;&nbsp;");
-}
-
-function htmlDecode(value){
-  return $('<div />').html(value).text();
-}
-  
 function S_GET(id)
 {
   var a = new RegExp(id+"=([^&#=]*)");
