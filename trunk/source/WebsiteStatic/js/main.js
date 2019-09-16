@@ -111,10 +111,22 @@ function set_context() {
 
 
 /**
+ * Fixes necessary, to make the old Javascript base work in this project.
+ * TODO: refactor old code to make this obsolete.
+ */
+function legacy_pre_render_fix() {
+    let body = $('body');
+    body.removeClass( "int tool home" );
+    body.addClass(_CONFIG.context.url.ui);
+}
+
+
+/**
  * Parse URL parameters and load/initialize corresponding content.
  */
 function bootstrap() {
     set_context();
+    legacy_pre_render_fix();
     render_header();
 
     switch (_CONFIG.context.url.ui) {

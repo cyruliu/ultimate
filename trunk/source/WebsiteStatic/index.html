@@ -26,29 +26,32 @@
     <script type="text/javascript" charset="utf-8" src="./js/tools.js"></script>
     <script type="text/javascript" charset="utf-8" src="./js/tool_interface.js"></script>
     <script type="text/javascript" charset="utf-8" src="./js/main.js"></script>
-    <!--    <script type="text/javascript" charset="utf-8" src="./js/control.js"></script>-->
-<!--    <script type="text/javascript" charset="utf-8" src="./js/dropdown.js"></script>-->
-<!--    <script type="text/javascript" charset="utf-8" src="./js/toast.js"></script>-->
+    <script type="text/javascript" charset="utf-8" src="./js/dropdown.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./js/toast.js"></script>
 
     <title>Uni-Freiburg : SWT - Ultimate</title>
 </head>
-<body class="home animate horizontal">
+<body class="animate horizontal">
 <div id="header" class="line-horizontal fixed">
 <script id="header-template" type="text/x-handlebars-template">
     <div class="left">
         <div id="brand-holder">
             <div id="brand-logo"></div>
-            <a href="./" id="brand-label">ULTIMATE</a>
+            {{#ifCond context.url.ui '===' 'home'}}
+                <div id="brand-label">ULTIMATE</div>
+            {{else}}
+                <a href="?ui=home" id="brand-label">ULTIMATE</a>
+            {{/ifCond}}
         </div>
         {{#ifCond context.url.ui '!==' 'home'}}
-        <div class="breadcrumb selection" id="tool">
+        <div class="tool int breadcrumb selection" id="tool">
             <a href="?ui=tool&tool={{context.url.tool}}" class="label selected" id="{{context.tool.id}}">
                 {{context.tool.name}}
             </a>
         </div>
         {{/ifCond}}
         {{#ifCond context.url.ui '===' 'int'}}
-        <div class="breadcrumb button spinner visible font-light" id="task" data-default-val="choose language">
+        <div class="int breadcrumb button spinner visible font-light" id="task" data-default-val="choose language">
             <div class="label">choose language</div>
             <div class="box font-average">
                 {{#each context.tool.workers}}
@@ -123,7 +126,7 @@
             {{#each tools}}
             <div class="toolchain line-right" style="height: 268px;">
                 <div class="toolchain-name font-normal">
-                    <a href="./?ui=tool&tool={{this.id}}">{{this.name}}</a>
+                    <a href="?ui=tool&tool={{this.id}}">{{this.name}}</a>
                 </div>
                 <div class="toolchain-description font-average">
                     <div>Description</div>
@@ -140,8 +143,8 @@
                     </div>
                 </div>
                 <div class="toolchain-buttons font-normal color-lighter">
-                    <a href=".?ui=int&tool={{this.id}}">Try online</a>
-                    <a href="./?ui=tool&tool={{this.id}}" class="no-border">Read more</a>
+                    <a href="?ui=int&tool={{this.id}}">Try online</a>
+                    <a href="?ui=tool&tool={{this.id}}" class="no-border">Read more</a>
                 </div>
             </div>
             {{~/each}}

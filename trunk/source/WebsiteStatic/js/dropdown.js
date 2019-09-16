@@ -179,6 +179,30 @@ function onTaskSelect(self)
   _EVENT = setTimeout(alignHeaderWidth, 50);
 }
 
+
+// fetching example asynchronously
+function selectExample(ex)
+{
+  _EDITOR.getSession().setAnnotations([]);
+
+  if (!_SPINNER.task.selected) return;
+
+  $.ajax({
+    url: _CONFIG.backend.web_bridge_url,
+    data: "example=" + encodeURIComponent(ex),
+    success: function (json)
+    {
+      if (json.exampleContent !== null)
+      {
+        _EDITOR.session.setValue(json.exampleContent);
+        _EDITOR.focus();
+        return;
+      }
+    },
+    dataType: 'json'
+  });
+}
+
 function onSampleSelect(self)
 {
   // apply sample to editor

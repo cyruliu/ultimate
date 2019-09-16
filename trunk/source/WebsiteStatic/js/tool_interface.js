@@ -1,7 +1,6 @@
 var _EDITOR, _CUR_LANG,_LAST_MARKER;
 var _COOKIE_EX_DAYS = 365;
 var _COOKIE_SKIP    = false;
-var _SERVER         = '../WebsiteEclipseBridge/if?callback=?';
 var _INIT_CODE      = '// Enter Code here ...';
 var _ANIMATE        = !(getCookie('_ANIMATE') == 'false');
 var _AUTO_ORIENTATE = !(getCookie('_AUTO_ORIENTATE') == 'false');
@@ -13,6 +12,22 @@ var _EVENT;
 // false, when messages/annotations added
 var _CLEAR;
 
+// change language highlighting of editor
+function changeMode(mode)
+{
+    _EDITOR.getSession().setMode('ace/mode/' + mode.replace(' ', '_'));
+}
+
+// change font size of content
+function changeFontSize(percent)
+{
+    var e = document.getElementById("editor");
+    e.style.fontSize = (percent/2) + "%";
+    e.nextElementSibling.style.fontSize = Math.min(150, percent) + '%';
+
+    _FONTSIZE = percent;
+    setCookie('_FONTSIZE', Math.floor(percent*2)/2, _COOKIE_EX_DAYS);
+}
 
 function load_tool_interface_template() {
     const tool_interface_template = Handlebars.compile($("#tool-interface-template").html());
@@ -32,8 +47,7 @@ function init_tool_interface_control()
     actions.children[1].onclick   = switchOrientation;
 
     $('#show-msg')[0].onclick     = function() { switchMessageView(true); };
-    // Todo init the settings div.
-    // $('#settings')[0].onmouseup = function() { setTimeout(alignSettingsDropdownBoxes, 500); };
+    $('#settings')[0].onmouseup = function() { setTimeout(alignSettingsDropdownBoxes, 500); };
 
     $('.messages-item .close').each(  function()
     { this.onclick = function() { removeElement(this.parentElement); checkResultsEmpty(); return false; }; });
@@ -48,15 +62,15 @@ function init_tool_interface_control()
     $('.box').each(  function()
     { this.onmousedown = function(e) { e=e||window.event; e.stopPropagation(); }; });
 
-    // $('#play')[0].onclick = getResults;
+    $('#play')[0].onclick = getResults;
 
     var o;
     if(o = getCookie('orientation')) switchOrientation(null, o);
 
     initResizing();
     initEditor();
-    // initSpinners();
-    // alignDropdownBoxes();
+    initSpinners();
+    alignDropdownBoxes();
 }
 
 function initEditor()
@@ -123,7 +137,7 @@ function getResults()
 
     $.ajax({
         type: "POST",
-        url: _SERVER,
+        url: _CONFIG.backend.web_bridge_url,
         data: values,
         success: function (json) {
             loading('play', false);
