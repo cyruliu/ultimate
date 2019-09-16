@@ -1,0 +1,363 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="author" content="Markus Lindenmann, Oleksii Saukh, Stefan Wissert, German Fordinal">
+    <meta name="viewport" content="initial-scale=.6, user-scalable=no">
+
+    <link rel="shortcut icon" type="image/x-icon" href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/favicon.ico">
+    <link rel="stylesheet" type="text/css" media="screen, projection" href="./css/basics.css" charset="utf-8">
+    <link rel="stylesheet" type="text/css" media="screen, projection" href="./css/toast.css" charset="utf-8">
+    <link rel="stylesheet" type="text/css" media="screen, projection" href="./font/stylesheet.css" charset="utf-8">
+    <link rel="stylesheet" type="text/css" media="screen, projection" href="./css/ace_editor.css" charset="utf-8">
+
+    <script type="text/javascript" charset="utf-8" src="./js/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./js/md5.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/transfer.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./js/ace-min/ace.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./js/handlebars.min-35d3fdb.js"></script>
+    <script>
+        window.define = ace.define;
+        window.require = ace.require;
+    </script>
+    <script type="text/javascript" charset="utf-8" src="./js/config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./js/tools.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./js/tool_interface.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./js/main.js"></script>
+    <!--    <script type="text/javascript" charset="utf-8" src="./js/control.js"></script>-->
+<!--    <script type="text/javascript" charset="utf-8" src="./js/dropdown.js"></script>-->
+<!--    <script type="text/javascript" charset="utf-8" src="./js/toast.js"></script>-->
+
+    <title>Uni-Freiburg : SWT - Ultimate</title>
+</head>
+<body class="home animate horizontal">
+<div id="header" class="line-horizontal fixed">
+<script id="header-template" type="text/x-handlebars-template">
+    <div class="left">
+        <div id="brand-holder">
+            <div id="brand-logo"></div>
+            <a href="./" id="brand-label">ULTIMATE</a>
+        </div>
+        {{#ifCond context.url.ui '!==' 'home'}}
+        <div class="tool int breadcrumb selection" id="tool">
+            <a href="?ui=tool&tool={{context.url.tool}}" />"
+            class="label selected"
+            id="{{context.tool.id}}" />"> <c:out
+                value="{{context.tool.name}}" />
+            </a>
+        </div>
+        {{/ifCond}}
+
+        {{#ifCond context.url.ui '===' 'int'}}
+
+        {{/ifCond}}
+    </div>
+
+    <div class="right">
+        {{#ifCond context.url.ui '===' 'tool'}}
+        <div class="tool" id="tool-logo" style="background-image:url({{context.tool.logo_url}});"></div>
+        {{/ifCond}}
+        {{#ifCond context.url.ui '===' 'int'}}
+        <div class="int button selection spinner hidden line-left"
+             id="samples" data-default-val="samples">
+            <div class="label">samples</div>
+            <div class="img"></div>
+            <div class="box font-average"></div>
+        </div>
+        <div class="int button line-left" id="play"
+             data-default-val="evaluate">
+            <div class="label">execute</div>
+            <div class="img">
+                <div class="ajax-loader"></div>
+            </div>
+        </div>
+        <div class="int button menu line-left" id="settings"
+             data-default-val="settings">
+            <div class="label">settings</div>
+            <div class="img"></div>
+            <div class="box font-average"></div>
+        </div>
+        {{/ifCond}}
+    </div>
+    <div id="info-bar" class="line-top">
+        <div id="info-label" class="font-normal color-lighter"></div>
+        <div class="hide">
+            <div class="tooltip">
+                <div></div>
+                <label>remind</label>
+            </div>
+        </div>
+        <div class="close">
+            <div class="tooltip">
+                <div></div>
+                <label>close</label>
+            </div>
+        </div>
+    </div>
+    <div class="shadow down"></div>
+</script>
+</div>
+
+<div id="content" class="no-messages" style="padding-top: 74px;">
+<script id="landing-page-template" type="text/x-handlebars-template">
+    <div class="home section link-emph">
+        <div class="caption">description</div>
+        <div class="text font-normal color-lighter">
+            <p><span style="font-variant:small-caps">Ultimate</span> is a program analysis framework.
+                <span style="font-variant:small-caps">Ultimate</span> consists of several plugins that perform steps of an
+                program analysis, e.g., parsing source code, transforming programs from one representation to another,
+                or analyze programs. Toolchains of these plugins can perform complex tasks, e.g., verify that a C
+                program fulfills a given specification. </p>
+        </div>
+    </div>
+
+    <div class="home section wide">
+        <div class="caption">tools</div>
+        <div class="toolchains" id="toolchains">
+            {{#each tools}}
+            <div class="toolchain line-right" style="height: 268px;">
+                <div class="toolchain-name font-normal">
+                    <a href="./?ui=tool&tool={{this.id}}">{{this.name}}</a>
+                </div>
+                <div class="toolchain-description font-average">
+                    <div>Description</div>
+                    <div class="color-lighter">
+                        {{this.description}}
+                    </div>
+                </div>
+                <div class="toolchain-description font-average">
+                    <div>Language</div>
+                    <div class="color-lighter">
+                        {{#each this.languages}}
+                        <span>{{this}}</span>
+                        {{~/each}}
+                    </div>
+                </div>
+                <div class="toolchain-buttons font-normal color-lighter">
+                    <a href=".?ui=int&tool={{this.id}}">Try online</a>
+                    <a href="./?ui=tool&tool={{this.id}}" class="no-border">Read more</a>
+                </div>
+            </div>
+            {{~/each}}
+        </div>
+    </div>
+
+    <!-- Generating all sections from JSON file -->
+    <div class="home section link-emph">
+        <div class="caption">
+            Awards
+        </div>
+        <div class="text font-normal color-lighter">
+            <ul>
+                <li><a href="http://sv-comp.sosy-lab.org/2017/">SV-COMP 2017</a>
+                    <ul>
+                        <li><span style="background-color: #ffd633"><a style="background-color: #ffd633"
+                                                                       href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=automizer">Ultimate Automizer</a> won the <a
+                                style="background-color: #ffd633" href="http://sv-comp.sosy-lab.org/2017/results/">overall ranking</a>.</span>
+                        </li>
+                        <li>
+                            <a href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=buechi_automizer">Ultimate
+                                Büchi Automizer</a> was first in the <a
+                                href="http://sv-comp.sosy-lab.org/2017/results/">category Termination</a>.
+                        </li>
+                        <li>
+                            <a href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=automizer">Ultimate
+                                Automizer</a> was second in the <a href="http://sv-comp.sosy-lab.org/2017/results/">categories
+                            MemSafety and Overflows</a>.
+                        </li>
+                        <li>
+                            <a href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=taipan">Ultimate
+                                Taipan</a> was second in the <a href="http://sv-comp.sosy-lab.org/2017/results/">category
+                            SoftwareSystems</a>.
+                        </li>
+                        <li>
+                            <a href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=automizer">Ultimate
+                                Automizer</a> was third in the <a href="http://sv-comp.sosy-lab.org/2017/results/">categories
+                            ReachSafety and SoftwareSystems</a>.
+                        </li>
+                        <li>
+                            <a href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=taipan">Ultimate
+                                Taipan</a> was third in the <a href="http://sv-comp.sosy-lab.org/2017/results/">category
+                            Overflows</a>.
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="http://sv-comp.sosy-lab.org/2016/">SV-COMP 2016</a>
+                    <ul>
+                        <li><span style="background-color: #ffd633"><a style="background-color: #ffd633"
+                                                                       href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=automizer">Ultimate Automizer</a> won the <a
+                                style="background-color: #ffd633" href="http://sv-comp.sosy-lab.org/2016/results/">overall ranking</a>.</span>
+                        </li>
+                        <li>
+                            <a href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=automizer">Ultimate
+                                Automizer</a> won the <a href="http://sv-comp.sosy-lab.org/2016/results/">overall
+                            falsification ranking</a>.
+                        </li>
+                        <li>
+                            <a href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=buechi_automizer">Ultimate
+                                Büchi Automizer</a> was second in the category <a
+                                href="http://sv-comp.sosy-lab.org/2016/results/">Termination</a>.
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="http://termination-portal.org/wiki/Termination_Competition_2015">Termination Competition
+                    2015</a>
+                    <ul>
+                        <li>
+                            <a href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=buechi_automizer">Ultimate
+                                Büchi Automizer</a> won the <a
+                                href="http://nfa.imn.htwk-leipzig.de/termcomp-2015/competitions/4">category Termination
+                            of Programming Languages</a>.
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="http://sv-comp.sosy-lab.org/2015/">SV-COMP 2015</a>
+                    <ul>
+                        <li>
+                            <a href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=automizer">Ultimate
+                                Automizer</a> was second in the <a href="http://sv-comp.sosy-lab.org/2015/results/">overall
+                            ranking</a> and in the category <a href="http://sv-comp.sosy-lab.org/2015/results/">Recursive</a>.
+                        </li>
+                        <li>
+                            <a href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=buechi_automizer">Ultimate
+                                Büchi Automizer</a> was second in the category <a
+                                href="http://sv-comp.sosy-lab.org/2015/results/">Termination</a>.
+                        </li>
+                        <li>
+                            <a href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=kojak">Ultimate
+                                Kojak</a> was second in the category <a
+                                href="http://sv-comp.sosy-lab.org/2015/results/">Arrays</a>.
+                        </li>
+                        <li>
+                            <a href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=automizer">Ultimate
+                                Automizer</a> was third in the categories <a
+                                href="http://sv-comp.sosy-lab.org/2015/results/">Arrays and Sequentialized</a>.
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="http://termination-portal.org/wiki/Termination_Competition_2015">Termination Competition
+                    2014</a>
+                    <ul>
+                        <li>
+                            <a href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=buechi_automizer">Ultimate
+                                Büchi Automizer</a> was second in the <a
+                                href="http://nfa.imn.htwk-leipzig.de/termcomp-2014/competition/20">category Termination
+                            of Programming Languages</a>.
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="http://sv-comp.sosy-lab.org/2014/">SV-COMP 2014</a>
+                    <ul>
+                        <li>
+                            <a href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=automizer">Ultimate
+                                Automizer</a> was second in the category <a
+                                href="http://sv-comp.sosy-lab.org/2014/results/">Recursive</a>.
+                        </li>
+                        <li>
+                            <a href="https://monteverdi.informatik.uni-freiburg.de/tomcat/Website/?ui=tool&amp;tool=kojak">Ultimate
+                                Kojak</a> was third in the category <a href="http://sv-comp.sosy-lab.org/2014/results/">Recursive</a>.
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="home section link-emph">
+        <div class="caption">
+            Development
+        </div>
+        <div class="text font-normal color-lighter">
+            <p> The <span style="font-variant:small-caps">Ultimate</span> <a
+                    href="https://github.com/ultimate-pa/ultimate">source code and some documentation</a> is available
+                at GitHub. <br> The core of <span style="font-variant:small-caps">Ultimate</span> and many plugins are
+                subject to the LGPLv3 license with a linking exception to Eclipse RCP and Eclipse CDT. </p></div>
+    </div>
+    <div class="home section link-emph">
+        <div class="caption">
+            Developers
+        </div>
+        <div class="text font-normal color-lighter">
+            <p><a name="developers"></a>Most <span style="font-variant:small-caps">Ultimate</span> developers are
+                students and researchers in the <a href="https://swt.informatik.uni-freiburg.de/">software engineering
+                    group of Andreas Podelski</a> at the <a href="https://www.uni-freiburg.de/">University of
+                    Freiburg</a>. Current and former developers of <span style="font-variant:small-caps">Ultimate</span>
+                are <br> <br> <a href="https://swt.informatik.uni-freiburg.de/staff/nutz">Alexander Nutz</a> <br> Alex
+                Saukh (web interface, CDT interface, CACSL2Boogie, Büchi minimization) <br> Arend v. Reinersdorff
+                (predecessor of Ultimate) <br> Bat-Chen Golden (incremental verification) <br> Betim Musa (automata
+                script, interpolants from unsatisfiable cores, incremental proof generation, interpolant consolidation,
+                invariant synthesis) <br> Björn Buchhold (predecessor of Ultimate, the 2.0 version) <br> Björn
+                Hagemeister (DFA minimization) <br> Claus Schätzle (procedure inlining, abstract interpretation octagon
+                domain) <br> Chen Kefei (nested interpolants) <br> Christian Ortolf (predecessor of Ultimate) <br> <a
+                        href="https://swt.informatik.uni-freiburg.de/staff/christian_schilling">Christian Schilling</a>
+                <br> Christian Simon (predecessor of Ultimate, the 2.0 version) <br> Christoph Hofmann (Ultimate in the
+                cloud) <br> David Zschocke (invariant synthesis) <br> <a
+                        href="https://swt.informatik.uni-freiburg.de/staff/dietsch">Daniel Dietsch</a> <br> Daniel
+                Christiany (NWA) <br> Daniel Tischner (random automata, DFA minimization, Büchi minimization, NWA
+                minimization) <br> Daniel Wadehn (delta debugger) <br> Dennis Wöfling (danger invariants) <br> Dirk
+                Steinmetz (invariant synthesis) <br> Dominik Nuber (floating point) <br> Elisabeth Henkel (MSO solver)
+                <br> <a href="https://swt.informatik.uni-freiburg.de/staff/ermis">Evren Ermis</a> <br> Fabian Reiter
+                (Büchi complementation) <br> Frank Schüssele (abstract interpretation congruence domain, map
+                elimination) <br> <a href="http://www.aurora-visual.eu/">German Fordinal</a> (Webinterface) <br>
+                Guilherme Schievelbein (floating point) <br> Jan Leike (NWA, <a
+                        href="https://ultimate.informatik.uni-freiburg.de/LassoRanker">LassoRanker</a>) <br> Jan Hättig
+                (total interpolation, abstract interpretation polyhedra domain) <br> Jan Mortensen (NWA, Petri nets)
+                <br> Jan Oreans (invariant synthesis) <br> Jeffery Hsu (incremental inclusion) <br> Jens Stimpfle (NWA
+                minimization) <br> Jelena Barth (Jung visualization) <br> Jeremi Dzienian (Temporal Properties) <br>
+                Julian Jarecki (Petri nets) <br> <a href="https://swt.informatik.uni-freiburg.de/staff/hoenicke">Jochen
+                    Hoenicke</a> <br> <a href="https://swt.informatik.uni-freiburg.de/staff/christ">Jürgen Christ</a>
+                <br> Justus Bisser (predecessor of Ultimate) <br> Lars Nitzke (pthreads) <br> Layla Franke (DFA
+                minimization) <br> Leonard Fichtner (polynomial terms) <br> Marc Fuchs (multi-step automata) <br> Markus
+                Lindenmann (web interface, CDT interface, CACSL2Boogie, Büchi minimization, C memory model) <br> Markus
+                Pomrehn (formula simplification, alternating automata) <br> Markus Zeiger (NWA, E-Matching) <br> <a
+                        href="https://swt.informatik.uni-freiburg.de/staff/greitschus">Marius Greitschus</a> <br> <a
+                        href="https://swt.informatik.uni-freiburg.de/staff/heizmann">Matthias Heizmann</a> <br> Matthias
+                Keil (Prefuse visualization) <br> Max Barth (quantifier elimination) <br> Maximilian Rohland (floating
+                point) <br> Nico Hauff (MSO solver) <br> Nicola Sheldrick (predecessor of Ultimate) <br> Numair Mansur
+                (fault localization) <br> Robert Jakob (predecessor of Ultimate) <br> Saskia Rabald (multi-step
+                automata) <br> Simon Ley (IC3) <br> Stefan Wissert (Web interface, CDT interface, CACSL2Boogie,
+                IValuations, large block encoding) <br> Thomas Lang (loop complexity, bitvectors) <br> Tobias Grugel
+                (tree automata) <br> <a href="https://swt.informatik.uni-freiburg.de/staff/langenfeld">Vincent
+                    Langenfeld</a> <br> Xiaolin Wu (Büchi NWA emptiness check, Büchi NWA complementation) <br> Yu-Wen
+                Chen (alias analysis) </p></div>
+    </div>
+    <div class="home section link-emph">
+        <div class="caption">
+            Dependencies
+        </div>
+        <div class="text font-normal color-lighter">
+            <p>Many plugins in <span style="font-variant:small-caps">Ultimate</span> require an <a
+                    href="http://smtlib.org/SMT-LIB">SMT-LIB</a> compatible theorem prover. We use <a
+                    href="http://ultimate.informatik.uni-freiburg.de/smtinterpol/">SMTInterpol</a>.</p>
+            <p><span style="font-variant:small-caps">Ultimate</span> uses <a
+                    href="http://wiki.eclipse.org/index.php/Rich_Client_Platform">Eclipse RCP</a>. Plugins that handle C
+                code depend on <a href="http://www.eclipse.org/cdt/">Eclipse CDT</a>.</p></div>
+    </div>
+</script>
+<script id="tool-interface-template" type="text/x-handlebars-template">
+    <div id="editor" class="int"></div>
+    <div id="messages" class="int line">
+        <div class="shadow up resize-v"></div>
+        <div id="messages-wrapper">
+            <div id="messages-head">
+                <div id="messages-caption" class="font-bold font-normal">ULTIMATE
+                    Results</div>
+                <div id="messages-actions">
+                    <div class="hide-msgs mini-button"></div>
+                    <div class="window mini-button"></div>
+                </div>
+                <div id="messages-labels" class="font-average">
+                    <div class="msg-icon"></div>
+                    <div class="msg-line">Line</div>
+                    <div class="msg-column">Column</div>
+                    <div class="msg-description">Description</div>
+                </div>
+            </div>
+        </div>
+        <div id="resize-vertical" class="resize-h"></div>
+    </div>
+    <div id="show-msg" class="int"></div>
+</script>
+</div>
+</body>
+</html>
