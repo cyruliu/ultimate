@@ -17,6 +17,7 @@
     <script type="text/javascript" charset="utf-8" src="js/transfer.js"></script>
     <script type="text/javascript" charset="utf-8" src="./js/ace-min/ace.js"></script>
     <script type="text/javascript" charset="utf-8" src="./js/handlebars.min-35d3fdb.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./js/handlebars-custom.js"></script>
     <script>
         window.define = ace.define;
         window.require = ace.require;
@@ -40,23 +41,27 @@
             <a href="./" id="brand-label">ULTIMATE</a>
         </div>
         {{#ifCond context.url.ui '!==' 'home'}}
-        <div class="tool int breadcrumb selection" id="tool">
-            <a href="?ui=tool&tool={{context.url.tool}}" />"
-            class="label selected"
-            id="{{context.tool.id}}" />"> <c:out
-                value="{{context.tool.name}}" />
+        <div class="breadcrumb selection" id="tool">
+            <a href="?ui=tool&tool={{context.url.tool}}" class="label selected" id="{{context.tool.id}}">
+                {{context.tool.name}}
             </a>
         </div>
         {{/ifCond}}
-
         {{#ifCond context.url.ui '===' 'int'}}
-
+        <div class="breadcrumb button spinner visible font-light" id="task" data-default-val="choose language">
+            <div class="label">choose language</div>
+            <div class="box font-average">
+                {{#each context.tool.workers}}
+                <div id="{{this.id}}" value="{{this.name}}">{{this.name}}</div>
+                {{~/each}}
+            </div>
+        </div>
         {{/ifCond}}
     </div>
 
     <div class="right">
         {{#ifCond context.url.ui '===' 'tool'}}
-        <div class="tool" id="tool-logo" style="background-image:url({{context.tool.logo_url}});"></div>
+        <div id="tool-logo" style="background-image:url({{context.tool.logo_url}});"></div>
         {{/ifCond}}
         {{#ifCond context.url.ui '===' 'int'}}
         <div class="int button selection spinner hidden line-left"

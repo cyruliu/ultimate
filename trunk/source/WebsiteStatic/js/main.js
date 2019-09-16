@@ -1,31 +1,3 @@
-Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
-    switch (operator) {
-        case '==':
-            return (v1 == v2) ? options.fn(this) : options.inverse(this);
-        case '===':
-            return (v1 === v2) ? options.fn(this) : options.inverse(this);
-        case '!=':
-            return (v1 != v2) ? options.fn(this) : options.inverse(this);
-        case '!==':
-            return (v1 !== v2) ? options.fn(this) : options.inverse(this);
-        case '<':
-            return (v1 < v2) ? options.fn(this) : options.inverse(this);
-        case '<=':
-            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-        case '>':
-            return (v1 > v2) ? options.fn(this) : options.inverse(this);
-        case '>=':
-            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-        case '&&':
-            return (v1 && v2) ? options.fn(this) : options.inverse(this);
-        case '||':
-            return (v1 || v2) ? options.fn(this) : options.inverse(this);
-        default:
-            return options.inverse(this);
-    }
-});
-
-
 /**
  * Check if "key: value" exists in any tool config.
  * @param key
@@ -63,7 +35,9 @@ function get_url_params() {
  * Parse the landing page from config.js and add the result to the content container.
  */
 function render_landing_page() {
-    const landing_page_template = Handlebars.compile($("#landing-page-template").html());
+    const landing_page_template = Handlebars.compile(
+        $("#landing-page-template").html()
+    );
     $('#content').append(landing_page_template(_CONFIG));
 }
 
@@ -80,6 +54,10 @@ function render_tool_page(tool_id) {
 }
 
 
+/**
+ * Load the interactive tool interface.
+ * @param tool_id
+ */
 function load_tool_interface(tool_id) {
     load_tool_interface_template();
     alignInterfaceContent();
@@ -89,12 +67,26 @@ function load_tool_interface(tool_id) {
 }
 
 
+/**
+ * Render the header/navigation-bar.
+ */
 function render_header() {
     const header_template = Handlebars.compile($("#header-template").html());
     $('#header').append(header_template(_CONFIG));
 }
 
 
+/**
+ * Set current context in _CONFIG.context s.t:
+ *
+ * _CONFIG.context = {
+ *     url: {
+ *         ui: <URL ui param | home by default.>
+ *         tool: <URL tool param>
+ *     },
+ *     tool: <CONFIG for tool with corresponding tool.id>
+ * }
+ */
 function set_context() {
     const url_params = get_url_params();
     let tool = {};
@@ -106,7 +98,9 @@ function set_context() {
 
     // Set current tool if active.
     if (url_params.ui !== "home") {
-        tool = Object.values(_CONFIG.tools).find(function(e) {e.id === url_params.tool} );
+        tool = Object.values(_CONFIG.tools).find(function(tool) {
+            return tool.id === url_params.tool
+        });
     }
 
     _CONFIG["context"] = {
