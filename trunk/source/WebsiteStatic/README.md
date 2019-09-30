@@ -1,7 +1,7 @@
 **Ultimate** framework website.
 
 # Configuration
-Configuration is set via [config.js](js/config.js). The configuration consists of 2 sections:
+Configuration is set via [config.js](config/config.js). The configuration consists of 2 sections:
 
 **1. Backend:**
 ```
@@ -38,6 +38,7 @@ Configuration is set via [config.js](js/config.js). The configuration consists o
 
 # Todo: 
 * [ ] Refactor the javascript code base.
+    * [ ] Decide on where to fetch additional settings if any.
 * [ ] Evaluate and introduce new methods to provide settings to the toolchains.
 * [ ] Refactor the API to use data Objects instead of long concatenated strings.
 * [ ] Send and use asynchronous tasks to the backend WebsiteEclipseBridge.
@@ -51,7 +52,7 @@ Configuration is set via [config.js](js/config.js). The configuration consists o
 
 
 
-# ULR parameters
+# Frontend ULR parameters
 The URL can contain up to two parameters:
 
 ```

@@ -47,10 +47,11 @@ function render_landing_page() {
  * @param tool_id
  */
 function render_tool_page(tool_id) {
-    $.get( "./templates/" + tool_id + ".hbs", function( data ) {
+    $.get("./templates/" + tool_id + ".hbs", function (data) {
         const tool_page_template = Handlebars.compile(data);
         $('#content').append(tool_page_template(_CONFIG));
     });
+    fitHeight();
 }
 
 
@@ -77,7 +78,7 @@ function render_header() {
 
 
 /**
- * Set current context in _CONFIG.context s.t:
+ * Inject current context to _CONFIG.context s.t:
  *
  * _CONFIG.context = {
  *     url: {
@@ -98,7 +99,7 @@ function set_context() {
 
     // Set current tool if active.
     if (url_params.ui !== "home") {
-        tool = Object.values(_CONFIG.tools).find(function(tool) {
+        tool = Object.values(_CONFIG.tools).find(function (tool) {
             return tool.id === url_params.tool
         });
     }
@@ -116,7 +117,7 @@ function set_context() {
  */
 function legacy_pre_render_fix() {
     let body = $('body');
-    body.removeClass( "int tool home" );
+    body.removeClass("int tool home");
     body.addClass(_CONFIG.context.url.ui);
 }
 
@@ -142,6 +143,9 @@ function bootstrap() {
             // load the landing page.
             render_landing_page();
     }
+
+    alignContent();
+    window.onresize = alignContent;
 }
 
 

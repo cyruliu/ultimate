@@ -18,7 +18,23 @@ const _CONFIG = {
                     id: "boogieAutomizer"
                 }
             ],
-            logo_url: "img/tool_logo.png"
+            logo_url: "img/tool_logo.png",
+            code_examples: {
+                c: [
+                    {
+                        name: 'CyclicBuffer.c',
+                        source: 'CyclicBuffer.c',
+                        task_id: 'AUTOMIZER_C',
+                        toolchain_id: 'cAutomizer'
+                    }
+                ],
+                boogie: [
+                    {
+                        name: 'GoannaDoubleFreeWithoutPoin',
+                        source: 'GoannaDoubleFreeWithoutPoin.boogie'
+                    }
+                ]
+            }
         },
         {
             name: "ULTIMATE Büchi Automizer",
