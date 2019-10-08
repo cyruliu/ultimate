@@ -64,12 +64,29 @@ function set_available_code_samples(language) {
 
   _CONFIG.code_examples[language].forEach(function (example) {
     if (example.assoc_workers.includes(_CONFIG.context.current_worker.id)) {
-      example_entries += '<a class="nav-link" href="#" data-name>' + example.name + '</a>';
+      example_entries += '<a class="dropdown-item sample-selection" href="#" data-source="' +  example.source + '">' + example.name + '</a>';
     }
   });
 
   samples_menu.html(example_entries);
+  $('.sample-selection').on({
+    click: function () {
+      load_sample($( this ).data().source);
+    }
+  });
 }
+
+
+/**
+ * Load an available sample into the editor.
+ * @param source
+ */
+function load_sample(source) {
+  $.get('config/code_examples/' + source, function (data) {
+    _EDITOR.session.setValue(data);
+  })
+}
+
 
 
 /**
@@ -80,9 +97,7 @@ function set_available_frontend_settings(language) {
   let settings_entries = '';
 
   _CONFIG.context.current_worker.frontend_settings.forEach(function (setting) {
-    console.log(setting);
     if (setting.type === "bool") {
-      console.log('Add setting.');
       settings_entries += '<div class="form-check">' +
         '<input type="checkbox" class="form-check-input" id="' + setting.id + '" ' + (setting.default ? "checked" : "") + '>' +
         '<label class="form-check-label" for="' + setting.id + '">' + setting.name + '</label>' +
@@ -92,6 +107,6 @@ function set_available_frontend_settings(language) {
 
   settings_menu.html(settings_entries);
   $('.form-check').on('click', function(e) {
-      e.stopPropagation();
+    e.stopPropagation();
   });
 }
