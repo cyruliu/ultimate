@@ -1,430 +1,97 @@
-var _EDITOR, _CUR_LANG, _LAST_MARKER;
-var _COOKIE_EX_DAYS = 365;
-var _COOKIE_SKIP = false;
-var _INIT_CODE = '// Enter Code here ...';
-var _ANIMATE = !(getCookie('_ANIMATE') == 'false');
-var _AUTO_ORIENTATE = !(getCookie('_AUTO_ORIENTATE') == 'false');
-var _FONTSIZE = getCookie('_FONTSIZE') || 100;
-var _SPINNER = {};
-var _INFO = new Array();
-// an editor event occurs, this is not null for 100ms
-var _EVENT;
-// false, when messages/annotations added
-var _CLEAR;
+let _EDITOR;
 
-// change language highlighting of editor
-function changeMode(mode) {
-    _EDITOR.getSession().setMode('ace/mode/' + mode.replace(' ', '_'));
-}
-
-// change font size of content
-function changeFontSize(percent) {
-    var e = document.getElementById("editor");
-    e.style.fontSize = (percent / 2) + "%";
-    e.nextElementSibling.style.fontSize = Math.min(150, percent) + '%';
-
-    _FONTSIZE = percent;
-    setCookie('_FONTSIZE', Math.floor(percent * 2) / 2, _COOKIE_EX_DAYS);
-}
 
 function load_tool_interface_template() {
-    const tool_interface_template = Handlebars.compile($("#tool-interface-template").html());
-    $('#content').append(tool_interface_template(_CONFIG));
+  let content = $('#content');
+  content.removeClass('container-fluid');
+  const tool_interface_template = Handlebars.compile($("#tool-interface-template").html());
+  content.append(tool_interface_template(_CONFIG));
 }
 
-function init_tool_interface_control() {
-    // restore user specific layout
-    moveHandler();
 
-    var actions = $('#messages-actions')[0];
+function init_editor() {
+  _EDITOR = ace.edit("editor");
+  _EDITOR.renderer.setHScrollBarAlwaysVisible(false);
+  _EDITOR.setTheme("ace/theme/eclipse");
+  _EDITOR.getSession().setMode('ace/mode/c_cpp'); //equv to: changeMode('c_cpp');
+  _EDITOR.renderer.setShowGutter(true);
+  _EDITOR.setShowPrintMargin(true);
+  _EDITOR.setDisplayIndentGuides(true);
+  _EDITOR.setHighlightSelectedWord(true);
+  _EDITOR.setPrintMarginColumn(80);
 
-    $('#brand-logo')[0].onclick = function () {
-        window.location = './';
-    };
-
-    actions.children[0].onclick = function () {
-        switchMessageView(false);
-    };
-    actions.children[1].onclick = switchOrientation;
-
-    $('#show-msg')[0].onclick = function () {
-        switchMessageView(true);
-    };
-    $('#settings')[0].onmouseup = function () {
-        setTimeout(alignSettingsDropdownBoxes, 500);
-    };
-
-    $('.messages-item .close').each(function () {
-        this.onclick = function () {
-            removeElement(this.parentElement);
-            checkResultsEmpty();
-            return false;
-        };
-    });
-
-    $('.button').each(function () {
-        this.onmousedown = function (e) {
-            if ($(this).hasClass('active')) return;
-            document.onmousedown();
-            $(this).addClass('active');
-            e = e || window.event;
-            e.stopPropagation();
-            e.preventDefault();
-            return false;
-        };
-    });
-
-    document.onmousedown = function () {
-        $('.button').each(function () {
-            $(this).removeClass('active');
-        });
-    };
-
-    $('.box').each(function () {
-        this.onmousedown = function (e) {
-            e = e || window.event;
-            e.stopPropagation();
-        };
-    });
-
-    $('#play')[0].onclick = getResults;
-
-    var o;
-    if (o = getCookie('orientation')) switchOrientation(null, o);
-
-    initResizing();
-    initEditor();
-    initSpinners();
-    alignDropdownBoxes();
+  _EDITOR.session.setValue(_CONFIG.editor.init_code);
+  _EDITOR.session.setTabSize(4);
+  _EDITOR.session.setUseWrapMode(true);
 }
 
-function initEditor() {
-    _EDITOR = ace.edit("editor");
-    _EDITOR.renderer.setHScrollBarAlwaysVisible(false);
-    _EDITOR.setTheme("ace/theme/eclipse");
-    _EDITOR.getSession().setMode('ace/mode/c_cpp'); //equv to: changeMode('c_cpp');
-    _EDITOR.renderer.setShowGutter(true);
-    _EDITOR.setShowPrintMargin(true);
-    _EDITOR.setDisplayIndentGuides(true);
-    _EDITOR.setHighlightSelectedWord(true);
-    _EDITOR.setPrintMarginColumn(80);
-
-    _EDITOR.session.setValue(_INIT_CODE);
-    _EDITOR.session.setTabSize(4);
-    _EDITOR.session.setUseWrapMode(true);
-
-    _EDITOR.session.on("change", clearResults);
-    $('.ace_text-input').bind('keyup', clearSampleAndResults);
-    $('.ace_text-input').bind('mouseup', clearSampleAndResults);
-
-    _EDITOR.on("gutterclick", highlightCodeByAnnotation);
-
-    _EDITOR.commands.addCommand({
-        name: 'execute',
-        bindKey: {win: 'Ctrl-D', mac: 'Command-D'},
-        exec: getResults,
-        readOnly: true
-    });
-
-    _EDITOR.commands.addCommand({
-        name: 'execute',
-        bindKey: {win: 'Ctrl-S', mac: 'Command-S'},
-        exec: function () {
-            getResults();
-            toast('Save file not possible!');
-        },
-        readOnly: true
-    });
-}
-
-function getResults() {
-    _CLEAR = false;
-    clearResults();
-
-    // get trimmed code from editor
-    var trimmedCode = $.trim(_EDITOR.getSession().getValue());
-    if (!editorHasCode(trimmedCode)) {
-        toast('No code to ' + _SPINNER.tool.selected.evalText);
-        _EDITOR.focus();
-        return;
+function init_interface_controls () {
+  $('.language-selection').on({
+    click: function () {
+      choose_language($( this ).data().language);
     }
-
-    // show ajax-loader on #play
-    loading('play', true);
-    toast('Fetching Ultimate results...');
-
-    var tc = _SPINNER.task.selected;
-
-    var values = "action=execute";
-    values += "&code=" + encodeURIComponent(trimmedCode);
-    values += getSerializedSettings();
-    values += '&taskID=' + tc.taskID + '&tcID=' + tc.id;
-
-    $.ajax({
-        type: "POST",
-        url: _CONFIG.backend.web_bridge_url,
-        data: values,
-        success: function (json) {
-            loading('play', false);
-            _EDITOR.focus();
-
-            if (json.error) {
-                toast("Error:\n\n" + json.error);
-            } else {
-
-                if (json.status == "success") {
-                    addResults(json.results);
-                } else {
-                    alert("Unexpected response from server!");
-                }
-            }
-        },
-        contentType: 'application/x-www-form-urlencoded;charset=UTF-8',
-        dataType: 'json',
-        error: function (e) {
-            loading('play', false);
-            toast(e.statusText + ' (' + e.status + ')');
-        }
-    });
-    /*
-    var res = [
-                {
-                  endCol: -1,
-                  endLNr: 9,
-                  logLvl: "error",
-                  longDesc: "Variable is neither declared globally nor locally! ID=lock",
-                  shortDesc: "Incorrect Syntax",
-                  startCol: -1,
-                  startLNr: 7
-                },
-                {
-                    endCol: 10,
-                    endLNr: 14,
-                    logLvl: "warning",
-                    longDesc: "Found wrong description in current line",
-                    shortDesc: "Loop invariant",
-                    startCol: 3,
-                    startLNr: 13
-                },
-                {
-                    endCol: 6,
-                    endLNr: 16,
-                    logLvl: "info",
-                    longDesc: "Have a look on several letters again",
-                    shortDesc: "Information found",
-                    startCol: 2,
-                    startLNr: 12
-                },
-                {
-                    endCol: 6,
-                    endLNr: 16,
-                    logLvl: "info",
-                    longDesc: "Have a look on several letters again",
-                    shortDesc: "Information found",
-                    startCol: 6,
-                    startLNr: 16
-                },
-                {
-                    endCol: -1,
-                    endLNr: 56,
-                    logLvl: "info",
-                    longDesc: "Have a look on several letters again",
-                    shortDesc: "Information found",
-                    startCol: 0,
-                    startLNr: 42
-                }
-              ];
-    setTimeout( function()
-            {
-              loading('play', false);
-              addResults(res);
-              _EDITOR.focus();
-            }, 1000); */
+  });
 }
 
 
-function initResizing() {
-    $('.resize-v')[0].onmousedown = function (e) {
-        moveHandler(e, true, 'h');
-        dragResizer(e);
-    };
-    $('.resize-h')[0].onmousedown = function (e) {
-        moveHandler(e, true, 'v');
-        dragResizer(e);
-    };
+/**
+ * Process a language selection.
+ * @param language
+ */
+function choose_language(language) {
+  console.log('Set current language to ' + language);
+  $('#language_select_dropdown').html('Language: ' + language);
 
-    document.onmouseup = function (e) {
-        moveHandler(e, false);
-    };
+  _CONFIG.context.tool.workers.forEach(function (worker) {
+    if (worker.language === language) {
+      _CONFIG.context.current_worker = worker;
+    }
+  });
+
+  set_available_code_samples(language);
+  set_available_frontend_settings(language);
 }
 
-function initInfo() {
-    $('#info-bar .close')[0].onclick = function () {
-        showNextInfo(false);
-    };
-    $('#info-bar .hide')[0].onclick = function () {
-        showNextInfo(true);
-    };
+
+/**
+ * Set available code samples to the dropdown.
+ * This is adding each example with current language match and current worker id in in the example.assoc_workers list.
+ * @param language
+ */
+function set_available_code_samples(language) {
+  let samples_menu = $('#code_sample_dropdown_menu');
+  let example_entries = '';
+
+  _CONFIG.code_examples[language].forEach(function (example) {
+    if (example.assoc_workers.includes(_CONFIG.context.current_worker.id)) {
+      example_entries += '<a class="nav-link" href="#" data-name>' + example.name + '</a>';
+    }
+  });
+
+  samples_menu.html(example_entries);
 }
 
-function switchOrientation(e, o) {
-    var el = $(document.body);
-    el.removeClass('animate');
 
-    if (o == 'horizontal' || (el.hasClass('vertical') && o == null)) {
-        el.removeClass('vertical');
-        el.addClass('horizontal');
-        if (o == null) setCookie('orientation', 'horizontal', _COOKIE_EX_DAYS);
-    } else {
-        el.removeClass('horizontal');
-        el.addClass('vertical');
-        if (o == null) setCookie('orientation', 'vertical', _COOKIE_EX_DAYS);
+/**
+ *
+ */
+function set_available_frontend_settings(language) {
+  let settings_menu = $('#settings_dropdown_menu');
+  let settings_entries = '';
+
+  _CONFIG.context.current_worker.frontend_settings.forEach(function (setting) {
+    console.log(setting);
+    if (setting.type === "bool") {
+      console.log('Add setting.');
+      settings_entries += '<div class="form-check">' +
+        '<input type="checkbox" class="form-check-input" id="' + setting.id + '" ' + (setting.default ? "checked" : "") + '>' +
+        '<label class="form-check-label" for="' + setting.id + '">' + setting.name + '</label>' +
+        '</div>'
     }
+  });
 
-    setTimeout(function () {
-        $(document.body).addClass(_ANIMATE ? 'animate' : '');
-    }, 100);
-    setTimeout(alignDropdownBoxes, 500);
-
-    try {
-        _EDITOR.resize();
-    } catch (e) {
-    }
-}
-
-function switchMessageView(show) {
-    if (show)
-        $('#content').removeClass('hide');
-    else
-        $('#content').addClass('hide');
-
-    setTimeout(alignDropdownBoxes, _ANIMATE * 500);
-}
-
-var _newHeight = getCookie('_EDITOR_H') || null;
-;
-var _newWidth = getCookie('_EDITOR_W') || null;
-var _direction = _newHeight || _newWidth;
-var _hidden;
-
-function moveHandler(e, start, direction) {
-    if (start) {
-        $(document.body).removeClass('animate');
-        $('#content').removeClass('hide');
-        $('#content').addClass('drag');
-
-        e = e || window.event;
-
-        _direction = direction;
-
-        // tell our code to start moving the element with the mouse
-        document.onmousemove = dragResizer;
-
-        // cancel out any text selections
-        document.body.focus();
-
-        // prevent text selection in IE
-        document.onselectstart = function () {
-            return false;
-        };
-        // prevent IE from trying to drag an image
-        if (e.srcElement) e.srcElement.ondragstart = function () {
-            return false;
-        };
-        // prevent text selection (except IE)
-        return false;
-    }
-
-    // mouse is up
-    if (!_direction) return false;
-
-    var editor = document.getElementById('editor');
-    var messages = document.getElementById('messages');
-
-    document.onmousemove = null;
-    document.onselectstart = null;
-    _direction = null;
-
-    $(document.body).addClass(_ANIMATE ? 'animate' : '');
-    $('#content').removeClass('drag');
-
-    if (_hidden) {
-        $('#content').addClass('hide');
-    }
-
-    if (_newHeight) {
-        editor.style.height = (100 - _newHeight) + '%';
-        messages.style.height = _newHeight + '%';
-        setCookie('_EDITOR_H', _newHeight, _COOKIE_EX_DAYS);
-    }
-
-    if (_newWidth) {
-        editor.style.width = (100 - _newWidth) + '%';
-        messages.style.width = _newWidth + '%';
-        setCookie('_EDITOR_W', _newWidth, _COOKIE_EX_DAYS);
-    }
-
-    _newHeight = null;
-    _newWidth = null;
-
-    setTimeout(alignDropdownBoxes, _ANIMATE * 500);
-
-    return false;
-}
-
-function dragResizer(e) {
-    e = e || window.event;
-
-    e.preventDefault();
-
-    var wPx = window.innerWidth
-        || document.documentElement.clientWidth
-        || document.body.clientWidth;
-    var hPx = window.innerHeight
-        || document.documentElement.clientHeight
-        || document.body.clientHeight;
-
-    var editor = document.getElementById('editor');
-    var messages = document.getElementById('messages');
-
-    if (_direction == 'v') {
-        // minimal width of messages AND editor*2
-        var minW = 400;
-        // mouse
-        var mY = e.clientX + 5;
-
-        _hidden = e.clientX > wPx - 80;
-
-        var w = getInInterval(0, ((wPx - mY) / wPx) * 100, 95);
-
-        // minimal pixel value
-        mY = getInInterval(minW / 2, mY, wPx - minW);
-        // min-max percentage value
-        _newWidth = getInInterval(20, ((wPx - mY) / wPx) * 100, 80);
-
-        editor.style.width = (100 - w) + '%';
-        messages.style.width = w + '%';
-    } else {
-        // minimal height of editor AND messages
-        var minH = 100;
-        var hH = document.getElementById('header').clientHeight;
-        hPx -= hH;
-        // mouse
-        var mX = e.clientY - hH + 5;
-
-        _hidden = mX > hPx - 40;
-
-        var h = getInInterval(0, ((hPx - (mX)) / hPx) * 100, 99);
-        // minimal pixel value
-        mX = getInInterval(minH, mX, hPx - minH);
-        // min-max percentage value
-        _newHeight = getInInterval(10, ((hPx - (mX)) / hPx) * 100, 90);
-
-        editor.style.height = (100 - h) + '%';
-        messages.style.height = h + '%';
-    }
-
-    _EDITOR.resize();
-
-    return false;
+  settings_menu.html(settings_entries);
+  $('.form-check').on('click', function(e) {
+      e.stopPropagation();
+  });
 }

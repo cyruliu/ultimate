@@ -1,7 +1,7 @@
 **Ultimate** framework website.
 
 # Configuration
-Configuration is set via [config.js](config/config.js). The configuration consists of 2 sections:
+Configuration is set via [config.js](config/config.js). The configuration consists of the sections:
 
 **1. Backend:**
 ```
@@ -12,7 +12,16 @@ Configuration is set via [config.js](config/config.js). The configuration consis
 ...
 ```
 
-**2. Tools:**
+**2. Editor:**
+```
+...
+    editor: {
+        init_code: '// Enter code here ...'
+    },
+...
+```
+
+**3. Tools:**
 ```
 ...
     tools: [
@@ -24,7 +33,16 @@ Configuration is set via [config.js](config/config.js). The configuration consis
             workers: [
                 {
                     name: "c",
-                    id: "cAutomizer"
+                    id: "cAutomizer",
+                    frontend_settings: [
+                      {
+                        name: "Check for memory leak in main procedure",
+                        id: "chck_main_mem_leak",
+                        type: "bool",
+                        default: true
+                      },
+                      ...
+                    ]
                 },
                 {
                     name: "boogie",
@@ -36,23 +54,51 @@ Configuration is set via [config.js](config/config.js). The configuration consis
         ...
 ```
 
+**4. Code Examples:**
+```
+...
+    code_examples: {
+        c: [
+          {
+            name: 'CyclicBuffer.c',
+            source: 'CyclicBuffer.c',
+            assoc_workers: ["cAutomizer"]
+          }
+        ],
+        boogie: [
+          {
+            name: 'GoannaDoubleFreeWithoutPoin',
+            source: 'GoannaDoubleFreeWithoutPoin.boogie',
+            assoc_workers: ["boogieAutomizer", "boogieBuchiAutomizer"]
+          }
+        ],
+        ...
+      }
+...
+```
+
 # Todo: 
-* [ ] Refactor the javascript code base.
-    * [ ] Decide on where to fetch additional settings if any.
-* [ ] Evaluate and introduce new methods to provide settings to the toolchains.
+* [ ] Implement sample loading
+* [ ] Implement range settings. 
 * [ ] Refactor the API to use data Objects instead of long concatenated strings.
 * [ ] Send and use asynchronous tasks to the backend WebsiteEclipseBridge.
-* [ ] Update the dependencies.
-
+* [ ] Refactor the results display.
 
 # Dependencies
 * [ace-editor](https://ace.c9.io/)
 * [jquery](https://jquery.com/)
 * [handlebars](https://handlebarsjs.com/)
 
+# Documentation
+## _CONFIG.context
+Contains
+
+* `_CONFIG.context.tool` The config of the tool selected by the user.
+* `_CONFIG.context.worker` The config of the tools worker selected by the user.
+* `_CONFIG.context.url` The url parameters.
 
 
-# Frontend ULR parameters
+## Frontend ULR parameters
 The URL can contain up to two parameters:
 
 ```
