@@ -31,6 +31,46 @@ function init_interface_controls () {
       choose_language($( this ).data().language);
     }
   });
+  $('#execute-interface').on({
+    click: function () {
+      const settings = get_execute_settings();
+      const result = get_ultimate_results(settings);
+    }
+  });
+}
+
+
+/**
+ * Initiate a ultimate run and process the result.
+ * @param settings
+ */
+function get_ultimate_results(settings) {
+  $.post(_CONFIG.backend.web_bridge_url, settings, function (response) {
+    console.log(response);
+  });
+}
+
+
+/**
+ * Get the current settings Dict to be used as a new job for ultimate.
+ * @returns {{user_settings: {}, code: string, action: string, toolchain: {task_id: *, id: *}}}
+ */
+function get_execute_settings() {
+  let settings = {
+    action: 'execute',
+    code: 'here is the code...',
+    toolchain: {
+      id: _CONFIG.context.current_worker.id,
+      task_id: _CONFIG.context.current_worker.task_id,
+    },
+    user_settings: {}
+  };
+
+  _CONFIG.context.current_worker.frontend_settings.forEach(function (setting) {
+    settings.user_settings[setting.id] = $('#' + setting.id).is(':checked')
+  });
+
+  return settings;
 }
 
 
