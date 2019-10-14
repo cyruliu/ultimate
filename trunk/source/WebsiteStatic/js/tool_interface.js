@@ -163,6 +163,7 @@ function choose_language(language) {
 
 /**
  * Highlight (background color pop) a section in the editor.
+ * Navigates to the start of the code.
  * @param start_line
  * @param end_line
  * @param start_col
@@ -170,12 +171,22 @@ function choose_language(language) {
  * @param css_type
  */
 function highlight_code(start_line, end_line, start_col, end_col, css_type) {
+  if (start_line < 0) {
+    return
+  }
+  // Highlight the range.
   let maker = _EDITOR.session.addMarker(
     new Range(start_line - 1, start_col, end_line, end_col), "color-pop-animation " + css_type, "line"
   );
   setTimeout(function (marker) {
     if (marker) _EDITOR.session.removeMarker(marker);
   }, 2000, maker);
+
+  // Navigate to the start ot the code.
+  let out_of_sight = !_EDITOR.isRowFullyVisible(start_line);
+  _EDITOR.setAnimatedScroll(out_of_sight);
+  if (out_of_sight) _EDITOR.scrollToLine(start_line, true, true);
+  _EDITOR.navigateTo(start_line - 1, start_col > 0 ? start_col : 0);
 }
 
 
