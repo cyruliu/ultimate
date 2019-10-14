@@ -1,6 +1,6 @@
 const _CONFIG = {
   backend: {
-    web_bridge_url: 'https://monteverdi.informatik.uni-freiburg.de/tomcat/WebsiteEclipseBridge/if?callback=?'
+    web_bridge_url: 'http://127.0.0.1:5000/test-result'
   },
   editor: {
     init_code: '// Enter code here ...'
@@ -80,7 +80,12 @@ const _CONFIG = {
         name: 'CyclicBuffer.c',
         source: 'CyclicBuffer.c',
         assoc_workers: ["cAutomizer"]
-      }
+      },
+      {
+        name: 'GonnaDoubleFree.c',
+        source: 'GonnaDoubleFree.c',
+        assoc_workers: ["cAutomizer"]
+      },
     ],
     boogie: [
       {
