@@ -42,7 +42,7 @@ function init_interface_controls () {
       refresh_navbar();
     }
   });
-  $('#execute-interface').on({
+  $('#navbar_execute_interface').on({
     click: function () {
       const settings = get_execute_settings();
       fetch_ultimate_results(settings);
@@ -53,15 +53,15 @@ function init_interface_controls () {
 
 function refresh_navbar() {
   if ("current_worker" in _CONFIG.context) {
-    $('#language_select_dropdown').html('Language: ' + _CONFIG.context.current_worker.language);
+    $('#navbar_language_select_dropdown').html('Language: ' + _CONFIG.context.current_worker.language);
 
     set_available_code_samples(_CONFIG.context.current_worker.language);
     set_available_frontend_settings(_CONFIG.context.current_worker.language);
-    $('#execute-interface').removeClass('hidden');
+    $('#navbar_execute_interface').removeClass('hidden');
   } else {
-    $('#sample_select_dropdown').addClass('hidden');
-    $('#execute-interface').addClass('hidden');
-    $('#settings_select_dropdown').addClass('hidden');
+    $('#navbar_sample_select_dropdown').addClass('hidden');
+    $('#navbar_execute_interface').addClass('hidden');
+    $('#navbar_settings_select_dropdown').addClass('hidden');
   }
 }
 
@@ -105,7 +105,7 @@ function add_results_to_editor(result) {
  * @param activate
  */
 function set_execute_spinner(activate) {
-  let exec_button = $('#execute-interface');
+  let exec_button = $('#navbar_execute_interface');
   if (activate) {
     exec_button.html(
       '<span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span> Executing ...'
@@ -184,7 +184,7 @@ function set_available_code_samples(language) {
   });
 
   if (example_entries.length > 0) {
-    $('#sample_select_dropdown').removeClass('hidden');
+    $('#navbar_sample_select_dropdown').removeClass('hidden');
   }
   samples_menu.html(example_entries);
   $('.sample-selection').on({
@@ -224,7 +224,7 @@ function set_available_frontend_settings(language) {
   });
 
   if (settings_entries.length > 0) {
-    $('#settings_select_dropdown').removeClass('hidden');
+    $('#navbar_settings_select_dropdown').removeClass('hidden');
   }
   settings_menu.html(settings_entries);
   $('.form-check').on('click', function(e) {
