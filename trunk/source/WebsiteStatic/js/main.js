@@ -2,10 +2,12 @@
  * Parse the landing page from config.js and add the result to the content container.
  */
 function render_landing_page() {
+  const content = $('#content');
+  content.addClass('p-5');
   const landing_page_template = Handlebars.compile(
     $("#landing-page-template").html()
   );
-  $('#content').append(landing_page_template(_CONFIG));
+  content.append(landing_page_template(_CONFIG));
 }
 
 
@@ -14,9 +16,11 @@ function render_landing_page() {
  * @param tool_id
  */
 function render_tool_page(tool_id) {
+  const content = $('#content');
+  content.addClass('p-5');
   $.get("./config/tool_pages/" + tool_id + ".hbs", function (data) {
     const tool_page_template = Handlebars.compile(data);
-    $('#content').append(tool_page_template(_CONFIG));
+    content.append(tool_page_template(_CONFIG));
   });
 }
 
