@@ -1,14 +1,20 @@
 let _EDITOR;
 
 
+/**
+ * Load an add the editor template to the DOM.
+ */
 function load_tool_interface_template() {
   let content = $('#content');
-  content.removeClass('container-fluid');
+  content.removeClass('p-5');
   const tool_interface_template = Handlebars.compile($("#tool-interface-template").html());
   content.append(tool_interface_template(_CONFIG));
 }
 
 
+/**
+ * Initialize the frontend editor.
+ */
 function init_editor() {
   _EDITOR = ace.edit("editor");
   _EDITOR.renderer.setHScrollBarAlwaysVisible(false);
@@ -25,6 +31,10 @@ function init_editor() {
   _EDITOR.session.setUseWrapMode(true);
 }
 
+
+/**
+ * Bind the user control buttons to process events.
+ */
 function init_interface_controls () {
   $('.language-selection').on({
     click: function () {
@@ -34,9 +44,43 @@ function init_interface_controls () {
   $('#execute-interface').on({
     click: function () {
       const settings = get_execute_settings();
-      const result = get_ultimate_results(settings);
+      fetch_ultimate_results(settings);
     }
   });
+}
+
+
+/**
+ * Process ultimate web bridge results and add them as toasts to the editor interface.
+ * @param result
+ */
+function add_results_to_editor(result) {
+  let message;
+  let messages_container = $('#messages');
+  const editor_message_template = Handlebars.compile($("#editor-message").html());
+
+  console.log(result.results);
+  for (let key in result.results) {
+    message = result.results[key];
+
+    switch (message.type) {
+      case "warning": {
+        message.toast_classes = "border border-warning";
+        break;
+      }
+      case "positive": {
+        message.toast_classes = "border border-info";
+        break;
+      }
+      case "invariant": {
+        message.toast_classes = "border border-info";
+        break;
+      }
+    }
+
+    messages_container.append(editor_message_template(result.results[key]));
+  }
+  $('.toast').toast('show');
 }
 
 
@@ -44,9 +88,11 @@ function init_interface_controls () {
  * Initiate a ultimate run and process the result.
  * @param settings
  */
-function get_ultimate_results(settings) {
+function fetch_ultimate_results(settings) {
   $.post(_CONFIG.backend.web_bridge_url, settings, function (response) {
-    console.log(response);
+    add_results_to_editor(response);
+  }).fail(function () {
+    alert("Could not fetch results. Server error.");
   });
 }
 
