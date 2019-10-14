@@ -19,61 +19,77 @@
   <title>Uni-Freiburg : SWT - Ultimate</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="./">
-    <img src="img/ultimate_logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-    Ultimate
-  </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<div class="d-flex h-100 flex-column">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="./">
+        <img src="img/ultimate_logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+        Ultimate
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-  <div class="collapse navbar-collapse" id="navbar_content">
-  </div>
-</nav>
-<div id="content" class="container-fluid h-100">
+      <div class="collapse navbar-collapse" id="navbar_content">
+      </div>
+    </nav>
+    <div id="content" class="d-flex flex-column flex-grow-1"></div>
 </div>
 
+<script id="editor-message" type="text/x-handlebars-template">
+  <div class="toast  {{toast_classes}}"
+       role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+    <div class="toast-header">
+      <img src="..." class="rounded mr-2" alt="...">
+      <strong class="mr-auto">{{shortDesc}}</strong>
+      <small>{{type}}</small>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      <pre><code class="text-break break-spaces">{{longDesc}}</code></pre>
+    </div>
+  </div>
+</script>
 <script id="tool-interface-template" type="text/x-handlebars-template">
-  <div id="editor" class="h-100"></div>
+  <div id="editor" class="flex-grow-1 flex-shrink-1"></div>
+  <div id="messages" class="bg-light border-top py-1"></div>
 </script>
 <script id="landing-page-template" type="text/x-handlebars-template">
-  <div class="container-fluid">
-    <div class="row description">
-      <h3>Description</h3>
-      <div class="col-12">
-        <p><span style="font-variant:small-caps">Ultimate</span> is a program analysis framework.
-          <span style="font-variant:small-caps">Ultimate</span> consists of several plugins that perform steps of an
-          program analysis, e.g., parsing source code, transforming programs from one representation to another,
-          or analyze programs. Toolchains of these plugins can perform complex tasks, e.g., verify that a C
-          program fulfills a given specification.
-        </p>
-      </div>
+  <div class="row description">
+    <h3>Description</h3>
+    <div class="col-12">
+      <p><span style="font-variant:small-caps">Ultimate</span> is a program analysis framework.
+        <span style="font-variant:small-caps">Ultimate</span> consists of several plugins that perform steps of an
+        program analysis, e.g., parsing source code, transforming programs from one representation to another,
+        or analyze programs. Toolchains of these plugins can perform complex tasks, e.g., verify that a C
+        program fulfills a given specification.
+      </p>
     </div>
-    <div class="row tools">
-      <h3>Tools</h3>
-      <div class="col-12">
-        <div class="card-deck">
-          {{#each tools}}
-          <div class="card border-secondary mb-3" style="max-width: 18rem;">
-            <div class="card-header"><a href="?ui=tool&tool={{this.id}}">{{this.name}}</a></div>
-            <div class="card-body text-secondary">
-              <h5 class="card-title">Description</h5>
-              <p class="card-text">{{this.description}}</p>
-              <h5 class="card-title">Languages</h5>
-              <p class="card-text">
-                {{#each this.languages}}
-                <span>{{this}}</span>
-                {{~/each}}
-              </p>
-            </div>
-            <div class="card-footer text-right">
-              <a href="?ui=tool&tool={{this.id}}" class="btn btn-secondary">Read more</a>
-              <a href="?ui=int&tool={{this.id}}" class="btn btn-secondary">Try online</a>
-            </div>
+  </div>
+  <div class="row tools">
+    <h3>Tools</h3>
+    <div class="col-12">
+      <div class="card-deck">
+        {{#each tools}}
+        <div class="card border-secondary mb-3" style="max-width: 18rem;">
+          <div class="card-header"><a href="?ui=tool&tool={{this.id}}">{{this.name}}</a></div>
+          <div class="card-body text-secondary">
+            <h5 class="card-title">Description</h5>
+            <p class="card-text">{{this.description}}</p>
+            <h5 class="card-title">Languages</h5>
+            <p class="card-text">
+              {{#each this.languages}}
+              <span>{{this}}</span>
+              {{~/each}}
+            </p>
           </div>
-          {{~/each}}
+          <div class="card-footer text-right">
+            <a href="?ui=tool&tool={{this.id}}" class="btn btn-secondary">Read more</a>
+            <a href="?ui=int&tool={{this.id}}" class="btn btn-secondary">Try online</a>
+          </div>
         </div>
+        {{~/each}}
       </div>
     </div>
   </div>

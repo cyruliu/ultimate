@@ -115,6 +115,14 @@ textarea {
   display: none !important;
 }
 
+
+/*
+ * Break text into multilines.
+ */
+.break-spaces {
+  white-space: pre-line;
+}
+
 /*
 * Hide only visually, but have it available for screen readers:
 * https://snook.ca/archives/html_and_css/hiding-content-for-accessibility

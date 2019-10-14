@@ -10,3 +10,15 @@
 .form-check-label {
   white-space: nowrap;
 }
+
+.toast {
+  max-width: 100%;
+}
+
+#messages {
+  overflow: auto;
+  flex-flow: column;
+  flex-shrink: 1;
+  flex-grow: 0;
+  flex-basis: 25vh;
+}
