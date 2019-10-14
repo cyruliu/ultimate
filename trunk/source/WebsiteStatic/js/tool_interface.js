@@ -1,4 +1,5 @@
 let _EDITOR;
+let Range = ace.require('ace/range').Range;
 
 
 /**
@@ -48,6 +49,12 @@ function init_interface_controls () {
       fetch_ultimate_results(settings);
     }
   });
+  $(document).on({
+    click: function () {
+      let data = $( this ).data();
+      highlight_code(data.startLine, data.endLine, data.startCol, data.endCol, data.type);
+    }
+  }, '.toast');
 }
 
 
@@ -75,7 +82,6 @@ function add_results_to_editor(result) {
   let messages_container = $('#messages');
   const editor_message_template = Handlebars.compile($("#editor-message").html());
 
-  console.log(result.results);
   for (let key in result.results) {
     message = result.results[key];
 
@@ -152,6 +158,24 @@ function choose_language(language) {
       _CONFIG.context.current_worker = worker;
     }
   });
+}
+
+
+/**
+ * Highlight (background color pop) a section in the editor.
+ * @param start_line
+ * @param end_line
+ * @param start_col
+ * @param end_col
+ * @param css_type
+ */
+function highlight_code(start_line, end_line, start_col, end_col, css_type) {
+  let maker = _EDITOR.session.addMarker(
+    new Range(start_line - 1, start_col, end_line, end_col), "color-pop-animation " + css_type, "line"
+  );
+  setTimeout(function (marker) {
+    if (marker) _EDITOR.session.removeMarker(marker);
+  }, 2000, maker);
 }
 
 

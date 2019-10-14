@@ -24,5 +24,71 @@
 }
 
 .oi{
-  top: 0px;
+  top: 0;
+}
+
+.color-pop-animation {
+  position: absolute;
+  opacity: 0;
+
+  -webkit-animation: color-pop 2s forwards;
+  -moz-animation: color-pop 2s forwards;
+  -ms-animation: color-pop 2s forwards;
+  -o-animation: color-pop 2s forwards;
+  animation: color-pop 2s forwards;
+}
+
+.color-pop-animation {
+  background-color: #6FFF9D;
+}
+
+.color-pop-animation.error {
+  background-color: #FF6F90;
+}
+
+.color-pop-animation.warning {
+  background-color: #FFC66F;
+}
+
+.color-pop-animation.info {
+  background-color: #6F92FF;
+}
+
+
+/*____________________________ Color Popping Keyframes _____________________________*/
+@-webkit-keyframes color-pop {
+  0%   { opacity: 0; }
+  5%   { opacity: .4; }
+  35%  { opacity: .4; }
+  100% { opacity: 0; }
+}
+@-khtml-keyframes color-pop {
+  0%   { opacity: 0; }
+  5%   { opacity: .4; }
+  35%  { opacity: .4; }
+  100% { opacity: 0; }
+}
+@-moz-keyframes color-pop {
+  0%   { opacity: 0; }
+  5%   { opacity: .4; }
+  35%  { opacity: .4; }
+  100% { opacity: 0; }
+}
+@-ms-keyframes color-pop {
+  0%   { opacity: 0; }
+  5%   { opacity: .4; }
+  35%  { opacity: .4; }
+  100% { opacity: 0; }
+}
+@-o-keyframes color-pop {
+  0%   { opacity: 0; }
+  5%   { opacity: .4; }
+  35%  { opacity: .4; }
+  100% { opacity: 0; }
+}
+@keyframes color-pop {
+  0%   { opacity: 0; }
+  5%   { opacity: .4; }
+  35%  { opacity: .4; }
+  100% { opacity: 0; }
 }

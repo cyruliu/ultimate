@@ -11,6 +11,7 @@
 
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/jquery-ui.min.css">
   <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/editor.css">
@@ -37,7 +38,8 @@
 </div>
 
 <script id="editor-message" type="text/x-handlebars-template">
-  <div class="toast  {{toast_classes}}"
+  <div class="toast  {{toast_classes}}" data-type="{{logLvl}}" data-start-line="{{startLNr}}"
+       data-end-line="{{endLNr}}" data-start-col="{{startCol}}" data-end-col="{{endCol}}"
        role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
     <div class="toast-header">
       <span class="oi mr-1 {{oi_icon}}"></span>
@@ -149,6 +151,7 @@
 <script src="js/vendor/handlebars.min-35d3fdb.js" ></script>
 <script src="js/handlebars-custom.js" ></script>
 <script src="js/vendor/ace-min/ace.js"></script>
+<script src="js/vendor/jquery-ui.min.js"></script>
 <script src="js/helpers.js" ></script>
 <script src="js/plugins.js"></script>
 <script src="js/tool_interface.js"></script>
