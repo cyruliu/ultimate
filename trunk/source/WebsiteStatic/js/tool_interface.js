@@ -39,6 +39,7 @@ function init_interface_controls () {
   $('.language-selection').on({
     click: function () {
       choose_language($( this ).data().language);
+      refresh_navbar();
     }
   });
   $('#execute-interface').on({
@@ -47,6 +48,21 @@ function init_interface_controls () {
       fetch_ultimate_results(settings);
     }
   });
+}
+
+
+function refresh_navbar() {
+  if ("current_worker" in _CONFIG.context) {
+    $('#language_select_dropdown').html('Language: ' + _CONFIG.context.current_worker.language);
+
+    set_available_code_samples(_CONFIG.context.current_worker.language);
+    set_available_frontend_settings(_CONFIG.context.current_worker.language);
+    $('#execute-interface').removeClass('hidden');
+  } else {
+    $('#sample_select_dropdown').addClass('hidden');
+    $('#execute-interface').addClass('hidden');
+    $('#settings_select_dropdown').addClass('hidden');
+  }
 }
 
 
@@ -85,11 +101,29 @@ function add_results_to_editor(result) {
 
 
 /**
+ * Set (activete == true) or unset the spinner indicating the results are being fetched.
+ * @param activate
+ */
+function set_execute_spinner(activate) {
+  let exec_button = $('#execute-interface');
+  if (activate) {
+    exec_button.html(
+      '<span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span> Executing ...'
+    );
+  } else {
+    exec_button.html('Execute');
+  }
+}
+
+
+/**
  * Initiate a ultimate run and process the result.
  * @param settings
  */
 function fetch_ultimate_results(settings) {
+  set_execute_spinner(true);
   $.post(_CONFIG.backend.web_bridge_url, settings, function (response) {
+    set_execute_spinner(false);
     add_results_to_editor(response);
   }).fail(function () {
     alert("Could not fetch results. Server error.");
@@ -104,7 +138,7 @@ function fetch_ultimate_results(settings) {
 function get_execute_settings() {
   let settings = {
     action: 'execute',
-    code: 'here is the code...',
+    code: _EDITOR.getSession().getValue(),
     toolchain: {
       id: _CONFIG.context.current_worker.id,
       task_id: _CONFIG.context.current_worker.task_id,
@@ -126,16 +160,11 @@ function get_execute_settings() {
  */
 function choose_language(language) {
   console.log('Set current language to ' + language);
-  $('#language_select_dropdown').html('Language: ' + language);
-
   _CONFIG.context.tool.workers.forEach(function (worker) {
     if (worker.language === language) {
       _CONFIG.context.current_worker = worker;
     }
   });
-
-  set_available_code_samples(language);
-  set_available_frontend_settings(language);
 }
 
 
@@ -154,6 +183,9 @@ function set_available_code_samples(language) {
     }
   });
 
+  if (example_entries.length > 0) {
+    $('#sample_select_dropdown').removeClass('hidden');
+  }
   samples_menu.html(example_entries);
   $('.sample-selection').on({
     click: function () {
@@ -191,6 +223,9 @@ function set_available_frontend_settings(language) {
     }
   });
 
+  if (settings_entries.length > 0) {
+    $('#settings_select_dropdown').removeClass('hidden');
+  }
   settings_menu.html(settings_entries);
   $('.form-check').on('click', function(e) {
     e.stopPropagation();

@@ -33,6 +33,7 @@ function load_tool_interface(tool_id) {
   load_tool_interface_template();
   init_editor();
   init_interface_controls();
+  refresh_navbar();
 }
 
 
