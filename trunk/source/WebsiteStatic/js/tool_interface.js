@@ -82,14 +82,17 @@ function add_results_to_editor(result) {
     switch (message.type) {
       case "warning": {
         message.toast_classes = "border border-warning";
+        message.oi_icon = "oi-warning text-warning";
         break;
       }
       case "positive": {
         message.toast_classes = "border border-info";
+        message.oi_icon = "oi-info text-info";
         break;
       }
       case "invariant": {
         message.toast_classes = "border border-info";
+        message.oi_icon = "oi-info text-info";
         break;
       }
     }
@@ -97,22 +100,6 @@ function add_results_to_editor(result) {
     messages_container.append(editor_message_template(result.results[key]));
   }
   $('.toast').toast('show');
-}
-
-
-/**
- * Set (activete == true) or unset the spinner indicating the results are being fetched.
- * @param activate
- */
-function set_execute_spinner(activate) {
-  let exec_button = $('#navbar_execute_interface');
-  if (activate) {
-    exec_button.html(
-      '<span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span> Executing ...'
-    );
-  } else {
-    exec_button.html('Execute');
-  }
 }
 
 
@@ -230,4 +217,20 @@ function set_available_frontend_settings(language) {
   $('.form-check').on('click', function(e) {
     e.stopPropagation();
   });
+}
+
+
+/**
+ * Set (activete == true) or unset the spinner indicating the results are being fetched.
+ * @param activate
+ */
+function set_execute_spinner(activate) {
+  let exec_button = $('#navbar_execute_interface');
+  if (activate) {
+    exec_button.html(
+      '<span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span> Executing ...'
+    );
+  } else {
+    exec_button.html('Execute');
+  }
 }
