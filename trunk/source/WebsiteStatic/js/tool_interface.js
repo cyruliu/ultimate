@@ -30,6 +30,7 @@ function init_editor() {
   _EDITOR.session.setValue(_CONFIG.editor.init_code);
   _EDITOR.session.setTabSize(4);
   _EDITOR.session.setUseWrapMode(true);
+  _EDITOR.on("gutterclick", process_gutter_click);
 }
 
 
@@ -73,6 +74,20 @@ function refresh_navbar() {
 }
 
 
+function get_annotation_from_message(message) {
+  let annotation = {
+    row: message.startLNr - 1,
+    column: message.startCol,
+    text: message.shortDesc,
+    type: message.logLvl,
+    row_end: message.endLNr,
+    col_end: message.endCol
+  };
+
+  return annotation
+}
+
+
 /**
  * Process ultimate web bridge results and add them as toasts to the editor interface.
  * @param result
@@ -80,11 +95,12 @@ function refresh_navbar() {
 function add_results_to_editor(result) {
   let message;
   let messages_container = $('#messages');
+  let annotations = [];
   const editor_message_template = Handlebars.compile($("#editor-message").html());
 
   for (let key in result.results) {
     message = result.results[key];
-
+    annotations.push(get_annotation_from_message(message))
     switch (message.type) {
       case "warning": {
         message.toast_classes = "border border-warning";
@@ -103,6 +119,7 @@ function add_results_to_editor(result) {
       }
     }
 
+    _EDITOR.getSession().setAnnotations(annotations);
     messages_container.append(editor_message_template(result.results[key]));
   }
   $('.toast').toast('show');
@@ -183,19 +200,52 @@ function highlight_code(start_line, end_line, start_col, end_col, css_type) {
   if (start_line < 0) {
     return
   }
-  // Highlight the range.
+  // Navigate to the start ot the code if not visible.
+  if (!_EDITOR.isRowFullyVisible(start_line)) {
+    _EDITOR.setAnimatedScroll(false);
+    _EDITOR.scrollToLine(start_line, true, true);
+    _EDITOR.navigateTo(start_line - 1, start_col > 0 ? start_col : 0);
+  }
+  // Set marker for given range.
   let maker = _EDITOR.session.addMarker(
     new Range(start_line - 1, start_col, end_line, end_col), "color-pop-animation " + css_type, "line"
   );
+  // Remove the maker after 2 seconds
   setTimeout(function (marker) {
     if (marker) _EDITOR.session.removeMarker(marker);
   }, 2000, maker);
+}
 
-  // Navigate to the start ot the code.
-  let out_of_sight = !_EDITOR.isRowFullyVisible(start_line);
-  _EDITOR.setAnimatedScroll(out_of_sight);
-  if (out_of_sight) _EDITOR.scrollToLine(start_line, true, true);
-  _EDITOR.navigateTo(start_line - 1, start_col > 0 ? start_col : 0);
+
+/**
+ * Process the event of a gutter click (the area where the line numbers are).
+ * Triggers code highlight for annotation clicks.
+ * @param event
+ */
+function process_gutter_click(event) {
+  let target = event.domEvent.target;
+
+  // Check if we clicked on an annotation.
+  if ((target.className.indexOf('ace_info') !== -1) &&
+    (_EDITOR.isFocused()) &&
+    (event.clientX < 20 + target.getBoundingClientRect().left)) {
+
+    // Trigger code highlighting for clicked annotation.
+    let current_row = event.getDocumentPosition().row;
+    let annotations = _EDITOR.session.getAnnotations();
+
+    annotations.forEach(function (annotation) {
+      if (annotation.row === current_row) {
+        highlight_code(
+          annotation.row + 1,
+          annotation.row_end,
+          annotation.column,
+          annotation.col_end,
+          annotation.type
+        )
+      }
+    });
+  }
 }
 
 
@@ -232,6 +282,7 @@ function set_available_code_samples(language) {
  */
 function load_sample(source) {
   $.get('config/code_examples/' + source, function (data) {
+    _EDITOR.getSession().clearAnnotations();
     _EDITOR.session.setValue(data);
   })
 }
