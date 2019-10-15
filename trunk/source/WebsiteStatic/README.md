@@ -3,6 +3,16 @@
 # Configuration
 Configuration is set via [config.js](config/config.js). The configuration consists of the sections:
 
+**0. Meta:**
+```
+...
+meta: {
+    debug_mode: false,  # if set to true, `test/result.json` will be used as a response for fetching ultimate results.
+}
+...
+```
+
+
 **1. Backend:**
 ```
 ...
@@ -77,19 +87,43 @@ Configuration is set via [config.js](config/config.js). The configuration consis
 ...
 ```
 
-# Todo: 
-* [ ] Implement sample loading
-* [ ] Implement range settings. 
-* [ ] Refactor the API to use data Objects instead of long concatenated strings.
-* [ ] Send and use asynchronous tasks to the backend WebsiteEclipseBridge.
-* [ ] Refactor the results display.
+# Development
+## Webbridge API
+To fetch results from the ultimate tool for the interactive part, a POST request is sent to the URL defined in the
+config section `backend.web_bridge_url`.
 
-# Dependencies
-* [ace-editor](https://ace.c9.io/)
-* [jquery](https://jquery.com/)
-* [handlebars](https://handlebarsjs.com/)
+**POST request data:** (see `tool_interface.get_execute_settings()`)
+```json
+{
+    "action": "execute",
+    "code": "the code in the editor",
+    "toolchain": {
+      "id": _CONFIG.context.current_worker.id,
+      "task_id": _CONFIG.context.current_worker.task_id,
+    },
+    "user_settings": {
+      // The settings derrived from config `worker.frontend_settings` and set by the user.
+    }
+  }
+```
 
-# Documentation
+**Result response example:**
+```json
+"results": [
+    {
+      "endCol": -1,
+      "endLNr": -1,
+      "logLvl": "warning",
+      "longDesc": "unknown boogie variable #StackHeapBarrier",
+      "shortDesc": "Unfinished Backtranslation",
+      "startCol": -1,
+      "startLNr": -1,
+      "type": "warning"
+    },
+    ...
+]
+```
+
 ## _CONFIG.context
 Contains
 
@@ -109,3 +143,8 @@ ui=tool : show informations about the tool.
 ui=int  : show the interactive tool interface. (The editor).
 ```
 
+# Dependencies
+* [ace-editor](https://ace.c9.io/)
+* [jquery](https://jquery.com/)
+* [handlebars](https://handlebarsjs.com/)
+* [bootstrap](https://getbootstrap.com/)

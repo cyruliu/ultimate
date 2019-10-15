@@ -115,6 +115,15 @@ function add_results_to_editor(result) {
  */
 function fetch_ultimate_results(settings) {
   set_execute_spinner(true);
+
+  if (_CONFIG.meta.debug_mode) {
+    $.get('./test/result.json', function (response) {
+      set_execute_spinner(false);
+      add_results_to_editor(response);
+    });
+    return
+  }
+
   $.post(_CONFIG.backend.web_bridge_url, settings, function (response) {
     set_execute_spinner(false);
     add_results_to_editor(response);

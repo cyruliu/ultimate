@@ -1,4 +1,7 @@
 const _CONFIG = {
+  meta: {
+    debug_mode: true,
+  },
   backend: {
     web_bridge_url: 'http://127.0.0.1:5000/test-result'
   },
