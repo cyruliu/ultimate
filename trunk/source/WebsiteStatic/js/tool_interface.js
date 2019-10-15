@@ -35,6 +35,16 @@ function init_editor() {
 
 
 /**
+ * Remove all messages from the results.
+ */
+function clear_messages() {
+  let messages_container = $('#messages');
+  messages_container.html('');
+  _EDITOR.getSession().clearAnnotations();
+}
+
+
+/**
  * Bind the user control buttons to process events.
  */
 function init_interface_controls () {
@@ -47,7 +57,8 @@ function init_interface_controls () {
   $('#navbar_execute_interface').on({
     click: function () {
       const settings = get_execute_settings();
-      fetch_ultimate_results(settings);
+      clear_messages();
+      run_ultimate_task(settings);
     }
   });
   $(document).on({
@@ -130,13 +141,16 @@ function add_results_to_editor(result) {
  * Initiate a ultimate run and process the result.
  * @param settings
  */
-function fetch_ultimate_results(settings) {
+function run_ultimate_task(settings) {
   set_execute_spinner(true);
 
   if (_CONFIG.meta.debug_mode) {
     $.get('./test/result.json', function (response) {
-      set_execute_spinner(false);
       add_results_to_editor(response);
+    }).fail(function () {
+      alert("Could not fetch results. Server error.");
+    }).always(function () {
+      set_execute_spinner(false);
     });
     return
   }
@@ -146,6 +160,8 @@ function fetch_ultimate_results(settings) {
     add_results_to_editor(response);
   }).fail(function () {
     alert("Could not fetch results. Server error.");
+  }).always(function () {
+    set_execute_spinner(false);
   });
 }
 
@@ -282,7 +298,7 @@ function set_available_code_samples(language) {
  */
 function load_sample(source) {
   $.get('config/code_examples/' + source, function (data) {
-    _EDITOR.getSession().clearAnnotations();
+    clear_messages();
     _EDITOR.session.setValue(data);
   })
 }
