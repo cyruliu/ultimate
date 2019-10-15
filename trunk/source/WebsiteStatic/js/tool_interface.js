@@ -45,12 +45,22 @@ function clear_messages() {
 
 
 /**
+ * Truncate the editor.
+ */
+function clear_editor() {
+  clear_messages();
+  _EDITOR.session.setValue(_CONFIG.editor.init_code);
+}
+
+
+/**
  * Bind the user control buttons to process events.
  */
 function init_interface_controls () {
   $('.language-selection').on({
     click: function () {
       choose_language($( this ).data().language);
+      clear_editor();
       refresh_navbar();
     }
   });
