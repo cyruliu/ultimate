@@ -29,3 +29,15 @@ function get_url_params() {
     "tool": url.searchParams.get("tool")
   };
 }
+
+
+/**
+ * Returns the current workers language or "undefined" if none set.
+ */
+function get_current_language() {
+  let result = "undefined";
+  if ("current_worker" in _CONFIG.context) {
+    result = _CONFIG.context.current_worker.language;
+  }
+  return result
+}

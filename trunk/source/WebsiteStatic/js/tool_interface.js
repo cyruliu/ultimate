@@ -59,8 +59,11 @@ function clear_editor() {
 function init_interface_controls () {
   $('.language-selection').on({
     click: function () {
-      choose_language($( this ).data().language);
-      clear_editor();
+      let language = $( this ).data().language;
+      if (language !== get_current_language()) {
+        clear_editor();
+      }
+      choose_language(language);
       refresh_navbar();
     }
   });
