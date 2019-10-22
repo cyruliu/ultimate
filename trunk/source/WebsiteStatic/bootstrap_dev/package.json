@@ -9,8 +9,7 @@
     "css:minify": "cleancss --level 1 --source-map --source-map-inline-sources --output bootstrap.min.css bootstrap.css",
     "css:copy-dist": "copyfiles bootstrap.min.css bootstrap.min.css.map ../css",
     "css": "npm run css:compile && npm run css:prefix && npm run css:minify && npm run css:copy-dist",
-    "css:watch": "watch 'npm run css' scss",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "watch \"npm run css\" scss"
   },
   "author": "",
   "license": "ISC",
