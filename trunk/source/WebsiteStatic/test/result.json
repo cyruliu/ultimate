@@ -1,64 +1,14 @@
 {
   "results": [
     {
-      "endCol": -1,
-      "endLNr": -1,
-      "logLvl": "warning",
-      "longDesc": "unknown boogie variable #StackHeapBarrier",
-      "shortDesc": "Unfinished Backtranslation",
-      "startCol": -1,
-      "startLNr": -1,
-      "type": "warning"
-    },
-    {
-      "endCol": -1,
-      "endLNr": -1,
-      "logLvl": "warning",
-      "longDesc": "unknown boogie variable #StackHeapBarrier",
-      "shortDesc": "Unfinished Backtranslation",
-      "startCol": -1,
-      "startLNr": -1,
-      "type": "warning"
-    },
-    {
-      "endCol": -1,
-      "endLNr": -1,
-      "logLvl": "warning",
-      "longDesc": "unknown boogie variable #StackHeapBarrier",
-      "shortDesc": "Unfinished Backtranslation",
-      "startCol": -1,
-      "startLNr": -1,
-      "type": "warning"
-    },
-    {
-      "endCol": -1,
-      "endLNr": -1,
-      "logLvl": "warning",
-      "longDesc": "unknown boogie variable #StackHeapBarrier",
-      "shortDesc": "Unfinished Backtranslation",
-      "startCol": -1,
-      "startLNr": -1,
-      "type": "warning"
-    },
-    {
-      "endCol": -1,
-      "endLNr": -1,
-      "logLvl": "warning",
-      "longDesc": "unknown boogie variable #StackHeapBarrier",
-      "shortDesc": "Unfinished Backtranslation",
-      "startCol": -1,
-      "startLNr": -1,
-      "type": "warning"
-    },
-    {
-      "endCol": -1,
-      "endLNr": -1,
-      "logLvl": "warning",
-      "longDesc": "unknown boogie variable #StackHeapBarrier",
-      "shortDesc": "Unfinished Backtranslation",
-      "startCol": -1,
-      "startLNr": -1,
-      "type": "warning"
+      "startLNr":25,
+      "startCol":-1,
+      "endLNr":25,
+      "endCol":-1,
+      "logLvl":"error",
+      "shortDesc":"array index can be out of bounds",
+      "type":"counter",
+      "longDesc":"array index can be out of bounds\nWe found a FailurePath: \n[L21]             unsigned char pos = getInitialPosition();\n[L22]             int arr[256];\n[L23]  COND TRUE  1\n[L24]  EXPR       arr[pos]\n[L24]             arr[pos] = getNextValue()\n[L25]             arr[pos + 1]\n       VAL        [pos=255]\n"
     },
     {
       "endCol": -1,
