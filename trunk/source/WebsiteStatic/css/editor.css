@@ -21,7 +21,7 @@
   flex-shrink: 1;
   flex-grow: 0;
   flex-basis: 25vh;
-  z-index: 3;
+  z-index: 4;
 }
 
 .oi{
