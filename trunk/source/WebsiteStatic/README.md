@@ -143,6 +143,11 @@ ui=tool : show informations about the tool.
 ui=int  : show the interactive tool interface. (The editor).
 ```
 
+## Configure theme & style
+### Bootstrap theming
+Edit [bootstrap_dev/scss/main.scss](bootstrap_dev/scss/main.scss) and then run `npm run css` to apply changes.
+
+
 # Dependencies
 * [ace-editor](https://ace.c9.io/)
 * [jquery](https://jquery.com/)
