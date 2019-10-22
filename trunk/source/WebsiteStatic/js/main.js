@@ -87,6 +87,7 @@ function bootstrap() {
   set_context();
   render_navbar();
 
+  // Load content by context.
   switch (_CONFIG.context.url.ui) {
     case "int":
       // load the interactive mode for the active tool.
@@ -103,6 +104,6 @@ function bootstrap() {
 }
 
 
-$(document).ready(function () {
+$(function () {
   bootstrap();
 });
