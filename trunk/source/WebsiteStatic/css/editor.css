@@ -21,10 +21,17 @@
   flex-shrink: 1;
   flex-grow: 0;
   flex-basis: 25vh;
+  z-index: 3;
 }
 
 .oi{
   top: 0;
+}
+
+.top-shaddow{
+  -webkit-box-shadow: 0 -2px 9px 0 rgba(0,0,0,0.75);
+  -moz-box-shadow:    0 -2px 9px 0 rgba(0,0,0,0.75);
+  box-shadow:         0 -2px 9px 0 rgba(0,0,0,0.75);
 }
 
 .color-pop-animation {
