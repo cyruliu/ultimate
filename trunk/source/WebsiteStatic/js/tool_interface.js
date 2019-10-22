@@ -57,6 +57,7 @@ function clear_editor() {
  * Bind the user control buttons to process events.
  */
 function init_interface_controls () {
+  // Changing the tool Language.
   $('.language-selection').on({
     click: function () {
       let language = $( this ).data().language;
@@ -67,6 +68,8 @@ function init_interface_controls () {
       refresh_navbar();
     }
   });
+
+  // Handle click on "Execute"
   $('#navbar_execute_interface').on({
     click: function () {
       const settings = get_execute_settings();
@@ -74,12 +77,31 @@ function init_interface_controls () {
       run_ultimate_task(settings);
     }
   });
+
+  // Highlight code by message click.
   $(document).on({
     click: function () {
       let data = $( this ).data();
       highlight_code(data.startLine, data.endLine, data.startCol, data.endCol, data.type);
     }
   }, '.toast');
+
+  // Resizable Message container.
+  let messages_container = $('#messages');
+  interact('#messages')
+    .resizable({
+      edges: { left: false, right: false, bottom: false, top: true },
+      modifiers: [
+        // minimum size
+        interact.modifiers.restrictSize({
+          min: { height: 50 }
+        })
+      ]
+    })
+    .on('resizemove', function (event) {
+      messages_container.css("flex-basis", event.rect.height + 'px');
+      _EDITOR.resize();
+    });
 }
 
 
