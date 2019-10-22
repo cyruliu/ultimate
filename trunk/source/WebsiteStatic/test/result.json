@@ -1,9 +1,9 @@
 {
   "results": [
     {
-      "startLNr":25,
+      "startLNr":24,
       "startCol":-1,
-      "endLNr":25,
+      "endLNr":27,
       "endCol":-1,
       "logLvl":"error",
       "shortDesc":"array index can be out of bounds",
@@ -22,12 +22,12 @@
     },
     {
       "endCol": -1,
-      "endLNr": -1,
+      "endLNr": 9,
       "logLvl": "warning",
       "longDesc": "unknown boogie variable #StackHeapBarrier",
       "shortDesc": "Unfinished Backtranslation",
       "startCol": -1,
-      "startLNr": -1,
+      "startLNr": 7,
       "type": "warning"
     },
     {
