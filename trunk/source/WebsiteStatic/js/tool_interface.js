@@ -277,7 +277,9 @@ function process_gutter_click(event) {
   let target = event.domEvent.target;
 
   // Check if we clicked on an annotation.
-  if ((target.className.indexOf('ace_info') !== -1) &&
+  if (((target.className.indexOf('ace_info') !== -1) ||
+    (target.className.indexOf('ace_error') !== -1)  ||
+    (target.className.indexOf('ace_warning') !== -1)) &&
     (_EDITOR.isFocused()) &&
     (event.clientX < 20 + target.getBoundingClientRect().left)) {
 
