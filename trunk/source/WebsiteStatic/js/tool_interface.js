@@ -147,18 +147,18 @@ function add_results_to_editor(result) {
   for (let key in result.results) {
     message = result.results[key];
     annotations.push(get_annotation_from_message(message))
-    switch (message.type) {
+    switch (message.logLvl) {
+      case "error": {
+        message.toast_classes = "border border-danger";
+        message.oi_icon = "oi-circle-x text-danger";
+        break;
+      }
       case "warning": {
         message.toast_classes = "border border-warning";
         message.oi_icon = "oi-warning text-warning";
         break;
       }
-      case "positive": {
-        message.toast_classes = "border border-info";
-        message.oi_icon = "oi-info text-info";
-        break;
-      }
-      case "invariant": {
+      case "info": {
         message.toast_classes = "border border-info";
         message.oi_icon = "oi-info text-info";
         break;
