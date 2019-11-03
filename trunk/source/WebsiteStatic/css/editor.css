@@ -1,3 +1,7 @@
+#content {
+  overflow: auto;
+}
+
 .ace_content {
   position: absolute;
   -moz-box-sizing: border-box;
@@ -26,6 +30,10 @@
 
 .oi{
   top: 0;
+}
+
+.messages-actions {
+  cursor: pointer;
 }
 
 .top-shaddow{

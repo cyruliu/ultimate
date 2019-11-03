@@ -38,7 +38,7 @@ function init_editor() {
  * Remove all messages from the results.
  */
 function clear_messages() {
-  let messages_container = $('#messages');
+  let messages_container = $('#messages-toasts');
   messages_container.html('');
   _EDITOR.getSession().clearAnnotations();
 }
@@ -87,24 +87,90 @@ function init_interface_controls () {
   }, '.toast');
 
   // Resizable Message container.
+  init_messages_resize();
+
+  $('#move-messages').on({
+    click: function () {
+      let current_orientation = $( this ).data().currentOrientation;
+      switch_message_orientation(current_orientation);
+    }
+  });
+}
+
+
+/**
+ * Initialize the resizing feature for the messages column.
+ */
+function init_messages_resize() {
   let messages_container = $('#messages');
+  let current_orientation = $("#move-messages").data().currentOrientation;
+  let edges = { left: false, right: false, bottom: false, top: false };
+  switch (current_orientation) {
+    case "bottom":
+      edges.top = true;
+      break;
+    case "left":
+      edges.left = true;
+      break;
+  }
+
+  function set_flex_basis(event) {
+    switch (current_orientation) {
+      case "bottom":
+        return event.rect.height;
+      case "left":
+        return event.rect.width;
+    }
+  }
+
   interact('#messages')
     .resizable({
-      edges: { left: false, right: false, bottom: false, top: true },
+      edges: edges,
       modifiers: [
         // minimum size
         interact.modifiers.restrictSize({
-          min: { height: 50 }
+          min: { height: 50, width: 50 }
         })
       ]
     })
     .on('resizemove', function (event) {
-      messages_container.css("flex-basis", event.rect.height + 'px');
+      messages_container.css("flex-basis", set_flex_basis(event) + 'px');
       _EDITOR.resize();
     });
+
 }
 
 
+/**
+ * Move the message column to "bottom" or "left".
+ * @param current_orientation
+ */
+function switch_message_orientation(current_orientation) {
+  let content = $('#content');
+  let move_msg_action = $('#move-messages');
+  content.removeClass('flex-row flex-column');
+  switch (current_orientation) {
+    case "bottom":
+      content.addClass('flex-row');
+      move_msg_action.data("currentOrientation", "left");
+      move_msg_action.removeClass("oi-collapse-right oi-collapse-down");
+      move_msg_action.addClass("oi-collapse-down");
+      break;
+    case "left":
+      content.addClass('flex-column');
+      move_msg_action.data("currentOrientation", "bottom");
+      move_msg_action.removeClass("oi-collapse-right oi-collapse-down");
+      move_msg_action.addClass("oi-collapse-right");
+      break;
+  }
+  init_messages_resize();
+  _EDITOR.resize();
+}
+
+
+/**
+ * Set available options for the navbar based on _CONFIG.context
+ */
 function refresh_navbar() {
   if ("current_worker" in _CONFIG.context) {
     $('#navbar_language_select_dropdown').html('Language: ' + _CONFIG.context.current_worker.language);
@@ -120,6 +186,11 @@ function refresh_navbar() {
 }
 
 
+/**
+ * Extract a code annotation from a ultimate message.
+ * @param message
+ * @returns {{column: *, row: number, text: *, type: *, col_end: *, row_end: *}}
+ */
 function get_annotation_from_message(message) {
   let annotation = {
     row: message.startLNr - 1,
@@ -140,7 +211,7 @@ function get_annotation_from_message(message) {
  */
 function add_results_to_editor(result) {
   let message;
-  let messages_container = $('#messages');
+  let messages_container = $('#messages-toasts');
   let annotations = [];
   const editor_message_template = Handlebars.compile($("#editor-message").html());
 
@@ -343,7 +414,7 @@ function load_sample(source) {
 
 
 /**
- *
+ * Set the available options for the settings dropdown menu based on the current config.
  */
 function set_available_frontend_settings(language) {
   let settings_menu = $('#settings_dropdown_menu');

@@ -80,7 +80,12 @@
 </script>
 <script id="tool-interface-template" type="text/x-handlebars-template">
   <div id="editor" class="flex-grow-1 flex-shrink-1"></div>
-  <div id="messages" class="bg-light border-top top-shaddow py-1"></div>
+  <div id="messages" class="bg-light border-top top-shaddow p-1">
+    <div class="btn col-12 float-right">
+      <span id="move-messages" class="oi oi-collapse-right pr-1 float-right messages-actions close" data-current-orientation="bottom"></span>
+    </div>
+    <div id="messages-toasts"></div>
+  </div>
 </script>
 <script id="landing-page-template" type="text/x-handlebars-template">
   <div class="row description">
