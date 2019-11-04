@@ -6,7 +6,8 @@ const _CONFIG = {
     web_bridge_url: 'http://127.0.0.1:5000/test-result'
   },
   editor: {
-    init_code: '// Enter code here ...'
+    init_code: '// Enter code here ...',
+    default_msg_orientation: "left"  // ["bottom" | "left"] the ultimate response messages default layout.
   },
   tools: [
     {

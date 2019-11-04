@@ -34,6 +34,7 @@ function load_tool_interface(tool_id) {
   init_editor();
   init_interface_controls();
   refresh_navbar();
+  set_message_orientation(_CONFIG.context.msg_orientation);
 }
 
 
@@ -54,7 +55,8 @@ function render_navbar() {
  *         ui: <URL ui param | home by default.>
  *         tool: <URL tool param>
  *     },
- *     tool: <CONFIG for tool with corresponding tool.id>
+ *     tool: <CONFIG for tool with corresponding tool.id>,
+ *     msg_orientation: _CONFIG.editor.default_msg_orientation
  * }
  */
 function set_context() {
@@ -75,7 +77,8 @@ function set_context() {
 
   _CONFIG["context"] = {
     "url": url_params,
-    "tool": tool
+    "tool": tool,
+    "msg_orientation": _CONFIG.editor.default_msg_orientation
   }
 }
 

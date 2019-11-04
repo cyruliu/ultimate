@@ -91,8 +91,14 @@ function init_interface_controls () {
 
   $('#move-messages').on({
     click: function () {
-      let current_orientation = $( this ).data().currentOrientation;
-      switch_message_orientation(current_orientation);
+      switch (_CONFIG.context.msg_orientation) {
+        case "left":
+          set_message_orientation("bottom");
+          break;
+        case "bottom":
+          set_message_orientation("left");
+          break;
+      }
     }
   });
 }
@@ -103,9 +109,8 @@ function init_interface_controls () {
  */
 function init_messages_resize() {
   let messages_container = $('#messages');
-  let current_orientation = $("#move-messages").data().currentOrientation;
   let edges = { left: false, right: false, bottom: false, top: false };
-  switch (current_orientation) {
+  switch (_CONFIG.context.msg_orientation) {
     case "bottom":
       edges.top = true;
       break;
@@ -115,7 +120,7 @@ function init_messages_resize() {
   }
 
   function set_flex_basis(event) {
-    switch (current_orientation) {
+    switch (_CONFIG.context.msg_orientation) {
       case "bottom":
         return event.rect.height;
       case "left":
@@ -143,26 +148,25 @@ function init_messages_resize() {
 
 /**
  * Move the message column to "bottom" or "left".
- * @param current_orientation
+ * @param new_orientation
  */
-function switch_message_orientation(current_orientation) {
+function set_message_orientation(new_orientation) {
   let content = $('#content');
   let move_msg_action = $('#move-messages');
   content.removeClass('flex-row flex-column');
-  switch (current_orientation) {
-    case "bottom":
+  switch (new_orientation) {
+    case "left":
       content.addClass('flex-row');
-      move_msg_action.data("currentOrientation", "left");
       move_msg_action.removeClass("oi-collapse-right oi-collapse-down");
       move_msg_action.addClass("oi-collapse-down");
       break;
-    case "left":
+    case "bottom":
       content.addClass('flex-column');
-      move_msg_action.data("currentOrientation", "bottom");
       move_msg_action.removeClass("oi-collapse-right oi-collapse-down");
       move_msg_action.addClass("oi-collapse-right");
       break;
   }
+  _CONFIG.context.msg_orientation = new_orientation;
   init_messages_resize();
   _EDITOR.resize();
 }
