@@ -2,12 +2,12 @@
 /*
  * Program depicted in Figure 7 of
  * 1997FMSD - Halbwachs,Proy,Roumanoff - Verification of Real-Time Systems using Linear Relation Analysis
- *
- * Program was mentioned in
+ * 
+ * Program was mentioned in 
  * 2009PLDI - Gulwani,Jain,Koskinen - Control-flow refinement and progress invariants for bound analysis
- * as "flagship example to motivate a new technique for proving non-trivial
+ * as "flagship example to motivate a new technique for proving non-trivial 
  * safety assertions"
- *
+ * 
  * Date: 25.6.2013
  * Author: heizmann@informatik.uni-freiburg.de
  *

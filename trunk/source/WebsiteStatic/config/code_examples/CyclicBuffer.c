@@ -7,10 +7,10 @@
  * (pos + 1) is always between 0 and 255. However, because of the "usual
  * arithmetic conversions" the expression pos + 1 has type int and can be
  * evaluated to 256.
- *
+ * 
  * Date: 2016-02-11
  * Author: heizmann@informatik.uni-freiburg.de
- *
+ * 
  */
 #include <stdlib.h>
 
@@ -27,3 +27,4 @@ int main() {
     }
     return 0;
 }
+

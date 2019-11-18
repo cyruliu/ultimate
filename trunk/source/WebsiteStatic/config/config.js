@@ -77,26 +77,5 @@ const _CONFIG = {
         }
       ]
     }
-  ],
-  code_examples: {
-    c: [
-      {
-        name: 'CyclicBuffer.c',
-        source: 'CyclicBuffer.c',
-        assoc_workers: ["cAutomizer"]
-      },
-      {
-        name: 'GonnaDoubleFree.c',
-        source: 'GonnaDoubleFree.c',
-        assoc_workers: ["cAutomizer"]
-      },
-    ],
-    boogie: [
-      {
-        name: 'GoannaDoubleFreeWithoutPoin',
-        source: 'GoannaDoubleFreeWithoutPoin.boogie',
-        assoc_workers: ["boogieAutomizer", "boogieBuchiAutomizer"]
-      }
-    ]
-  }
+  ]
 };

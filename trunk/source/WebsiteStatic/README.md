@@ -65,27 +65,8 @@ meta: {
 ```
 
 **4. Code Examples:**
-```
-...
-    code_examples: {
-        c: [
-          {
-            name: 'CyclicBuffer.c',
-            source: 'CyclicBuffer.c',
-            assoc_workers: ["cAutomizer"]
-          }
-        ],
-        boogie: [
-          {
-            name: 'GoannaDoubleFreeWithoutPoin',
-            source: 'GoannaDoubleFreeWithoutPoin.boogie',
-            assoc_workers: ["boogieAutomizer", "boogieBuchiAutomizer"]
-          }
-        ],
-        ...
-      }
-...
-```
+Code examples are generated using the [build_examples.py](build_examples.py) script. 
+To add new examples edit the `tool_examples_map` dict accordingly.
 
 # Development
 ## Webbridge API

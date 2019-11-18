@@ -90,6 +90,13 @@ function set_context() {
 }
 
 
+function load_available_code_examples() {
+  $.getJSON("./config/code_examples/code_examples.json", function (data) {
+    _CONFIG.code_examples = data;
+  });
+}
+
+
 /**
  * Parse URL parameters and load/initialize corresponding content.
  */
@@ -101,7 +108,8 @@ function bootstrap() {
   switch (_CONFIG.context.url.ui) {
     case "int":
       // load the interactive mode for the active tool.
-      load_tool_interface(_CONFIG.context.tool.id)
+      load_available_code_examples();
+      load_tool_interface(_CONFIG.context.tool.id);
       break;
     case "tool":
       // load the tool info page.

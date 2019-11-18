@@ -179,7 +179,7 @@ function refresh_navbar() {
   if ("current_worker" in _CONFIG.context) {
     $('#navbar_language_select_dropdown').html('Language: ' + _CONFIG.context.current_worker.language);
 
-    set_available_code_samples(_CONFIG.context.current_worker.language);
+    set_available_code_samples(_CONFIG.context.current_worker.id);
     set_available_frontend_settings(_CONFIG.context.current_worker.language);
     $('#navbar_execute_interface').removeClass('hidden');
   } else {
@@ -379,17 +379,15 @@ function process_gutter_click(event) {
 
 /**
  * Set available code samples to the dropdown.
- * This is adding each example with current language match and current worker id in in the example.assoc_workers list.
- * @param language
+ * This is adding each example associated to the worker id. This association originates from the build_examples.py
+ * @param worker_id
  */
-function set_available_code_samples(language) {
+function set_available_code_samples(worker_id) {
   let samples_menu = $('#code_sample_dropdown_menu');
   let example_entries = '';
 
-  _CONFIG.code_examples[language].forEach(function (example) {
-    if (example.assoc_workers.includes(_CONFIG.context.current_worker.id)) {
+  _CONFIG.code_examples[worker_id].forEach(function (example) {
       example_entries += '<a class="dropdown-item sample-selection" href="#" data-source="' +  example.source + '">' + example.name + '</a>';
-    }
   });
 
   if (example_entries.length > 0) {
