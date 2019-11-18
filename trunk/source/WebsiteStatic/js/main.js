@@ -8,6 +8,13 @@ function render_landing_page() {
     $("#landing-page-template").html()
   );
   content.append(landing_page_template(_CONFIG));
+
+  const sections = ["description", "awards", "development", "developers", "dependencies"];
+  sections.forEach(function (section) {
+    $.get("./config/home_page/" + section + ".html", function (data) {
+      $("#" + section).append(data);
+    });
+  });
 }
 
 
