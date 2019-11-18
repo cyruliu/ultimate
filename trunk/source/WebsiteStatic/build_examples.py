@@ -79,8 +79,54 @@ tool_examples_map = {
     {
       'path': osp.join(EXAMPLES_DIR, 'LTL', 'coolant'),
       'pattern': '*'
-    }
-  ]
+    },
+  ],
+  'cLassoRanker': [
+    {
+      'path': osp.join(EXAMPLES_DIR, 'lassos'),
+      'pattern': '*.c'
+    },
+  ],
+  'boogieLassoRanker': [
+    {
+      'path': osp.join(EXAMPLES_DIR, 'lassos'),
+      'pattern': '*.bpl'
+    },
+    {
+      'path': osp.join(EXAMPLES_DIR, 'lassos', 'website'),
+      'pattern': '*.bpl'
+    },
+  ],
+  'automataScript': [
+    {
+      'path': osp.join(EXAMPLES_DIR, 'Automata', 'website'),
+      'pattern': '*.ats'
+    },
+  ],
+  'boogieConcurrentTraceAbstr': [
+    {
+      'path': osp.join(EXAMPLES_DIR, 'concurrent', 'concurrentBoogie', 'showcase'),
+      'pattern': '*.bpl'
+    },
+  ],
+  'cReferee': [
+    {
+      'path': osp.join(EXAMPLES_DIR, 'programs', 'toy', 'InvariantChecking', 'showcase'),
+      'pattern': '*.c'
+    },
+  ],
+  'boogieReferee': [
+    {
+      'path': osp.join(EXAMPLES_DIR, 'programs', 'toy', 'InvariantChecking', 'showcase'),
+      'pattern': '*.bpl'
+    },
+  ],
+  'smtEliminator': [
+    {
+      'path': osp.join(EXAMPLES_DIR, 'smtlib', 'QuantifierElimination'),
+      'pattern': '*.smt2'
+    },
+  ],
 }
 
 
