@@ -25,9 +25,8 @@ function render_landing_page() {
 function render_tool_page(tool_id) {
   const content = $('#content');
   content.addClass('p-5');
-  $.get("./config/tool_pages/" + tool_id + ".hbs", function (data) {
-    const tool_page_template = Handlebars.compile(data);
-    content.append(tool_page_template(_CONFIG));
+  $.get("./config/tool_pages/" + tool_id + ".html", function (data) {
+    content.append(data);
   });
 }
 
