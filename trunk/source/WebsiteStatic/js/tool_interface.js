@@ -134,7 +134,7 @@ function init_messages_resize() {
       modifiers: [
         // minimum size
         interact.modifiers.restrictSize({
-          min: { height: 50, width: 50 }
+          min: { height: 400, width: 400}
         })
       ]
     })

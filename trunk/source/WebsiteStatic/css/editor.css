@@ -24,7 +24,7 @@
   flex-flow: column;
   flex-shrink: 1;
   flex-grow: 0;
-  flex-basis: 25vh;
+  flex-basis: 400px;
   z-index: 4;
 }
 

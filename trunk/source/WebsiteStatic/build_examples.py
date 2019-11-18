@@ -42,6 +42,44 @@ tool_examples_map = {
       'path': osp.join(EXAMPLES_DIR, 'programs', 'termination', 'showcase'),
       'pattern': '*.bpl'
     }
+  ],
+  'cKojak': [
+    {
+      'path': osp.join(EXAMPLES_DIR, 'programs', 'toy', 'showcase'),
+      'pattern': '*.c'
+    },
+    {
+      'path': osp.join(EXAMPLES_DIR, 'programs', 'quantifier', 'regression', 'c'),
+      'pattern': 'FunctionPointers01.c'
+    }
+  ],
+  'boogieKojak': [
+    {
+      'path': osp.join(EXAMPLES_DIR, 'programs', 'toy', 'showcase'),
+      'pattern': '*.bpl'
+    }
+  ],
+  'cTaipan': [
+    {
+      'path': osp.join(EXAMPLES_DIR, 'programs', 'toy', 'showcase'),
+      'pattern': '*.c'
+    },
+    {
+      'path': osp.join(EXAMPLES_DIR, 'programs', 'quantifier', 'regression', 'c'),
+      'pattern': 'FunctionPointers01.c'
+    }
+  ],
+  'boogieTaipan': [
+    {
+      'path': osp.join(EXAMPLES_DIR, 'programs', 'toy', 'showcase'),
+      'pattern': '*.bpl'
+    }
+  ],
+  'cLTLAutomizer': [
+    {
+      'path': osp.join(EXAMPLES_DIR, 'LTL', 'coolant'),
+      'pattern': '*'
+    }
   ]
 }
 

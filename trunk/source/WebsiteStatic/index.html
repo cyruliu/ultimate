@@ -50,10 +50,10 @@
     </div>
     <div class="toast-body">
       <div class="row">
-        <div class="col">
+        <div class="col-1">
           <span>Line</span>
         </div>
-        <div class="col">
+        <div class="col-1">
           <span>Col</span>
         </div>
         <div class="col-10">
@@ -62,10 +62,10 @@
       </div>
       <hr>
       <div class="row">
-        <div class="col">
+        <div class="col-1">
           <span>{{startLNr}}</span>
         </div>
-        <div class="col">
+        <div class="col-1">
           <span>
             {{#ifCond startCol '!==' -1}}{{startCol}}{{/ifCond}}
             {{#ifCond startCol '===' -1}}-{{/ifCond}}
@@ -94,7 +94,7 @@
     <div class="col-12">
       <div class="card-deck">
         {{#each tools}}
-        <div class="card border-secondary shadow mb-3" style="max-width: 18rem;">
+        <div class="card border-secondary shadow mb-3 tool-card">
           <div class="card-header"><a href="?ui=tool&tool={{this.id}}">{{this.name}}</a></div>
           <div class="card-body text-black-70">
             <h5 class="card-title">Description</h5>
