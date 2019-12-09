@@ -12,7 +12,7 @@ public class UltimateWebInterface extends HttpServlet
     {
         response.setContentType("text/html");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().println("<h1>Hello Servlet</h1>");
+        response.getWriter().println("<h1>Ultimate Servlet</h1>");
         response.getWriter().println("session=" + request.getSession(true).getId());
     }
 }
