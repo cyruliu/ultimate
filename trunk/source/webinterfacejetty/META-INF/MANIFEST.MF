@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: webinterfacejetty
+Bundle-SymbolicName: webinterfacejetty;singleton:=true
+Bundle-ActivationPolicy: lazy
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: webinterfacejetty.jar,
+ naem/Desktop/eclipse/plugins/javax.servlet_3.1.0.v201410161800.jar
+Export-Package: de.uni_freiburg.informatik.ultimate.webinterfacejetty
+Require-Bundle: de.uni_freiburg.informatik.ultimate.lib.util,
+ de.uni_freiburg.informatik.ultimate.lib.ultimatemodel,
+ de.uni_freiburg.informatik.ultimate.lib.core,
+ de.uni_freiburg.informatik.ultimate.core
+Import-Package: javax.servlet.http, 
+ javax.servlet
