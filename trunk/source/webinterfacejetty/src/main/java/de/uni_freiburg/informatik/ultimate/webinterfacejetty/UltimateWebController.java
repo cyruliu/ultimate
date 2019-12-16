@@ -43,15 +43,15 @@ public class UltimateWebController implements IController<RunDefinition> {
 
 	private ILogger mLogger;
 
-public UltimateWebController() {
-	mExternalUltimateCore = new ExternalUltimateCore(this);
-	mSettingsFile = null;
-	mInputFile = null;
-	mToolchainFile = null;
-	mDeadline = 0;
-	mLogger = null;
-
-}
+	public UltimateWebController() {
+		mExternalUltimateCore = new ExternalUltimateCore(this);
+		mSettingsFile = null;
+		mInputFile = null;
+		mToolchainFile = null;
+		mDeadline = 0;
+		mLogger = null;
+	
+	}
 
 
 	public JSONObject runUltimate(final JSONObject json) throws Throwable {
