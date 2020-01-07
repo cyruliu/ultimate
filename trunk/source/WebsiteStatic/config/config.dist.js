@@ -1,9 +1,9 @@
 const _CONFIG = {
   meta: {
-    debug_mode: true,
+    debug_mode: false,
   },
   backend: {
-    web_bridge_url: 'http://127.0.0.1:5000/test-result'
+    web_bridge_url: 'http://127.0.0.1:8080/old_api'
   },
   editor: {
     init_code: '// Enter code here ...',

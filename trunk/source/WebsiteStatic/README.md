@@ -1,6 +1,8 @@
 **Ultimate** framework website.
 
 # Configuration
+For an initial configuration copy [config.dist.js](config/config.dist.js) to `config/config.js`.
+
 Configuration is set via [config.js](config/config.js). The configuration consists of the sections:
 
 **0. Meta:**
