@@ -4,8 +4,10 @@ import java.util.Hashtable;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
  
@@ -34,6 +36,17 @@ public class Activator implements BundleActivator {
         // Set the ultimate context handler.
         server.setHandler(new UltimateContextHandler());
 
+        // Declare server handler collection
+        ContextHandlerCollection contexts = new ContextHandlerCollection();
+        server.setHandler(contexts);
+
+        // Configure context "/" (root) for servlets
+        ServletContextHandler root = new ServletContextHandler(contexts, "/",
+            ServletContextHandler.SESSIONS);
+        // Add servlets to root context
+        root.addServlet(new ServletHolder(new SimplestServlet()), "/");
+        root.addServlet(new ServletHolder(new UltimateHttpServlet()), "/old_api");
+        
         // Passing in the class for the Servlet allows jetty to instantiate an
         // instance of that Servlet and mount it on a given context path.
 

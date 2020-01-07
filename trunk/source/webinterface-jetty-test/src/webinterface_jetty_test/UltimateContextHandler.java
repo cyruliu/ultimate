@@ -12,22 +12,17 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 
 public class UltimateContextHandler extends AbstractHandler {
 	final String greeting;
-    final String body;
-
+	private UltimateWebController ultimateWebController;
+	
     public UltimateContextHandler()
     {
-        this("Hello World");
+        this("I am here to process Ultimate results..");
     }
 
     public UltimateContextHandler(String greeting)
     {
-        this(greeting, null);
-    }
-
-    public UltimateContextHandler(String greeting, String body)
-    {
         this.greeting = greeting;
-        this.body = body;
+        this.ultimateWebController = new UltimateWebController();
     }
 
     @Override
@@ -43,10 +38,6 @@ public class UltimateContextHandler extends AbstractHandler {
         PrintWriter out = response.getWriter();
 
         out.println("<h1>" + greeting + "</h1>");
-        if (body != null)
-        {
-            out.println(body);
-        }
 
         baseRequest.setHandled(true);
     }
