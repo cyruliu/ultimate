@@ -288,6 +288,7 @@ function get_execute_settings() {
       id: _CONFIG.context.current_worker.id,
       task_id: _CONFIG.context.current_worker.task_id,
     },
+    code_file_extension: _CONFIG.code_file_extensions[_CONFIG.context.current_worker.language],
     user_settings: {}
   };
 

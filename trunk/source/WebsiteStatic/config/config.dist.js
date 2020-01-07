@@ -9,6 +9,13 @@ const _CONFIG = {
     init_code: '// Enter code here ...',
     default_msg_orientation: "left"  // ["bottom" | "left"] the ultimate response messages default layout.
   },
+  code_file_extensions: {
+    c: '.c',
+    boogie: '.bpl',
+    c_pp: '.c',
+    automata_script: '.ats',
+    smt: '.smt2'
+  },
   tools: [
     {
       name: "ULTIMATE Automizer",

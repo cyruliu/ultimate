@@ -33,6 +33,18 @@ meta: {
 ...
 ```
 
+**3. Language file extension mappings:**
+Determine the file extension to be used as input for the ultimate tool.
+Key is the language of the tool; Value is the file extension to be used.
+```
+...
+code_file_extensions: {
+    c: '.c',
+    ...
+}
+...
+```
+
 **3. Tools:**
 ```
 ...
