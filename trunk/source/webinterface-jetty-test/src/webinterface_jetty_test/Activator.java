@@ -2,12 +2,16 @@ package webinterface_jetty_test;
 
 import java.util.Hashtable;
 
+import javax.servlet.FilterRegistration;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
  
@@ -43,17 +47,17 @@ public class Activator implements BundleActivator {
         // Configure context "/" (root) for servlets
         ServletContextHandler root = new ServletContextHandler(contexts, "/",
             ServletContextHandler.SESSIONS);
+
+        // Enable CORS to allow ultimate backend running on a seperate port and domain.
+        FilterHolder filterHolder = new FilterHolder(CrossOriginFilter.class);
+        filterHolder.setInitParameter("allowedOrigins", "*");
+        filterHolder.setInitParameter("allowedMethods", "GET, POST");
+        root.addFilter(filterHolder, "/*", null);
+
         // Add servlets to root context
         root.addServlet(new ServletHolder(new SimplestServlet()), "/");
         root.addServlet(new ServletHolder(new UltimateHttpServlet()), "/old_api");
-        
-        // Passing in the class for the Servlet allows jetty to instantiate an
-        // instance of that Servlet and mount it on a given context path.
 
-        // IMPORTANT:
-        // This is a raw Servlet, not a Servlet that has been configured
-        // through a web.xml @WebServlet annotation, or anything similar.
-        // handler.addServletWithMapping(SimplestServlet.class, "/*");
 
         return server;
     }

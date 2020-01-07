@@ -31,4 +31,6 @@ Require-Bundle: de.uni_freiburg.informatik.ultimate.lib.util,
  org.eclipse.jetty.xml;bundle-version="9.4.20",
  org.eclipse.equinox.http.servlet;bundle-version="1.6.200",
  javax.servlet;bundle-version="3.1.0",
- org.apache.commons.logging;bundle-version="1.2.0"
+ org.apache.commons.logging;bundle-version="1.2.0",
+ org.eclipse.jetty.servlets;bundle-version="9.0.2",
+ org.eclipse.jetty.servlets.source;bundle-version="9.4.24"
