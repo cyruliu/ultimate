@@ -289,7 +289,9 @@ function get_execute_settings() {
       task_id: _CONFIG.context.current_worker.task_id,
     },
     code_file_extension: _CONFIG.code_file_extensions[_CONFIG.context.current_worker.language],
-    user_settings: {}
+    user_settings: {},
+    ultimate_settings_epf: _CONFIG.context.current_worker.ultimate_settings_epf,
+    ultimate_toolchain_xml: (new XMLSerializer()).serializeToString(_CONFIG.context.current_worker.ultimate_toolchain_xml)
   };
 
   _CONFIG.context.current_worker.frontend_settings.forEach(function (setting) {
@@ -310,6 +312,20 @@ function choose_language(language) {
     if (worker.language === language) {
       _CONFIG.context.current_worker = worker;
     }
+  });
+
+  // Load the ultimate settings file.
+  $.get('./config/ultimate_setting_files/' + _CONFIG.context.current_worker.id + '.epf', function (response) {
+    _CONFIG.context.current_worker.ultimate_settings_epf = response;
+  }).fail(function () {
+    alert("Could not fetch ultimate settings. Config error.");
+  });
+
+  // Load the ultimate toolchain file.
+  $.get('./config/ultimate_toolchain_xmls/' + _CONFIG.context.current_worker.id + '.xml', function (response) {
+    _CONFIG.context.current_worker.ultimate_toolchain_xml = response;
+  }).fail(function () {
+    alert("Could not fetch ultimate toolchain xml. Config error.");
   });
 }
 
