@@ -55,7 +55,7 @@ public class Activator implements BundleActivator {
         root.addFilter(filterHolder, "/*", null);
 
         // Add servlets to root context
-        root.addServlet(new ServletHolder(new SimplestServlet()), "/");
+        root.addServlet(new ServletHolder(new UltimateAPIServlet()), "/");
         root.addServlet(new ServletHolder(new UltimateHttpServlet()), "/old_api");
 
 

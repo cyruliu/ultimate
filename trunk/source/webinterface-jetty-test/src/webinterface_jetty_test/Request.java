@@ -57,4 +57,18 @@ public class Request {
 	public Map<String, String[]> getParameterList() {
 		return mParameterList;
 	}
+
+	public String getSingleParameter(String parameterName) throws IllegalArgumentException{
+		final String[] parameters = getParameterList().get(parameterName);
+
+		if (parameters == null) {
+			throw new IllegalArgumentException("The parameter \"" + parameterName + "\" was not supplied");
+		}
+		if (parameters.length != 1) {
+			throw new IllegalArgumentException("The parameter \"" + parameterName
+					+ "\" has an unexpected length (Expected 1, but was " + parameters.length + ")");
+		}
+
+		return parameters[0];
+	}
 }
