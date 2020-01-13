@@ -72,9 +72,14 @@ function init_interface_controls () {
   // Handle click on "Execute"
   $('#navbar_execute_interface').on({
     click: function () {
-      const settings = get_execute_settings();
       clear_messages();
-      run_ultimate_task(settings);
+      try {
+        const settings = get_execute_settings();
+        run_ultimate_task(settings);
+      } catch (e) {
+        alert('Could not execute Ultimate: ' + e.message);
+        console.log(e);
+      }
     }
   });
 
@@ -219,9 +224,13 @@ function add_results_to_editor(result) {
   let annotations = [];
   const editor_message_template = Handlebars.compile($("#editor-message").html());
 
+  if ('error' in result) {
+    alert(result.error);
+  }
+
   for (let key in result.results) {
     message = result.results[key];
-    annotations.push(get_annotation_from_message(message))
+    annotations.push(get_annotation_from_message(message));
     switch (message.logLvl) {
       case "error": {
         message.toast_classes = "border border-danger";
@@ -289,14 +298,18 @@ function get_execute_settings() {
       task_id: _CONFIG.context.current_worker.task_id,
     },
     code_file_extension: _CONFIG.code_file_extensions[_CONFIG.context.current_worker.language],
-    user_settings: {},
+    user_settings: "",
     ultimate_settings_epf: _CONFIG.context.current_worker.ultimate_settings_epf,
     ultimate_toolchain_xml: (new XMLSerializer()).serializeToString(_CONFIG.context.current_worker.ultimate_toolchain_xml)
   };
 
+  let user_settings = [];
   _CONFIG.context.current_worker.frontend_settings.forEach(function (setting) {
-    settings.user_settings[setting.id] = $('#' + setting.id).is(':checked')
+    // TODO: implement int, float, ... settings.
+    setting["checked"] = $('#' + setting.id).is(':checked');
+    user_settings.push(setting);
   });
+  settings.user_settings = JSON.stringify({user_settings});
 
   return settings;
 }
