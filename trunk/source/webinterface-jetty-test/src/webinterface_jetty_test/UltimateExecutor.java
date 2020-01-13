@@ -45,10 +45,10 @@ public class UltimateExecutor {
 		File toolchainFile = null;
 
 		try {
-			// final String taskId = getCheckedArgument(internalRequest, "taskID");
-			final String taskId = "AUTOMIZER_C";
-			// final String tcId = getCheckedArgument(internalRequest, "tcID");
-			final String tcId = "cAutomizer";
+			final String taskId = getCheckedArgument(internalRequest, "toolchain[task_id]");
+			final String tcId = getCheckedArgument(internalRequest, "toolchain[id]");
+			// final String taskId = "AUTOMIZER_C";
+			// final String tcId = "cAutomizer";
 			final String code = getCheckedArgument(internalRequest, "code");
 
 			mLogger.log("Preparing to execute Ultimate for task ID " + taskId + " and toolchain ID " + tcId + "...");

@@ -43,7 +43,7 @@ public class UltimateAPIServlet extends HttpServlet{
 	@Override
 	protected void doPost(final HttpServletRequest request, final HttpServletResponse response)
 			throws ServletException, IOException {
-		mLogger.logDebug("Connection from " + request.getRemoteAddr() + ", POST: " + request.getQueryString()
+		mLogger.logDebug("Connection from " + request.getRemoteAddr() + ", POST: " + request.getRequestURI()
 				+ " Reading All Request Parameters");
 		processPOSTRequest(request, response);
 	}
@@ -72,11 +72,10 @@ public class UltimateAPIServlet extends HttpServlet{
 			JSONObject jsonResult = new JSONObject();
 			if (internalRequest.getParameterList().containsKey("action")) {
 				jsonResult = handleAPIAction(internalRequest);
-				jsonResult.put("status", "success");
 			} else {
 				jsonResult.put("error", "Invalid request: Missing `action` parameter.");
 			}
-			
+
 			jsonResult.write(responseWriter);
 
 		} catch (final JSONException e) {

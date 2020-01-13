@@ -1,13 +1,17 @@
 package webinterface_jetty_test;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,6 +41,7 @@ public class UltimateAPIExecutor {
 	}
 
 	public JSONObject executeUltimate(final Request internalRequest) throws JSONException {
+		mLogger.log("Start executing Ultimate for RequestId: " + internalRequest.getRequestId());
 		JSONObject jsonResult = new JSONObject();
 		
 		// Prepare temporary files.
@@ -58,12 +63,16 @@ public class UltimateAPIExecutor {
 			return jsonResult;
 		}
 		
-		// TODO: Apply User settings to the epf file.
+		try {
+			applyUserSettings(internalRequest);
+		} catch (IOException e) {
+			mLogger.log("Could not apply user settings: " + e.getMessage());
+		}
 		
 		// run ultimate
 		// TODO: Allow timeout to be set in the API request.
 		final long timeout = Math.min(TIMEOUT, TIMEOUT);
-		if (runUltimate(jsonResult, mInputFile, mSettingsFile, mToolchainFile, timeout)) {
+		if (runUltimate(jsonResult, timeout)) {
 			mLogger.log("Finished executing Ultimate.");
 		} else {
 			mLogger.log("Ultimate terminated abnormally.");
@@ -88,121 +97,36 @@ public class UltimateAPIExecutor {
 		mToolchainFile = writeTemporaryFile(timestamp + "_toolchain", ultimate_toolchain_xml, ".xml");		
 	}
 
-	private JSONObject handleActionExecute(final Request internalRequest) throws JSONException {
-		JSONObject json = new JSONObject();
-
-		File inputFile = null;
-		File settingsFile = null;
-		File toolchainFile = null;
-
+	private boolean runUltimate(final JSONObject json, final long timeout) throws JSONException {
 		try {
-			// final String taskId = getCheckedArgument(internalRequest, "taskID");
-			final String taskId = "AUTOMIZER_C";
-			// final String tcId = getCheckedArgument(internalRequest, "tcID");
-			final String tcId = "cAutomizer";
-			final String code = getCheckedArgument(internalRequest, "code");
-
-			mLogger.log("Preparing to execute Ultimate for task ID " + taskId + " and toolchain ID " + tcId + "...");
-
-			final WebToolchain tc = getToolchain(taskId, tcId);
-			if (tc == null) {
-				throw new IllegalArgumentException(
-						"Invalid task or toolchain ID. taskID=" + taskId + ", toolchainID=" + tcId);
-			}
-			// Apply the current user settings that are contained in the request
-			// to the settings instances defined by the toolchain
-			applyUserSettings(internalRequest, tcId, tc);
-
-			// create temporary files to run ultimate on
-			final String timestamp = CoreUtil.getCurrentDateTimeAsString();
-			inputFile = writeTemporaryFile(timestamp + "_input", code, getFileExtension(taskId));
-			settingsFile = writeTemporaryFile(timestamp + "_settings", tc.getSettingFileContent(), ".epf");
-			toolchainFile = writeTemporaryFile(timestamp + "_toolchain", tc.getToolchainXML(), ".xml");
-
-			// TODO: write additional settings file that will be loaded after
-			// the default settings file was loaded Apply additional settings
-			mLogger.log("Written temporary files to " + inputFile.getParent() + " with timestamp " + timestamp);
-
-			// run ultimate
-			final long timeout = Math.min(tc.getTimeout(), TIMEOUT);
-			if (runUltimate(json, inputFile, settingsFile, toolchainFile, timeout)) {
-				mLogger.log("Finished executing Ultimate for task ID " + taskId + " and toolchain ID " + tcId + "...");
-			} else {
-				mLogger.log(
-						"Ultimate terminated abnormally for task ID " + taskId + " and toolchain ID " + tcId + "...");
-			}
-
-		} catch (final IllegalArgumentException e) {
-			json = new JSONObject();
-			json.put("error", "Invalid request: Error code UI04.");
-			mLogger.log("Internal server error: " + e.getClass().getSimpleName());
-			mLogger.logDebug(e.toString());
-		} catch (final IOException e) {
-			json = new JSONObject();
-			json.put("error", "Internal server error: IO");
-			mLogger.log("Internal server error: " + e.getClass().getSimpleName());
-			mLogger.logDebug(e.toString());
-		} catch (final Throwable e) {
-			json = new JSONObject();
-			json.put("error", "Internal server error: Generic");
-			mLogger.log("Internal server error: " + e.getClass().getSimpleName());
-			mLogger.logDebug(e.toString());
-		} finally {
-			postProcessTemporaryFiles(settingsFile, toolchainFile, inputFile);
-		}
-		if (json.length() < 1) {
-			json.put("error", "Internal server error: No message produced");
-			mLogger.log("Internal server error: No message produced");
-		}
-		return json;
-	}
-
-	private static String getCheckedArgument(final Request internalRequest, final String paramId) {
-		final String[] rtr = internalRequest.getParameterList().get(paramId);
-
-		if (rtr == null) {
-			throw new IllegalArgumentException("The parameter \"" + paramId + "\" was not supplied");
-		}
-		if (rtr.length != 1) {
-			throw new IllegalArgumentException("The parameter \"" + paramId
-					+ "\" has an unexpected length (Expected 1, but was " + rtr.length + ")");
-		}
-
-		return rtr[0];
-	}
-
-	private boolean runUltimate(final JSONObject json, final File inputFile, final File settingsFile,
-			final File toolchainFile, final long timeout) throws JSONException {
-		try {
-			mLogger.log("Starting Ultimate...");
+			mLogger.log("Starting Ultimate ...");
 			final UltimateWebController uwc =
-					new UltimateWebController(mLogger, settingsFile, inputFile, toolchainFile, timeout);
+					new UltimateWebController(mLogger, mSettingsFile, mInputFile, mToolchainFile, timeout);
 			uwc.runUltimate(json);
 		} catch (final Throwable t) {
-			mLogger.log("fail");
-			final String sep = CoreUtil.getPlatformLineSeparator();
-			final String message = "failed to run ULTIMATE" + sep + t.toString() + sep + t.getMessage();
-			mLogger.log(message);
-			json.put("error", message);
+			mLogger.log("Failed to run Ultimate.");
+			json.put("error", "Failed to run ULTIMATE: " + t.getMessage());
 			return false;
+		} finally {
+			postProcessTemporaryFiles();
 		}
 		return true;
 	}
 
-	private void postProcessTemporaryFiles(final File settingsFile, final File tcFile, final File codeFile) {
+	private void postProcessTemporaryFiles() {
 		final File logDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "log" + File.separator);
 		if (!logDir.exists()) {
 			logDir.mkdir();
 		}
 		mLogger.log("Moving input, setting and toolchain file to " + logDir.getAbsoluteFile());
-		if (codeFile != null) {
-			codeFile.renameTo(new File(logDir, codeFile.getName()));
+		if (mInputFile != null) {
+			mInputFile.renameTo(new File(logDir, mInputFile.getName()));
 		}
-		if (settingsFile != null) {
-			settingsFile.renameTo(new File(logDir, settingsFile.getName()));
+		if (mSettingsFile != null) {
+			mSettingsFile.renameTo(new File(logDir, mSettingsFile.getName()));
 		}
-		if (tcFile != null) {
-			tcFile.renameTo(new File(logDir, tcFile.getName()));
+		if (mToolchainFile != null) {
+			mToolchainFile.renameTo(new File(logDir, mToolchainFile.getName()));
 		}
 	}
 
@@ -215,84 +139,31 @@ public class UltimateAPIExecutor {
 		return codeFile;
 	}
 
-	private static String getFileExtension(final String taskId) {
-		final TaskNames taskName = TaskNames.valueOf(taskId);
-		String fileExtension;
-
-		switch (taskName) {
-		case AUTOMATA_SCRIPT:
-			fileExtension = ".ats";
-			break;
-		case ELIMINATOR_SMT:
-			fileExtension = ".smt2";
-			break;
-		case AUTOMIZER_BOOGIE:
-		case CONCURRENT_BOOGIE:
-		case RANK_SYNTHESIS_BOOGIE:
-		case TERMINATION_BOOGIE:
-		case KOJAK_BOOGIE:
-		case TAIPAN_BOOGIE:
-		case REFEREE_BOOGIE:
-			fileExtension = ".bpl";
-			break;
-		case AUTOMIZER_C:
-		case LTLAUTOMIZER_C:
-		case RANK_SYNTHESIS_C:
-		case TERMINATION_C:
-		case KOJAK_C:
-		case TAIPAN_C:
-		case REFEREE_C:
-			fileExtension = ".c";
-			break;
-		default:
-			throw new IllegalArgumentException("The given taskId is unknown to UltimateInterface: " + taskId);
-		}
-		return fileExtension;
-	}
-
-	private static void applyUserSettings(final Request internalRequest, final String toolchainId,
-			final WebToolchain toolchain) {
-		for (final Setting setting : toolchain.getUserModifiableSettings()) {
-			final String sid = toolchainId + "_" + setting.getSettingIdentifier();
-			if (!internalRequest.getParameterList().containsKey(sid)) {
-				continue;
+	private void applyUserSettings(final Request internalRequest) throws IOException {
+		try {
+			mLogger.log("Apply user settings to run configuration.");
+			final JSONObject jsonParameter = new JSONObject(internalRequest.getSingleParameter("user_settings"));
+			final JSONArray userSettings = jsonParameter.getJSONArray("user_settings");
+			BufferedWriter settingsOutput = new BufferedWriter(new FileWriter(mSettingsFile.getAbsolutePath(), true));
+			
+			settingsOutput.newLine();
+			settingsOutput.write("# User settings from the webfrontend: ");
+			for (int i=0; i < userSettings.length(); i++) {
+			    final JSONObject userSetting = userSettings.getJSONObject(i);
+			    switch (userSetting.getString("type")) {
+				case "bool":
+					settingsOutput.newLine();
+					settingsOutput.write(userSetting.getString("string") + "=" + userSetting.getBoolean("checked"));
+					break;
+				default:
+					mLogger.log("User setting type " + userSetting.getString("type") + " is unknown. Ignoring");
+				}
 			}
-
-			if (setting.getType() != SettingType.DROPDOWN && internalRequest.getParameterList().get(sid).length != 1) {
-				throw new IllegalArgumentException("Setting ID not unique: " + sid);
-			}
-			switch (setting.getType()) {
-			case BOOLEAN:
-				setting.setBooleanValue(internalRequest.getParameterList().get(sid)[0]);
-				break;
-			case DROPDOWN:
-				setting.setDropDownValue(internalRequest.getParameterList().get(sid));
-				break;
-			case INTEGER:
-				setting.setIntValue(internalRequest.getParameterList().get(sid)[0]);
-				break;
-			case STRING:
-				setting.setStringValue(internalRequest.getParameterList().get(sid)[0]);
-				break;
-			default:
-				throw new IllegalArgumentException("Setting type " + setting.getType() + " is unknown");
-			}
+			settingsOutput.newLine();
+			settingsOutput.close();			
+		} catch (JSONException e) {
+			mLogger.log("Could not fetch user settings: " + e.getMessage());
 		}
-	}
-
-	private static WebToolchain getToolchain(final String taskId, final String tcId) {
-		// get user settings for this toolchain
-		final ArrayList<WebToolchain> tcs = Tasks.getActiveToolchains().get(taskId);
-		if (tcs == null) {
-			return null;
-		}
-		WebToolchain tc = null;
-		for (final WebToolchain currentTC : tcs) {
-			if (currentTC.getId().equals(tcId)) {
-				tc = currentTC;
-				break;
-			}
-		}
-		return tc;
+		
 	}
 }

@@ -69,7 +69,11 @@ public class UltimateWebController implements IController<RunDefinition> {
 		try {
 			final IStatus status = mExternalUltimateCore.runUltimate();
 			mLogger.log("Ultimate returned with status " + status);
-			UltimateResultProcessor.processUltimateResults(mLogger, mCurrentServices, json);
+			if (status.getSeverity() == IStatus.ERROR) {
+				json.put("error", "Could not run Ultimate: " + status.getMessage());
+			} else {
+				UltimateResultProcessor.processUltimateResults(mLogger, mCurrentServices, json);
+			}
 		} finally {
 			mExternalUltimateCore.complete();
 		}

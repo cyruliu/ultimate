@@ -1,10 +1,15 @@
 package webinterface_jetty_test;
 
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Request {
 	private final Map<String, String[]> mParameterList;
@@ -70,5 +75,11 @@ public class Request {
 		}
 
 		return parameters[0];
+	}
+	
+	public JSONObject getParameterJSONObject() throws IOException, JSONException {
+		// final String jsonString = mRequest.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+		final JSONObject jsonParameter = new JSONObject(mParameterList);
+		return jsonParameter;
 	}
 }
