@@ -62,6 +62,10 @@
 									<id>UltimateEliminator</id>
 									<attachId>UltimateEliminator</attachId>
 								</product>
+								<product>
+									<id>UltimateJetty</id>
+									<attachId>UltimateJetty</attachId>
+								</product>
 							</products>
 						</configuration>
 					</plugin>

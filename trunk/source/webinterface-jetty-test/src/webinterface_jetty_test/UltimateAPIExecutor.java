@@ -24,12 +24,6 @@ import de.uni_freiburg.informatik.ultimate.webbridge.website.Tasks.TaskNames;
 
 public class UltimateAPIExecutor {
 	private final ServletLogger mLogger;
-
-	/**
-	 * Upper bound for the all timeouts that are set by {@link WebToolchain}s. While executing a toolchain Ultimate uses
-	 * the minimum of this number and the timeout of the {@link WebToolchain}. Reducing this to a small number is
-	 * helpful if the website is running on a computer that is not able to handle many requests in parallel.
-	 */
 	private static final long TIMEOUT = 24 * 60 * 60 * 1000;
 	private File mInputFile;
 	private File mToolchainFile;
@@ -40,6 +34,12 @@ public class UltimateAPIExecutor {
 		mLogger = logger;
 	}
 
+	/**
+	 * Trigger an ultimate run based on an API request. Returns the results in the JSONobject.
+	 * @param internalRequest
+	 * @return Ultimate run results to be processed by the web-frontend.
+	 * @throws JSONException
+	 */
 	public JSONObject executeUltimate(final Request internalRequest) throws JSONException {
 		mLogger.log("Start executing Ultimate for RequestId: " + internalRequest.getRequestId());
 		JSONObject jsonResult = new JSONObject();
@@ -81,22 +81,47 @@ public class UltimateAPIExecutor {
 		return jsonResult;
 	}
 
+	/**
+	 * Set the temporary ultimate input file. As set by the web-frontend user in the editor.
+	 * @param internalRequest
+	 * @param timestamp
+	 * @throws IOException
+	 */
 	private void setInputFile(Request internalRequest, String timestamp) throws IOException {
 		final String code = internalRequest.getSingleParameter("code");
 		final String fileExtension = internalRequest.getSingleParameter("code_file_extension");
 		mInputFile = writeTemporaryFile(timestamp + "_input", code, fileExtension);
 	}
 
+	/**
+	 * Set temporary settings file as sent by the web-frontend.
+	 * @param internalRequest
+	 * @param timestamp
+	 * @throws IOException
+	 */
 	private void setToolchainFile(Request internalRequest, String timestamp) throws IOException {
 		final String ultimate_settings_epf = internalRequest.getSingleParameter("ultimate_settings_epf");
 		mSettingsFile = writeTemporaryFile(timestamp + "_settings", ultimate_settings_epf, ".epf");
 	}
 	
+	/**
+	 * Create temporary settings file as sent by the web-frontend.
+	 * @param internalRequest
+	 * @param timestamp
+	 * @throws IOException
+	 */
 	private void setSettingsFile(Request internalRequest, String timestamp) throws IOException {
 		final String ultimate_toolchain_xml = internalRequest.getSingleParameter("ultimate_toolchain_xml");
 		mToolchainFile = writeTemporaryFile(timestamp + "_toolchain", ultimate_toolchain_xml, ".xml");		
 	}
 
+	/**
+	 * Run a ultimate session via UltimateWebController. Add the results to the json object to be used as API response.
+	 * @param json
+	 * @param timeout
+	 * @return
+	 * @throws JSONException
+	 */
 	private boolean runUltimate(final JSONObject json, final long timeout) throws JSONException {
 		try {
 			mLogger.log("Starting Ultimate ...");
@@ -113,6 +138,9 @@ public class UltimateAPIExecutor {
 		return true;
 	}
 
+	/**
+	 * Move the temporary files to the "log dir" (log folder in the temp dir).
+	 */
 	private void postProcessTemporaryFiles() {
 		final File logDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "log" + File.separator);
 		if (!logDir.exists()) {
@@ -130,6 +158,14 @@ public class UltimateAPIExecutor {
 		}
 	}
 
+	/**
+	 * Creates a file in the default temporary-file.
+	 * @param name The name of the file (without file extension).
+	 * @param content Content to end up in the file.
+	 * @param fileExtension File extension to be used in the file path.
+	 * @return
+	 * @throws IOException
+	 */
 	private static File writeTemporaryFile(final String name, final String content, final String fileExtension)
 			throws IOException {
 		final File codeFile = File.createTempFile(name, fileExtension);
@@ -139,6 +175,11 @@ public class UltimateAPIExecutor {
 		return codeFile;
 	}
 
+	/**
+	 * Appends the settings from the web-frontend to the ultimate settings file.
+	 * @param internalRequest
+	 * @throws IOException
+	 */
 	private void applyUserSettings(final Request internalRequest) throws IOException {
 		try {
 			mLogger.log("Apply user settings to run configuration.");

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Webinterface-jetty-test
-Bundle-SymbolicName: webinterface-jetty-test
+Bundle-SymbolicName: webinterface-jetty-test;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: webinterface_jetty_test.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
