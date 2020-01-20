@@ -66,8 +66,9 @@ public class Activator implements BundleActivator {
         server.setHandler(contexts);
         
         // Serve the website (frontend) as static content.
-        addStaticPathToContext(
-        		contexts, Paths.get(System.getProperty("user.dir") + "/static_html"), "/website");
+        addStaticPathToContext(contexts,
+        		Paths.get(System.getProperty("user.home"), Config.FRONTEND_PATH), 
+        		Config.FRONTEND_ROUTE);
         
         // Prepare Handler for servlets.
         ServletContextHandler servlets = new ServletContextHandler(contexts, "/",
