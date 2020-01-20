@@ -1,23 +1,15 @@
 package webinterface_jetty_test;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Hashtable;
 
-import javax.servlet.FilterRegistration;
-
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
-import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.resource.PathResource;
@@ -32,6 +24,34 @@ public class Activator implements BundleActivator {
 	static BundleContext getContext() {
 		return context;
 	}
+	
+	/**
+	 * Create jetty front and backend server.
+	 * @param config.PORT Note that if you set this to port 0 then a randomly available port
+	 * @return
+	 */
+	public static Server createServer()
+    {
+        Server server = new Server(Config.PORT);
+        ContextHandlerCollection contexts = new ContextHandlerCollection();
+        server.setHandler(contexts);
+        
+        // Serve the website (frontend) as static content.
+        addStaticPathToContext(contexts,
+        		Paths.get(System.getProperty("user.home"), Config.FRONTEND_PATH), 
+        		Config.FRONTEND_ROUTE);
+        
+        // Serve the API.
+        // Prepare Handler for API servlets.
+        ServletContextHandler servlets = new ServletContextHandler(contexts, "/",
+            ServletContextHandler.SESSIONS);
+        // Enable CORS to allow ultimate backend/frontand running on a seperate port and domain.
+        enableCorsOnServletContextHandler(servlets);
+        // Add API servlets.
+        servlets.addServlet(new ServletHolder(new UltimateAPIServlet()), "/api");
+
+        return server;
+    }
 	
 	/**
 	 * Serve files staticly at the routePath
@@ -51,36 +71,12 @@ public class Activator implements BundleActivator {
         
         contextCollection.addHandler(frontendContextHandler);
 	}
-	
+
 	/**
-	 * Create jetty front and backend server.
-	 * @param config.PORT Note that if you set this to port 0 then a randomly available port
-	 * @return
+	 * Add CORS headers to the servlets in the servlet handler.
+	 * So the servlets can be called from outside their served domain. 
+	 * @param servlets ServletContextHandler
 	 */
-	public static Server createServer()
-    {
-        Server server = new Server(Config.PORT);
-        
-        // Declare server handler collection
-        ContextHandlerCollection contexts = new ContextHandlerCollection();
-        server.setHandler(contexts);
-        
-        // Serve the website (frontend) as static content.
-        addStaticPathToContext(contexts,
-        		Paths.get(System.getProperty("user.home"), Config.FRONTEND_PATH), 
-        		Config.FRONTEND_ROUTE);
-        
-        // Prepare Handler for servlets.
-        ServletContextHandler servlets = new ServletContextHandler(contexts, "/",
-            ServletContextHandler.SESSIONS);
-        // Enable CORS to allow ultimate backend running on a seperate port and domain.
-        enableCorsOnServletContextHandler(servlets);
-        // Add API servlets.
-        servlets.addServlet(new ServletHolder(new UltimateAPIServlet()), "/api");
-
-        return server;
-    }
-
 	private static void enableCorsOnServletContextHandler(ServletContextHandler servlets) {
 		FilterHolder filterHolder = new FilterHolder(CrossOriginFilter.class);
         filterHolder.setInitParameter("allowedOrigins", "*");
