@@ -1,17 +1,26 @@
 package webinterface_jetty_test;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Hashtable;
 
 import javax.servlet.FilterRegistration;
 
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
+import org.eclipse.jetty.util.resource.PathResource;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
  
@@ -24,50 +33,68 @@ public class Activator implements BundleActivator {
 		return context;
 	}
 	
-	public static Server createServer(int port)
+	/**
+	 * Serve files staticly at the routePath
+	 * @param contextCollection
+	 * @param folderPath Path to the static files to be served.
+	 * @param routePath The route the files should be served at (e.g. "/media").
+	 */
+	private static void addStaticPathToContext(
+			HandlerCollection contextCollection, Path folderPath, String routePath) {
+        ResourceHandler frontendResourceHandler = new ResourceHandler();
+        frontendResourceHandler.setDirectoriesListed(true);
+        
+        ContextHandler frontendContextHandler = new ContextHandler();
+        frontendContextHandler.setContextPath(routePath);
+        frontendContextHandler.setBaseResource(new PathResource(folderPath));
+        frontendContextHandler.setHandler(frontendResourceHandler);
+        
+        contextCollection.addHandler(frontendContextHandler);
+	}
+	
+	/**
+	 * Create jetty front and backend server.
+	 * @param config.PORT Note that if you set this to port 0 then a randomly available port
+	 * @return
+	 */
+	public static Server createServer()
     {
-        // Note that if you set this to port 0 then a randomly available port
-        // will be assigned that you can either look in the logs for the port,
-        // or programmatically obtain it for use in test cases.
-        Server server = new Server(port);
+        Server server = new Server(Config.PORT);
         
-        // The ServletHandler is a dead simple way to create a context handler
-        // that is backed by an instance of a Servlet.
-        // This handler then needs to be registered with the Server object.
-        // ServletHandler handler = new ServletHandler();
-        // server.setHandler(handler);
-        
-        // Set the ultimate context handler.
-        server.setHandler(new UltimateContextHandler());
-
         // Declare server handler collection
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         server.setHandler(contexts);
-
-        // Configure context "/" (root) for servlets
-        ServletContextHandler root = new ServletContextHandler(contexts, "/",
+        
+        // Serve the website (frontend) as static content.
+        addStaticPathToContext(
+        		contexts, Paths.get(System.getProperty("user.dir") + "/static_html"), "/website");
+        
+        // Prepare Handler for servlets.
+        ServletContextHandler servlets = new ServletContextHandler(contexts, "/",
             ServletContextHandler.SESSIONS);
-
         // Enable CORS to allow ultimate backend running on a seperate port and domain.
-        FilterHolder filterHolder = new FilterHolder(CrossOriginFilter.class);
-        filterHolder.setInitParameter("allowedOrigins", "*");
-        filterHolder.setInitParameter("allowedMethods", "GET, POST");
-        root.addFilter(filterHolder, "/*", null);
-
-        // Add servlets to root context
-        root.addServlet(new ServletHolder(new UltimateAPIServlet()), "/");
-        root.addServlet(new ServletHolder(new UltimateHttpServlet()), "/old_api");
-
+        enableCorsOnServletContextHandler(servlets);
+        // Add API servlets.
+        servlets.addServlet(new ServletHolder(new UltimateAPIServlet()), "/api");
 
         return server;
     }
 
+	private static void enableCorsOnServletContextHandler(ServletContextHandler servlets) {
+		FilterHolder filterHolder = new FilterHolder(CrossOriginFilter.class);
+        filterHolder.setInitParameter("allowedOrigins", "*");
+        filterHolder.setInitParameter("allowedMethods", "GET, POST");
+        servlets.addFilter(filterHolder, "/*", null);
+	}
+
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
         
-        int port = 8080;
+		// Load config
+		Config.load();
+		
         System.out.println("Start server.");
-        Server server = createServer(port);
+        Server server = createServer();
         
         server.start();
         server.join();
