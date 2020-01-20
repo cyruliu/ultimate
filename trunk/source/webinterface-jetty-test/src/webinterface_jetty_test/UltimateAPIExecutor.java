@@ -8,19 +8,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.uni_freiburg.informatik.ultimate.util.CoreUtil;
-import de.uni_freiburg.informatik.ultimate.webbridge.website.Setting;
-import de.uni_freiburg.informatik.ultimate.webbridge.website.Tasks;
-import de.uni_freiburg.informatik.ultimate.webbridge.website.WebToolchain;
-import de.uni_freiburg.informatik.ultimate.webbridge.website.Setting.SettingType;
-import de.uni_freiburg.informatik.ultimate.webbridge.website.Tasks.TaskNames;
 
 public class UltimateAPIExecutor {
 	private final ServletLogger mLogger;

@@ -11,9 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.uni_freiburg.informatik.ultimate.webbridge.website.Example;
 
 public class UltimateAPIServlet extends HttpServlet{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Whether the API should be executed in Debug-Mode or not.
 	 */
