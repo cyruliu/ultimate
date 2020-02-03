@@ -7,7 +7,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             name="UltimateJetty"
-            application="de.uni_freiburg.informatik.ultimate.core.CoreOSGi">
+            application="de.uni_freiburg.informatik.ultimate.core.CoreRCP">
          <property
                name="appName"
                value="UltimateJetty">

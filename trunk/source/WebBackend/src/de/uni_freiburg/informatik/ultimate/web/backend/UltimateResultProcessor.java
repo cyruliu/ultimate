@@ -1,4 +1,4 @@
-package webinterface_jetty_test;
+package de.uni_freiburg.informatik.ultimate.web.backend;
 
 import java.util.ArrayList;
 import java.util.List;
