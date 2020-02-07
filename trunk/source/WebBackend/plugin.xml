@@ -14,5 +14,17 @@
          </property>
       </product>
    </extension>
+   <extension
+         id="WebBackend"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="1"
+            thread="main"
+            visible="true">
+            <run
+     	class="de.uni_freiburg.informatik.ultimate.web.backend.Backend">
+    	</run>
+      </application>
+   </extension>
 
 </plugin>

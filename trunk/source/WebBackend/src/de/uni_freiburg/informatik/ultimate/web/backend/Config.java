@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
-* Class that loads settings from config.properties
-* @author Brant Unger
+* Back-end settings. 
+* Can load settings from config.properties file.
 *
 */
 public class Config 
