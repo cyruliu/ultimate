@@ -93,7 +93,7 @@ public final class CommandLineParser {
 		final CommandLine cli = mParser.parse(mOptionsForParser, args);
 		validateParsedOptionsWithValidators(cli);
 		validateParsedOptionsByConversion(cli);
-		return new ParsedParameters(mCore, cli, mOptionBuilder);
+		return new ParsedParameters(cli, mOptionBuilder);
 	}
 
 	private static void printHelp(final ILogger logger, final Options options, final String usage, final String header,

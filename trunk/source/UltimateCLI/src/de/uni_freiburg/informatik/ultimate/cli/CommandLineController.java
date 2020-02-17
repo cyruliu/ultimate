@@ -243,8 +243,9 @@ public class CommandLineController implements IController<RunDefinition> {
 		if (fullParams.hasSettings()) {
 			core.loadPreferences(fullParams.getSettingsFile(), false);
 		}
-		mToolchain = fullParams.createToolchainData();
-		fullParams.applyCliSettings(mToolchain.getServices());
+		mToolchain = fullParams.createToolchainData(core);
+		final ILogger logger = core.getCoreLoggingService().getControllerLogger();
+		fullParams.applyCliSettings(logger, mToolchain.getServices());
 		return mToolchain;
 	}
 

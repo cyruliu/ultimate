@@ -35,14 +35,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.cli.AlreadySelectedException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
@@ -55,12 +52,9 @@ import de.uni_freiburg.informatik.ultimate.core.lib.toolchain.RunDefinition;
 import de.uni_freiburg.informatik.ultimate.core.model.ICore;
 import de.uni_freiburg.informatik.ultimate.core.model.IToolchainData;
 import de.uni_freiburg.informatik.ultimate.core.model.preferences.IPreferenceProvider;
-import de.uni_freiburg.informatik.ultimate.core.model.preferences.KeyValueUtil;
-import de.uni_freiburg.informatik.ultimate.core.model.preferences.PreferenceType;
-import de.uni_freiburg.informatik.ultimate.core.model.preferences.UltimatePreferenceItem;
 import de.uni_freiburg.informatik.ultimate.core.model.services.ILogger;
 import de.uni_freiburg.informatik.ultimate.core.model.services.IUltimateServiceProvider;
-import de.uni_freiburg.informatik.ultimate.util.datastructures.relation.Triple;
+import de.uni_freiburg.informatik.ultimate.util.datastructures.relation.Pair;
 
 /**
  * @author Daniel Dietsch (dietsch@informatik.uni-freiburg.de)
@@ -68,68 +62,32 @@ import de.uni_freiburg.informatik.ultimate.util.datastructures.relation.Triple;
 public class ParsedParameters {
 
 	private final CommandLine mCli;
-	private final ICore<RunDefinition> mCore;
-	private final ILogger mLogger;
 	private final OptionBuilder mOptionFactory;
 	private String mCsvPrefix;
 
-	ParsedParameters(final ICore<RunDefinition> core, final CommandLine cli, final OptionBuilder optionFactory) {
-		mCore = core;
+	ParsedParameters(final CommandLine cli, final OptionBuilder optionFactory) {
 		mCli = cli;
 		mOptionFactory = optionFactory;
-		mLogger = core.getCoreLoggingService().getControllerLogger();
 	}
 
-	public void applyCliSettings(final IUltimateServiceProvider services) throws ParseException {
-		final List<Option> availableOptions = Arrays.asList(mCli.getOptions());
-
-		final Set<String> optLongNames = new LinkedHashSet<>();
-		for (final Option op : availableOptions) {
-
-			final String opName = op.getLongOpt();
-
-			// pluginId, settings label, preference item
-			final Triple<String, String, UltimatePreferenceItem<?>> id2Label2Item =
-					mOptionFactory.getUltimatePreference(opName);
-			if (id2Label2Item == null) {
-				continue;
-			}
-
-			final String id = id2Label2Item.getFirst();
-			final String label = id2Label2Item.getSecond();
-			final UltimatePreferenceItem<?> item = id2Label2Item.getThird();
-
-			if (!optLongNames.add(op.getLongOpt())) {
-				// we have already seen this Ultimate option. This is only allowed for KeyValue types.
-				if (item.getType() != PreferenceType.KeyValue) {
-					final String msg = String.format(
-							"You already specified option %s for an option of type %s. Only options of type %s can be specified multiple times.",
-							opName, item.getType(), PreferenceType.KeyValue);
-					throw new AlreadySelectedException(msg);
-				}
-				// KeyValue types are retrieved with the first occurrence
-				continue;
-			}
-			applyCliSetting(opName, services, id, label, item);
+	public void applyCliSettings(final ILogger logger, final IUltimateServiceProvider services) throws ParseException {
+		for (final Option op : mCli.getOptions()) {
+			applyCliSetting(logger, op, services);
 		}
 	}
 
-	private void applyCliSetting(final String optLongName, final IUltimateServiceProvider services, final String id,
-			final String label, final UltimatePreferenceItem<?> item) throws ParseException {
-		final IPreferenceProvider preferences = services.getPreferenceProvider(id);
-		final String valueStr;
-		if (item.getType() == PreferenceType.KeyValue) {
-			final Object[] values = getParsedOptions(optLongName);
-			valueStr = KeyValueUtil.toKeyValueString(values);
-		} else {
-			// note that this means that only KeyValue preferences can have duplicate occurrences. For all others, the
-			// first occurrence counts and others are swallowed silently
-			final Object value = getParsedOption(optLongName);
-			valueStr = String.valueOf(value);
+	private void applyCliSetting(final ILogger logger, final Option op, final IUltimateServiceProvider services)
+			throws ParseException {
+		final String optName = op.getLongOpt();
+		final Pair<String, String> prefName = mOptionFactory.getUltimatePreference(optName);
+		if (prefName == null) {
+			return;
 		}
-		mLogger.info("Applying setting for plugin " + id + ": " + label + " -> " + valueStr);
-		preferences.put(label, valueStr);
-
+		final IPreferenceProvider preferences = services.getPreferenceProvider(prefName.getFirst());
+		final Object value = getParsedOption(optName);
+		logger.info(
+				"Applying setting for plugin " + prefName.getFirst() + ": " + prefName.getSecond() + " -> " + value);
+		preferences.put(prefName.getSecond(), String.valueOf(value));
 	}
 
 	public boolean isHelpRequested() {
@@ -189,10 +147,11 @@ public class ParsedParameters {
 		return file;
 	}
 
-	public IToolchainData<RunDefinition> createToolchainData() throws InvalidFileArgumentException, ParseException {
+	public IToolchainData<RunDefinition> createToolchainData(final ICore<RunDefinition> core)
+			throws InvalidFileArgumentException, ParseException {
 		final File toolchainFile = getToolchainFile();
 		try {
-			return mCore.createToolchainData(toolchainFile.getAbsolutePath());
+			return core.createToolchainData(toolchainFile.getAbsolutePath());
 		} catch (final FileNotFoundException e1) {
 			throw new InvalidFileArgumentException(
 					"Toolchain file not found at specified path: " + toolchainFile.getAbsolutePath());
@@ -279,17 +238,9 @@ public class ParsedParameters {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> T[] getParsedOptions(final String optionName) throws ParseException {
-		final Object[] obj = mCli.getParsedOptionValues(optionName);
-		if (obj == null) {
-			return null;
-		}
-		return (T[]) obj;
-	}
-
-	@SuppressWarnings("unchecked")
 	private <T> T getParsedOption(final String optionName) throws ParseException {
-		return (T) mCli.getParsedOptionValue(optionName);
+		final Object obj = mCli.getParsedOptionValue(optionName);
+		return (T) obj;
 	}
 
 }
