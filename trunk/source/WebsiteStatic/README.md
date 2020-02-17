@@ -1,69 +1,77 @@
-**Ultimate** framework website.
+**Ultimate** framework website. Provides a frontend for the ultimate tools.
 
-# Configuration
-For an initial configuration copy [config.dist.js](config/config.dist.js) to `config/config.js`.
+# Configuration and setup.
+* Copy [config/config.dist.js](config/config.dist.js) to `config/config.js`.
 
-Configuration is set via [config.js](config/config.js). The configuration consists of the sections:
+Configuration is set in  [config/config.js](config/config.js). 
 
+## Configuration sections:
 **0. Meta:**
-```
+```javascript
 ...
 meta: {
-    debug_mode: false,  # if set to true, `test/result.json` will be used as a response for fetching ultimate results.
+    debug_mode: false,  // if set to true, `test/result.json` will be used as a response for fetching ultimate results.
 }
 ...
 ```
 
 
 **1. Backend:**
-```
+```javascript
 ...
     backend: {
-        web_bridge_url: 'URL to the WebsiteEclipseBridge server.'
+        web_bridge_url: 'http://127.0.0.1:8080/api' // URL to the WebInterface jetty backend server.
     },
 ...
 ```
 
 **2. Editor:**
-```
+```javascript
 ...
     editor: {
-        init_code: '// Enter code here ...'
+        init_code: '// Enter code here ...'  // The default content of the editor.
+        default_msg_orientation: "left"      // ["bottom" | "left"] the ultimate response messages default orientation.
     },
 ...
 ```
 
 **3. Language file extension mappings:**
-Determine the file extension to be used as input for the ultimate tool.
-Key is the language of the tool; Value is the file extension to be used.
-```
+Determines the file extension to be used as input for the ultimate tool.
+The key is the language of the tool in the frontend; The value is the file extension to be used.
+```javascript
 ...
 code_file_extensions: {
-    c: '.c',
+    c: '.c',  // Workers for language `c` will use `.c` as file extension.
     ...
 }
 ...
 ```
 
 **3. Tools:**
-```
-...
+Tool specific configurations. For each tool we must provide configuration for its:
+* Id (`id`).
+* Front-page enry (`name`, `description`, `languages`).
+* Supported languages and specific settings (`workers`).  
+```javascript
+    ...
     tools: [
         {
-            name: "ULTIMATE Automizer",
-            id: "automizer",
-            description: "Verification of ...",
-            languages: ["Boogie", "C"],
-            workers: [
+            id: "automizer",  // Unique id of the tool.
+            name: "ULTIMATE Automizer",  // Human readable name of this tool.
+            description: "Verification of ...",  // Frontend description.
+            languages: ["Boogie", "C"],  // Supported languages to be displayed in the frontend.
+            logo_url: "img/tool_logo.png",
+            workers: [  // Each worker for this tool defines a language specific instance of the tool.
                 {
-                    name: "c",
-                    id: "cAutomizer",
-                    frontend_settings: [
+                    language: "c",  // Language mus be available in `code_file_extensions` settings.
+                    id: "cAutomizer",  // Unique id for this worker.
+                    frontend_settings: [  // Frontend settings will be vailable to set by the user
                       {
-                        name: "Check for memory leak in main procedure",
-                        id: "chck_main_mem_leak",
-                        type: "bool",
-                        default: true
+                        name: "Check for memory leak in main procedure",  // The name in the settings menu.
+                        id: "chck_main_mem_leak",  // Unique id of that setting
+                        type: "bool",  // Type [string] of this setting
+                        default: true,
+                        string: "/instance/de.uni_freiburg.informatik...." // To be used by the ultimate controller
                       },
                       ...
                     ]
@@ -72,15 +80,21 @@ code_file_extensions: {
                     name: "boogie",
                     id: "boogieAutomizer"
                 }
-            ],
-            logo_url: "img/tool_logo.png"
+            ]
         },
         ...
 ```
 
-**4. Code Examples:**
-Code examples are generated using the [build_examples.py](build_examples.py) script. 
+## Code Examples
+Code examples are generated using the [build_examples.py](build_examples.py) script.
 To add new examples edit the `tool_examples_map` dict accordingly.
+
+## Tool details page
+Each tool is associated with a details page. To alter its content, edit the page matching the `tool_id` in the
+[config/too_pages](config/tool_pages) folder.
+
+## Home page contents
+The content sections are determined by the files in [config/home_page](config/home_page).
 
 # Development
 ## Webbridge API
@@ -102,7 +116,7 @@ config section `backend.web_bridge_url`.
   }
 ```
 
-**Result response example:**
+**Expected result response example:**
 ```json
 "results": [
     {
