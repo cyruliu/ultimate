@@ -3,7 +3,7 @@ const _CONFIG = {
     debug_mode: false,
   },
   backend: {
-    web_bridge_url: 'http://127.0.0.1:8080/old_api'
+    web_bridge_url: 'http://127.0.0.1:8080/api'
   },
   editor: {
     init_code: '// Enter code here ...',
@@ -32,13 +32,15 @@ const _CONFIG = {
               name: "Check for memory leak in main procedure",
               id: "chck_main_mem_leak",
               type: "bool",
-              default: true
+              default: true,
+              string: "/instance/de.uni_freiburg.informatik.ultimate.plugins.generator.cacsl2boogietranslator/Check\\ for\\ the\\ main\\ procedure\\ if\\ all\\ allocated\\ memory\\ was\\ freed"
             },
             {
               name: "Check for overflows of signed integers",
               id: "chck_signed_int_overflow",
               type: "bool",
-              default: true
+              default: true,
+              string: "/instance/de.uni_freiburg.informatik.ultimate.plugins.generator.cacsl2boogietranslator/Check\\ absence\\ of\\ signed\\ integer\\ overflows"
             }
           ]
         },
