@@ -22,7 +22,7 @@ import de.uni_freiburg.informatik.ultimate.core.preferences.RcpPreferenceProvide
 
 public class WebBackend implements IApplication {
 
-	private Server _jettyServer;
+	private Server mJettyServer;
 
 	public WebBackend() {
 
@@ -30,16 +30,12 @@ public class WebBackend implements IApplication {
 
 	@Override
 	public Object start(final IApplicationContext context) throws Exception {
-		System.out.println("Hoho");
 		Config.load();
-		final RcpPreferenceProvider rpp = new RcpPreferenceProvider(Activator.PLUGIN_ID);
-		System.out.println(rpp.getInt("PORT"));
 
-		Arrays.stream(Platform.getCommandLineArgs()).forEach(System.out::println);
 		initJettyServer();
 
-		_jettyServer.start();
-		_jettyServer.join();
+		mJettyServer.start();
+		mJettyServer.join();
 
 		return EXIT_OK;
 	}
@@ -47,31 +43,34 @@ public class WebBackend implements IApplication {
 	@Override
 	public void stop() {
 		try {
-			_jettyServer.stop();
+			mJettyServer.stop();
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Initialize jetty front- and back-end server.
+	 * Initialize Jetty front- and back-end server.
 	 */
 	private void initJettyServer() {
-		_jettyServer = new Server(Config.PORT);
+		mJettyServer = new Server(Config.PORT);
 		final ContextHandlerCollection contexts = new ContextHandlerCollection();
-		_jettyServer.setHandler(contexts);
+		mJettyServer.setHandler(contexts);
 
-		// Serve the website (frontend) as static content.
-		addStaticPathToContext(contexts, Paths.get(System.getProperty("user.home"), Config.FRONTEND_PATH),
-				Config.FRONTEND_ROUTE);
+		// Serve the website (front-end) as static content.
+		if (Config.SERVE_WEBSITE) {			
+			addStaticPathToContext(contexts, Paths.get(Config.FRONTEND_PATH), Config.FRONTEND_ROUTE);
+		}
 
 		// Serve the API.
 		// Prepare Handler for API servlets.
-		final ServletContextHandler servlets = new ServletContextHandler(contexts, "/", ServletContextHandler.SESSIONS);
+		final ServletContextHandler servlets = new ServletContextHandler(
+				contexts, "/", ServletContextHandler.SESSIONS
+		);
 		// Enable CORS to allow ultimate back-end/front-end running on a separate port and domain.
 		enableCorsOnServletContextHandler(servlets);
-		// Add API servlets.
-		servlets.addServlet(new ServletHolder(new UltimateAPIServlet()), "/api");
+		// Add the API servlet.
+		servlets.addServlet(new ServletHolder(new UltimateAPIServlet()), Config.BACKEND_ROUTE);
 	}
 
 	/**
@@ -97,8 +96,8 @@ public class WebBackend implements IApplication {
 	}
 
 	/**
-	 * Add CORS headers to the servlets in the servlet handler. So the servlets can be called from outside their served
-	 * domain.
+	 * Add CORS headers to the servlets in the servlet handler. 
+	 * Enables the servlets to be called from outside their served domain.
 	 *
 	 * @param servlets
 	 *            ServletContextHandler
