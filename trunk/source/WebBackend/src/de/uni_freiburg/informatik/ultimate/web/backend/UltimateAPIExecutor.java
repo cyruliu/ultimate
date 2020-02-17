@@ -93,8 +93,8 @@ public class UltimateAPIExecutor {
 	 * @throws IOException
 	 */
 	private void setToolchainFile(Request internalRequest, String timestamp) throws IOException {
-		final String ultimate_settings_epf = internalRequest.getSingleParameter("ultimate_settings_epf");
-		mSettingsFile = writeTemporaryFile(timestamp + "_settings", ultimate_settings_epf, ".epf");
+		final String ultimate_toolchain_xml = internalRequest.getSingleParameter("ultimate_toolchain_xml");
+		mToolchainFile = writeTemporaryFile(timestamp + "_toolchain", ultimate_toolchain_xml, ".xml");
 	}
 	
 	/**
@@ -104,8 +104,8 @@ public class UltimateAPIExecutor {
 	 * @throws IOException
 	 */
 	private void setSettingsFile(Request internalRequest, String timestamp) throws IOException {
-		final String ultimate_toolchain_xml = internalRequest.getSingleParameter("ultimate_toolchain_xml");
-		mToolchainFile = writeTemporaryFile(timestamp + "_toolchain", ultimate_toolchain_xml, ".xml");		
+		final String ultimate_settings_epf = internalRequest.getSingleParameter("ultimate_settings_epf");
+		mSettingsFile = writeTemporaryFile(timestamp + "_settings", ultimate_settings_epf, ".epf");
 	}
 
 	/**
