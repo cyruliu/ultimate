@@ -82,7 +82,7 @@ public class CommandLineController implements IController<RunDefinition> {
 	private ILogger mLogger;
 	private IToolchainData<RunDefinition> mToolchain;
 
-	private ParsedParameter mCliParams;
+	private ParsedParameters mCliParams;
 	private String mCsvPrefix;
 
 	@Override
@@ -108,7 +108,7 @@ public class CommandLineController implements IController<RunDefinition> {
 		final CommandLineParser onlyCliHelpParser =
 				CommandLineParser.createParser(core, getCoreAndControllerPluginFilter(), false);
 		final CommandLineParser toolchainStageParser = CommandLineParser.createParser(core, a -> true, false);
-		ParsedParameter toolchainStageParams;
+		ParsedParameters toolchainStageParams;
 		try {
 			toolchainStageParams = toolchainStageParser.parse(args);
 
@@ -138,7 +138,7 @@ public class CommandLineController implements IController<RunDefinition> {
 
 		// second, perform real parsing
 		final CommandLineParser fullParser = CommandLineParser.createParser(core, pluginNameFilter, true);
-		final ParsedParameter fullParams;
+		final ParsedParameters fullParams;
 
 		try {
 			fullParams = fullParser.parse(args);
@@ -223,7 +223,7 @@ public class CommandLineController implements IController<RunDefinition> {
 	 * @throws InterruptedException
 	 *             If during toolchain execution the thread is interrupted, this exception might be thrown.
 	 */
-	protected void startExecutingToolchain(final ICore<RunDefinition> core, final ParsedParameter cliParams,
+	protected void startExecutingToolchain(final ICore<RunDefinition> core, final ParsedParameters cliParams,
 			final ILogger logger, final IToolchainData<RunDefinition> toolchain)
 			throws ParseException, InvalidFileArgumentException, InterruptedException {
 		final File[] inputFiles = cliParams.getInputFiles();
@@ -238,7 +238,7 @@ public class CommandLineController implements IController<RunDefinition> {
 	}
 
 	private IToolchainData<RunDefinition> prepareToolchain(final ICore<RunDefinition> core,
-			final ParsedParameter fullParams) throws ParseException, InvalidFileArgumentException {
+			final ParsedParameters fullParams) throws ParseException, InvalidFileArgumentException {
 		core.resetPreferences(false);
 		if (fullParams.hasSettings()) {
 			core.loadPreferences(fullParams.getSettingsFile(), false);
@@ -248,7 +248,7 @@ public class CommandLineController implements IController<RunDefinition> {
 		return mToolchain;
 	}
 
-	private static void printHelp(final CommandLineParser parser, final ParsedParameter params) {
+	private static void printHelp(final CommandLineParser parser, final ParsedParameters params) {
 		if (params.showExperimentals()) {
 			parser.printHelpWithExperimentals();
 		} else {
@@ -363,7 +363,7 @@ public class CommandLineController implements IController<RunDefinition> {
 	}
 
 	private static ICsvProvider<Object> getEnrichedProvider(ICsvProvider<Object> csvProvider,
-			final ResultSummarizer summarizer, final ParsedParameter cliParams) {
+			final ResultSummarizer summarizer, final ParsedParameters cliParams) {
 		final int rowCount = csvProvider.getRowCount();
 		try {
 			csvProvider = CsvUtils.addColumn(csvProvider, "AnalysisResult", 0,
