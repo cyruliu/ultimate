@@ -23,7 +23,6 @@ import de.uni_freiburg.informatik.ultimate.core.model.preferences.IPreferenceIni
 import de.uni_freiburg.informatik.ultimate.core.model.results.IResult;
 import de.uni_freiburg.informatik.ultimate.core.model.services.IUltimateServiceProvider;
 
-
 /**
  *
  * @author dietsch@informatik.uni-freiburg.de
@@ -40,7 +39,7 @@ public class UltimateWebController implements IController<RunDefinition> {
 	private ICore<RunDefinition> mCore;
 	private IUltimateServiceProvider mCurrentServices;
 
-	private ServletLogger mLogger;
+	private final ServletLogger mLogger;
 
 	public UltimateWebController() {
 		mExternalUltimateCore = new ExternalUltimateCore(this);
@@ -49,9 +48,9 @@ public class UltimateWebController implements IController<RunDefinition> {
 		mToolchainFile = null;
 		mDeadline = 0;
 		mLogger = null;
-	
+
 	}
-	
+
 	public UltimateWebController(final ServletLogger logger, final File settings, final File input,
 			final File toolchain, final long deadline) {
 		mExternalUltimateCore = new ExternalUltimateCore(this);
@@ -61,7 +60,6 @@ public class UltimateWebController implements IController<RunDefinition> {
 		mDeadline = deadline;
 		mLogger = logger;
 	}
-
 
 	public JSONObject runUltimate(final JSONObject json) throws Throwable {
 		try {
@@ -139,7 +137,7 @@ public class UltimateWebController implements IController<RunDefinition> {
 	}
 
 	@Override
-	public void prerun(final IToolchainData<RunDefinition> tcData) {
-
+	public IToolchainData<RunDefinition> prerun(final IToolchainData<RunDefinition> tcData) {
+		return tcData;
 	}
 }
