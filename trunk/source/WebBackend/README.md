@@ -1,15 +1,24 @@
-This WebBackend project is for serving the ultimate tools as a web-service.
-The WebBackend application runs embedded jetty to provide an API for executing ultimate jobs.
+This WebBackend project is for serving the Ultimate tools as a web-service.
+The WebBackend application runs an embedded jetty to provide an API for executing Ultimate jobs.
 
 # Deploy
 Goto `trunk/source/BA_MavenParentUltimate` run `mvn clean install -P materialize`.
-After a successful build, goto `trunk/source/BA_WebBackend`. The artifacts to run and configure the application are in `./target/products` (beside a copy of this README.md).
+After a successful build, goto `trunk/source/BA_WebBackend`. The artifacts to run and configure the application are in `./target/products`, as well as a copy of this README.md.
 
-Now you need to configure the application.
+There are two main artifacts. The WebBackend (described by this README) and the front-end (in the folder WebsiteStatic).
 
-# Configuration
-## Initial configuration
-First make a copy of the configuration files:
+# Running the Ultimate web-service together with the front-end
+
+## Requirements 
+TODO
+
+
+## Configuration
+
+### Initial backend configuration
+TODO: Copy the backend from `./target/products/WebBackend/<plattform>/<ws>/<arch>/` to some folder, i.e. `/opt`. 
+
+Then, make a copy of the configuration files:
 
 * Copy `web.config.properties.dist` to `web.config.properties`
 * Copy `settings_whitelist.json.dist` to `settings_whitelist.json`
@@ -76,11 +85,12 @@ Ensure the path to ``settings_whitelist.json` is set correctly for the `SETTINGS
 ## Serving the front-end (aka WebsiteStatic)
 After a build, a cleaned, ready to be served Version of the `WebsiteStatic` project can be found in `trunk/source/BA_WebBackend/target/products/WebsiteStatic`.
 
-### Bundeled with the backend
+### Bundled with the backend
 * Set the config-parameter `SERVE_WEBSITE` to `True`.
 * Set the config-parameter `FRONTEND_PATH` to the absolute path of the "WebsiteStatic" folder.
 * Configure the Website. See `trunk/source/WebsiteStatic/README.md` for details.
 
 ### Stand alone
-* Serve the content of `WebsiteStatic` as a static Html
+* Set the config-parameter `SERVE_WEBSITE` to `False`.
+* Serve the content of `WebsiteStatic` as a static Html site from a webserver of your choice. 
 * Configure the Website. See `trunk/source/WebsiteStatic/README.md` for details.
