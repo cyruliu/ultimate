@@ -1,21 +1,21 @@
-import collections
 import glob
-import json
 import os
 import shutil
 
 import os.path as osp
 
 """ This script
-* copies all available examples for the web ui into config/code_examples.
-* Adds the code_examples.json index file used by the frontend to determine the available examples per worker.
+! Note: This script works only if run inside the ultimate repository.
+Otherwise, the relative paths will fail.
+ 
+* copies all code examples from a map (tool_examples_map) tool -> example_sources to the tool/example subfolder.
 
 Add new examples for a worker.id in the `tool_examples_map`
 Follow the rules already available.
 """
 
 HERE = osp.abspath(osp.dirname(__file__))
-PROJECT_ROOT = osp.join(HERE, '..', '..')
+PROJECT_ROOT = osp.join(HERE, '..', '..', '..', '..')
 EXAMPLES_DIR = osp.join(PROJECT_ROOT, 'examples')
 
 tool_examples_map = {
@@ -133,23 +133,19 @@ tool_examples_map = {
   ],
 }
 
-if __name__ == '__main__':
-    dest = osp.join(HERE, 'config', 'code_examples')
-    if not osp.exists(dest):
-        os.makedirs(dest)
 
-    code_examples = collections.defaultdict(list)
+if __name__ == '__main__':
+    for tool in tool_examples_map.keys():
+        dest = osp.join(HERE, tool)
+        if not osp.exists(dest):
+            os.makedirs(dest)
+
+    print('Start copying examples.')
     for tool, examples in tool_examples_map.items():
         for example in examples:
             path = example['path']
             pattern = example['pattern']
+            dest = osp.join(HERE, tool)
             for file in glob.glob(rf'{path}/{pattern}'):
                 shutil.copy(file, dest)
-                basename = osp.basename(file)
-                code_examples[tool].append({
-                  'name': (basename[:30] + '...') if len(basename) > 20 else basename,
-                  'source': basename
-                })
-
-    with open(osp.join(HERE, 'config', 'code_examples', 'code_examples.json'), mode='w') as out_file:
-        json.dump(code_examples, out_file)
+    print('Done.')

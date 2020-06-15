@@ -1,4 +1,54 @@
 {
+  "automataScript": [
+    {
+      "name": "beverageVendingMachine.ats",
+      "source": "beverageVendingMachine.ats"
+    },
+    {
+      "name": "BuchiAutomata.ats",
+      "source": "BuchiAutomata.ats"
+    },
+    {
+      "name": "BuchiNestedWordAutomata.ats",
+      "source": "BuchiNestedWordAutomata.ats"
+    },
+    {
+      "name": "FiniteAutomata.ats",
+      "source": "FiniteAutomata.ats"
+    },
+    {
+      "name": "ListsAndTrees.ats",
+      "source": "ListsAndTrees.ats"
+    },
+    {
+      "name": "LoopComplexity.ats",
+      "source": "LoopComplexity.ats"
+    },
+    {
+      "name": "McCarthy91.ats",
+      "source": "McCarthy91.ats"
+    },
+    {
+      "name": "MinimizeNwaPmaxSat.ats",
+      "source": "MinimizeNwaPmaxSat.ats"
+    },
+    {
+      "name": "PetriNets.ats",
+      "source": "PetriNets.ats"
+    },
+    {
+      "name": "SemiDeterministicBuchiAutomata...",
+      "source": "SemiDeterministicBuchiAutomata.ats"
+    },
+    {
+      "name": "TheoretischeInformatik2017.ats",
+      "source": "TheoretischeInformatik2017.ats"
+    },
+    {
+      "name": "TreeAutomata.ats",
+      "source": "TreeAutomata.ats"
+    }
+  ],
   "boogieAutomizer": [
     {
       "name": "GoannaDoubleFreeWithoutPointer...",
@@ -7,54 +57,6 @@
     {
       "name": "LockingExample.bpl",
       "source": "LockingExample.bpl"
-    }
-  ],
-  "cAutomizer": [
-    {
-      "name": "1997FMSD-Halbwachs.c",
-      "source": "1997FMSD-Halbwachs.c"
-    },
-    {
-      "name": "2001TACAS-BallPodelskiRajamani...",
-      "source": "2001TACAS-BallPodelskiRajamani.c"
-    },
-    {
-      "name": "CyclicBuffer.c",
-      "source": "CyclicBuffer.c"
-    },
-    {
-      "name": "GoannaDoubleFree.c",
-      "source": "GoannaDoubleFree.c"
-    },
-    {
-      "name": "GoannaDoubleFreeWithoutPointer...",
-      "source": "GoannaDoubleFreeWithoutPointers.c"
-    },
-    {
-      "name": "McCarthy91.c",
-      "source": "McCarthy91.c"
-    },
-    {
-      "name": "SAS09.c",
-      "source": "SAS09.c"
-    },
-    {
-      "name": "StructWithFunctionPointer.c...",
-      "source": "StructWithFunctionPointer.c"
-    },
-    {
-      "name": "TerminatorRamsey.c",
-      "source": "TerminatorRamsey.c"
-    },
-    {
-      "name": "FunctionPointers01.c",
-      "source": "FunctionPointers01.c"
-    }
-  ],
-  "cBuchiAutomizer": [
-    {
-      "name": "MicrosoftZuneBug_false-termina...",
-      "source": "MicrosoftZuneBug_false-termination.c"
     }
   ],
   "boogieBuchiAutomizer": [
@@ -91,48 +93,6 @@
       "source": "MicrosoftZuneBug_false-termination.bpl"
     }
   ],
-  "cKojak": [
-    {
-      "name": "1997FMSD-Halbwachs.c",
-      "source": "1997FMSD-Halbwachs.c"
-    },
-    {
-      "name": "2001TACAS-BallPodelskiRajamani...",
-      "source": "2001TACAS-BallPodelskiRajamani.c"
-    },
-    {
-      "name": "CyclicBuffer.c",
-      "source": "CyclicBuffer.c"
-    },
-    {
-      "name": "GoannaDoubleFree.c",
-      "source": "GoannaDoubleFree.c"
-    },
-    {
-      "name": "GoannaDoubleFreeWithoutPointer...",
-      "source": "GoannaDoubleFreeWithoutPointers.c"
-    },
-    {
-      "name": "McCarthy91.c",
-      "source": "McCarthy91.c"
-    },
-    {
-      "name": "SAS09.c",
-      "source": "SAS09.c"
-    },
-    {
-      "name": "StructWithFunctionPointer.c...",
-      "source": "StructWithFunctionPointer.c"
-    },
-    {
-      "name": "TerminatorRamsey.c",
-      "source": "TerminatorRamsey.c"
-    },
-    {
-      "name": "FunctionPointers01.c",
-      "source": "FunctionPointers01.c"
-    }
-  ],
   "boogieKojak": [
     {
       "name": "GoannaDoubleFreeWithoutPointer...",
@@ -143,177 +103,21 @@
       "source": "LockingExample.bpl"
     }
   ],
-  "cTaipan": [
-    {
-      "name": "1997FMSD-Halbwachs.c",
-      "source": "1997FMSD-Halbwachs.c"
-    },
-    {
-      "name": "2001TACAS-BallPodelskiRajamani...",
-      "source": "2001TACAS-BallPodelskiRajamani.c"
-    },
-    {
-      "name": "CyclicBuffer.c",
-      "source": "CyclicBuffer.c"
-    },
-    {
-      "name": "GoannaDoubleFree.c",
-      "source": "GoannaDoubleFree.c"
-    },
-    {
-      "name": "GoannaDoubleFreeWithoutPointer...",
-      "source": "GoannaDoubleFreeWithoutPointers.c"
-    },
-    {
-      "name": "McCarthy91.c",
-      "source": "McCarthy91.c"
-    },
-    {
-      "name": "SAS09.c",
-      "source": "SAS09.c"
-    },
-    {
-      "name": "StructWithFunctionPointer.c...",
-      "source": "StructWithFunctionPointer.c"
-    },
-    {
-      "name": "TerminatorRamsey.c",
-      "source": "TerminatorRamsey.c"
-    },
-    {
-      "name": "FunctionPointers01.c",
-      "source": "FunctionPointers01.c"
-    }
-  ],
-  "boogieTaipan": [
-    {
-      "name": "GoannaDoubleFreeWithoutPointer...",
-      "source": "GoannaDoubleFreeWithoutPointers.bpl"
-    },
-    {
-      "name": "LockingExample.bpl",
-      "source": "LockingExample.bpl"
-    }
-  ],
-  "cLTLAutomizer": [
-    {
-      "name": "coolant_basis_1_neg.c...",
-      "source": "coolant_basis_1_neg.c"
-    },
-    {
-      "name": "coolant_basis_1_safe_sfty.c...",
-      "source": "coolant_basis_1_safe_sfty.c"
-    },
-    {
-      "name": "coolant_basis_1_unsafe_sfty.c...",
-      "source": "coolant_basis_1_unsafe_sfty.c"
-    },
-    {
-      "name": "coolant_basis_2_neg.c...",
-      "source": "coolant_basis_2_neg.c"
-    },
-    {
-      "name": "coolant_basis_2_safe_liveness....",
-      "source": "coolant_basis_2_safe_liveness.c"
-    },
-    {
-      "name": "coolant_basis_2_unsafe_livenes...",
-      "source": "coolant_basis_2_unsafe_liveness.c"
-    },
-    {
-      "name": "coolant_basis_3_safe_sftyliven...",
-      "source": "coolant_basis_3_safe_sftyliveness.c"
-    },
-    {
-      "name": "coolant_basis_3_unsafe_sftyliv...",
-      "source": "coolant_basis_3_unsafe_sftyliveness.c"
-    },
-    {
-      "name": "coolant_basis_4_1_unsafe_sftyl...",
-      "source": "coolant_basis_4_1_unsafe_sftyliveness.c"
-    },
-    {
-      "name": "coolant_basis_4_2_unsafe_sftyl...",
-      "source": "coolant_basis_4_2_unsafe_sftyliveness.c"
-    },
-    {
-      "name": "coolant_basis_4_neg.c...",
-      "source": "coolant_basis_4_neg.c"
-    },
-    {
-      "name": "coolant_basis_4_safe_sftyliven...",
-      "source": "coolant_basis_4_safe_sftyliveness.c"
-    },
-    {
-      "name": "coolant_basis_4_unsafe_sftyliv...",
-      "source": "coolant_basis_4_unsafe_sftyliveness.c"
-    },
-    {
-      "name": "coolant_basis_5_neg.c...",
-      "source": "coolant_basis_5_neg.c"
-    },
-    {
-      "name": "coolant_basis_5_safe_sftyliven...",
-      "source": "coolant_basis_5_safe_sftyliveness.c"
-    },
-    {
-      "name": "coolant_basis_5_unsafe_sftyliv...",
-      "source": "coolant_basis_5_unsafe_sftyliveness.c"
-    },
-    {
-      "name": "coolant_basis_6_safe_sftyliven...",
-      "source": "coolant_basis_6_safe_sftyliveness.c"
-    },
-    {
-      "name": "coolant_basis_6_unsafe_sftyliv...",
-      "source": "coolant_basis_6_unsafe_sftyliveness.c"
-    }
-  ],
-  "cLassoRanker": [
-    {
-      "name": "Bangalore.c",
-      "source": "Bangalore.c"
-    },
-    {
-      "name": "Hammereisenbach-AlternatingBra...",
-      "source": "Hammereisenbach-AlternatingBranches_false-termination.c"
-    },
-    {
-      "name": "MultiphaseOnlyInThesis.c...",
-      "source": "MultiphaseOnlyInThesis.c"
-    },
-    {
-      "name": "Schaafheim_false-termination.c...",
-      "source": "Schaafheim_false-termination.c"
-    },
-    {
-      "name": "SyntaxSupportBitwiseOperations...",
-      "source": "SyntaxSupportBitwiseOperations01.c"
-    },
-    {
-      "name": "Vienna.c",
-      "source": "Vienna.c"
-    },
-    {
-      "name": "Waldkirch.c",
-      "source": "Waldkirch.c"
-    }
-  ],
   "boogieLassoRanker": [
     {
       "name": "2013POPL-BenAmGen-Ex3.20-Real....",
       "source": "2013POPL-BenAmGen-Ex3.20-Real.bpl"
     },
     {
-      "name": "2013POPL-BenAmGen-Ex3.20.bpl...",
+      "name": "2013POPL-BenAmGen-Ex3.20.bpl",
       "source": "2013POPL-BenAmGen-Ex3.20.bpl"
     },
     {
-      "name": "2013POPL-BenAmGen-Ex3.6.bpl...",
+      "name": "2013POPL-BenAmGen-Ex3.6.bpl",
       "source": "2013POPL-BenAmGen-Ex3.6.bpl"
     },
     {
-      "name": "2013POPL-BenAmGen-Ex4.2.bpl...",
+      "name": "2013POPL-BenAmGen-Ex4.2.bpl",
       "source": "2013POPL-BenAmGen-Ex4.2.bpl"
     },
     {
@@ -325,7 +129,7 @@
       "source": "3Phase.bpl"
     },
     {
-      "name": "4NestedWith3Variables.bpl...",
+      "name": "4NestedWith3Variables.bpl",
       "source": "4NestedWith3Variables.bpl"
     },
     {
@@ -335,6 +139,62 @@
     {
       "name": "5Phase.bpl",
       "source": "5Phase.bpl"
+    },
+    {
+      "name": "ATVA2013-array-int.bpl",
+      "source": "ATVA2013-array-int.bpl"
+    },
+    {
+      "name": "ATVA2013-array-real.bpl",
+      "source": "ATVA2013-array-real.bpl"
+    },
+    {
+      "name": "ATVA2013-bound-int.bpl",
+      "source": "ATVA2013-bound-int.bpl"
+    },
+    {
+      "name": "ATVA2013-bound-real.bpl",
+      "source": "ATVA2013-bound-real.bpl"
+    },
+    {
+      "name": "ATVA2013-diff42-int.bpl",
+      "source": "ATVA2013-diff42-int.bpl"
+    },
+    {
+      "name": "ATVA2013-diff42-real.bpl",
+      "source": "ATVA2013-diff42-real.bpl"
+    },
+    {
+      "name": "ATVA2013-nonIntegral-int.bpl",
+      "source": "ATVA2013-nonIntegral-int.bpl"
+    },
+    {
+      "name": "ATVA2013-nonIntegral-real.bpl",
+      "source": "ATVA2013-nonIntegral-real.bpl"
+    },
+    {
+      "name": "ATVA2013-wild-int.bpl",
+      "source": "ATVA2013-wild-int.bpl"
+    },
+    {
+      "name": "ATVA2013-wild-real.bpl",
+      "source": "ATVA2013-wild-real.bpl"
+    },
+    {
+      "name": "ATVA2013-yPositive-int.bpl",
+      "source": "ATVA2013-yPositive-int.bpl"
+    },
+    {
+      "name": "ATVA2013-yPositive-real.bpl",
+      "source": "ATVA2013-yPositive-real.bpl"
+    },
+    {
+      "name": "ATVA2013-zeno-int.bpl",
+      "source": "ATVA2013-zeno-int.bpl"
+    },
+    {
+      "name": "ATVA2013-zeno-real.bpl",
+      "source": "ATVA2013-zeno-real.bpl"
     },
     {
       "name": "Bangalore.bpl",
@@ -349,7 +209,7 @@
       "source": "Bangalore3.bpl"
     },
     {
-      "name": "BangaloreStrictIneq.bpl...",
+      "name": "BangaloreStrictIneq.bpl",
       "source": "BangaloreStrictIneq.bpl"
     },
     {
@@ -357,7 +217,7 @@
       "source": "Barcelona.bpl"
     },
     {
-      "name": "BenAmram-2010LMCS-Ex2.3.bpl...",
+      "name": "BenAmram-2010LMCS-Ex2.3.bpl",
       "source": "BenAmram-2010LMCS-Ex2.3.bpl"
     },
     {
@@ -397,8 +257,16 @@
       "source": "BradleyMannaSipma-2005ICALP-Fig2.bpl"
     },
     {
-      "name": "Braverman-2006CAV-Ex1-int.bpl...",
+      "name": "Braverman-2006CAV-Ex1-int.bpl",
       "source": "Braverman-2006CAV-Ex1-int.bpl"
+    },
+    {
+      "name": "Braverman-2006CAV-Ex1-real.bpl",
+      "source": "Braverman-2006CAV-Ex1-real.bpl"
+    },
+    {
+      "name": "Braverman-2006CAV-Ex2-real.bpl",
+      "source": "Braverman-2006CAV-Ex2-real.bpl"
     },
     {
       "name": "Cairo.bpl",
@@ -407,6 +275,10 @@
     {
       "name": "Cairo2.bpl",
       "source": "Cairo2.bpl"
+    },
+    {
+      "name": "ChenFlurMukhopadhyay-2012SAS-F...",
+      "source": "ChenFlurMukhopadhyay-2012SAS-Fig1.bpl"
     },
     {
       "name": "Collatz.bpl",
@@ -425,11 +297,23 @@
       "source": "ConjunctiveLoopWithoutNestedRF.bpl"
     },
     {
-      "name": "CooperatingT2_consts1.bpl...",
+      "name": "CookSeeZuleger-2013TACAS-Fig3....",
+      "source": "CookSeeZuleger-2013TACAS-Fig3.bpl"
+    },
+    {
+      "name": "CookSeeZuleger-2013TACAS-Fig7a...",
+      "source": "CookSeeZuleger-2013TACAS-Fig7a.bpl"
+    },
+    {
+      "name": "CookSeeZuleger-2013TACAS-Fig7b...",
+      "source": "CookSeeZuleger-2013TACAS-Fig7b.bpl"
+    },
+    {
+      "name": "CooperatingT2_consts1.bpl",
       "source": "CooperatingT2_consts1.bpl"
     },
     {
-      "name": "CopenhagenWithTmp.bpl...",
+      "name": "CopenhagenWithTmp.bpl",
       "source": "CopenhagenWithTmp.bpl"
     },
     {
@@ -445,7 +329,7 @@
       "source": "Damaskus.bpl"
     },
     {
-      "name": "DecreasingInvariant.bpl...",
+      "name": "DecreasingInvariant.bpl",
       "source": "DecreasingInvariant.bpl"
     },
     {
@@ -457,7 +341,7 @@
       "source": "Division.bpl"
     },
     {
-      "name": "DivisionTerminating.bpl...",
+      "name": "DivisionTerminating.bpl",
       "source": "DivisionTerminating.bpl"
     },
     {
@@ -469,7 +353,7 @@
       "source": "Edmonton.bpl"
     },
     {
-      "name": "ExponentialGrowth.bpl...",
+      "name": "ExponentialGrowth.bpl",
       "source": "ExponentialGrowth.bpl"
     },
     {
@@ -505,7 +389,7 @@
       "source": "Gulwani.bpl"
     },
     {
-      "name": "GulwaniResetBranchOnly.bpl...",
+      "name": "GulwaniResetBranchOnly.bpl",
       "source": "GulwaniResetBranchOnly.bpl"
     },
     {
@@ -513,7 +397,7 @@
       "source": "IncreasingSI.bpl"
     },
     {
-      "name": "IntegerVsRealSimple.bpl...",
+      "name": "IntegerVsRealSimple.bpl",
       "source": "IntegerVsRealSimple.bpl"
     },
     {
@@ -529,15 +413,15 @@
       "source": "Konstanz.bpl"
     },
     {
-      "name": "LexConj-Ben-Amram.bpl...",
+      "name": "LexConj-Ben-Amram.bpl",
       "source": "LexConj-Ben-Amram.bpl"
     },
     {
-      "name": "linRakWithNonTrivialSI01.bpl...",
+      "name": "linRakWithNonTrivialSI01.bpl",
       "source": "linRakWithNonTrivialSI01.bpl"
     },
     {
-      "name": "Lobnya-Boolean-Reordered.bpl...",
+      "name": "Lobnya-Boolean-Reordered.bpl",
       "source": "Lobnya-Boolean-Reordered.bpl"
     },
     {
@@ -581,19 +465,19 @@
       "source": "MultiPhase1.bpl"
     },
     {
-      "name": "MultiphaseRotation180.bpl...",
+      "name": "MultiphaseRotation180.bpl",
       "source": "MultiphaseRotation180.bpl"
     },
     {
-      "name": "MultiphaseRotation180_2.bpl...",
+      "name": "MultiphaseRotation180_2.bpl",
       "source": "MultiphaseRotation180_2.bpl"
     },
     {
-      "name": "MultiphaseRotation53.bpl...",
+      "name": "MultiphaseRotation53.bpl",
       "source": "MultiphaseRotation53.bpl"
     },
     {
-      "name": "MultiphaseRotation53nondet.bpl...",
+      "name": "MultiphaseRotation53nondet.bpl",
       "source": "MultiphaseRotation53nondet.bpl"
     },
     {
@@ -601,7 +485,7 @@
       "source": "Munich.bpl"
     },
     {
-      "name": "MunichWithInvariant.bpl...",
+      "name": "MunichWithInvariant.bpl",
       "source": "MunichWithInvariant.bpl"
     },
     {
@@ -613,7 +497,7 @@
       "source": "Mysore2.bpl"
     },
     {
-      "name": "Nangang-FakeDisjunction.bpl...",
+      "name": "Nangang-FakeDisjunction.bpl",
       "source": "Nangang-FakeDisjunction.bpl"
     },
     {
@@ -629,15 +513,15 @@
       "source": "NonTermination3.bpl"
     },
     {
-      "name": "NonterminationCAV_01.bpl...",
+      "name": "NonterminationCAV_01.bpl",
       "source": "NonterminationCAV_01.bpl"
     },
     {
-      "name": "NonterminationCAV_02.bpl...",
+      "name": "NonterminationCAV_02.bpl",
       "source": "NonterminationCAV_02.bpl"
     },
     {
-      "name": "NonterminationCAV_03.bpl...",
+      "name": "NonterminationCAV_03.bpl",
       "source": "NonterminationCAV_03.bpl"
     },
     {
@@ -645,19 +529,19 @@
       "source": "NonTerminationChangeOfBasisDemonstration01.bpl"
     },
     {
-      "name": "NonterminationDifficult01.bpl...",
+      "name": "NonterminationDifficult01.bpl",
       "source": "NonterminationDifficult01.bpl"
     },
     {
-      "name": "NonterminationDifficult02.bpl...",
+      "name": "NonterminationDifficult02.bpl",
       "source": "NonterminationDifficult02.bpl"
     },
     {
-      "name": "NonterminationDifficult03.bpl...",
+      "name": "NonterminationDifficult03.bpl",
       "source": "NonterminationDifficult03.bpl"
     },
     {
-      "name": "NonterminationDifficult04.bpl...",
+      "name": "NonterminationDifficult04.bpl",
       "source": "NonterminationDifficult04.bpl"
     },
     {
@@ -665,7 +549,7 @@
       "source": "NonterminationDifficult05_ComplexEigenvalues.bpl"
     },
     {
-      "name": "NonterminationDifficult06.bpl...",
+      "name": "NonterminationDifficult06.bpl",
       "source": "NonterminationDifficult06.bpl"
     },
     {
@@ -673,7 +557,7 @@
       "source": "NonterminationDifficult07_Hanoi_plus.bpl"
     },
     {
-      "name": "NonterminationDifficult08.bpl...",
+      "name": "NonterminationDifficult08.bpl",
       "source": "NonterminationDifficult08.bpl"
     },
     {
@@ -701,11 +585,11 @@
       "source": "NonterminationDifficult12_LeMans.bpl"
     },
     {
-      "name": "NonTerminationFixedPoint.bpl...",
+      "name": "NonTerminationFixedPoint.bpl",
       "source": "NonTerminationFixedPoint.bpl"
     },
     {
-      "name": "NonTerminationMykonos01.bpl...",
+      "name": "NonTerminationMykonos01.bpl",
       "source": "NonTerminationMykonos01.bpl"
     },
     {
@@ -713,23 +597,23 @@
       "source": "NonterminationNilpotentComponents.bpl"
     },
     {
-      "name": "NonTerminationOverReals.bpl...",
+      "name": "NonTerminationOverReals.bpl",
       "source": "NonTerminationOverReals.bpl"
     },
     {
-      "name": "NonTerminationPartitioned.bpl...",
+      "name": "NonTerminationPartitioned.bpl",
       "source": "NonTerminationPartitioned.bpl"
     },
     {
-      "name": "NonTerminationProjection01.bpl...",
+      "name": "NonTerminationProjection01.bpl",
       "source": "NonTerminationProjection01.bpl"
     },
     {
-      "name": "NonTerminationReal.bpl...",
+      "name": "NonTerminationReal.bpl",
       "source": "NonTerminationReal.bpl"
     },
     {
-      "name": "NonTerminationRotation.bpl...",
+      "name": "NonTerminationRotation.bpl",
       "source": "NonTerminationRotation.bpl"
     },
     {
@@ -737,24 +621,28 @@
       "source": "NonTerminationSameEigenvalues.bpl"
     },
     {
-      "name": "NonTerminationSimple.bpl...",
+      "name": "NonTerminationSimple.bpl",
       "source": "NonTerminationSimple.bpl"
     },
     {
-      "name": "NonTerminationSimple4.bpl...",
+      "name": "NonTerminationSimple4.bpl",
       "source": "NonTerminationSimple4.bpl"
     },
     {
-      "name": "NonTerminationSimple6.bpl...",
+      "name": "NonTerminationSimple6.bpl",
       "source": "NonTerminationSimple6.bpl"
     },
     {
-      "name": "NonTerminationSimple7.bpl...",
+      "name": "NonTerminationSimple7.bpl",
       "source": "NonTerminationSimple7.bpl"
     },
     {
-      "name": "NonTerminationSimple8.bpl...",
+      "name": "NonTerminationSimple8.bpl",
       "source": "NonTerminationSimple8.bpl"
+    },
+    {
+      "name": "NoriSharma-2013FSE-Fig7.bpl",
+      "source": "NoriSharma-2013FSE-Fig7.bpl"
     },
     {
       "name": "Nyala-TwoLex.bpl",
@@ -821,16 +709,20 @@
       "source": "Stockholm.bpl"
     },
     {
-      "name": "SyntaxSupportConst03.bpl...",
+      "name": "SyntaxSupportConst03.bpl",
       "source": "SyntaxSupportConst03.bpl"
     },
     {
-      "name": "SyntaxSupportFunctions01.bpl...",
+      "name": "SyntaxSupportFunctions01.bpl",
       "source": "SyntaxSupportFunctions01.bpl"
     },
     {
       "name": "SyntaxSupportUserDefinedTypes0...",
       "source": "SyntaxSupportUserDefinedTypes01.bpl"
+    },
+    {
+      "name": "TelAviv-AmirMinimum.bpl",
+      "source": "TelAviv-AmirMinimum.bpl"
     },
     {
       "name": "Thun.bpl",
@@ -841,23 +733,23 @@
       "source": "ThunPower2.bpl"
     },
     {
-      "name": "UnboundedDecrease.bpl...",
+      "name": "UnboundedDecrease.bpl",
       "source": "UnboundedDecrease.bpl"
     },
     {
-      "name": "WaldkirchNegativeBound.bpl...",
+      "name": "WaldkirchNegativeBound.bpl",
       "source": "WaldkirchNegativeBound.bpl"
     },
     {
-      "name": "WaldkirchSiensbach.bpl...",
+      "name": "WaldkirchSiensbach.bpl",
       "source": "WaldkirchSiensbach.bpl"
     },
     {
-      "name": "WaldkirchSuggental.bpl...",
+      "name": "WaldkirchSuggental.bpl",
       "source": "WaldkirchSuggental.bpl"
     },
     {
-      "name": "WaldkirchWithCruft.bpl...",
+      "name": "WaldkirchWithCruft.bpl",
       "source": "WaldkirchWithCruft.bpl"
     },
     {
@@ -869,211 +761,33 @@
       "source": "Wellington.bpl"
     },
     {
-      "name": "yPositive-MixedIntReal.bpl...",
+      "name": "yPositive-MixedIntReal.bpl",
       "source": "yPositive-MixedIntReal.bpl"
     },
     {
-      "name": "yPositive-SIscaled100.bpl...",
+      "name": "yPositive-SIscaled100.bpl",
       "source": "yPositive-SIscaled100.bpl"
     },
     {
-      "name": "yPositive-SIscaled50.bpl...",
+      "name": "yPositive-SIscaled50.bpl",
       "source": "yPositive-SIscaled50.bpl"
     },
     {
-      "name": "yPositive-SIscaled75.bpl...",
+      "name": "yPositive-SIscaled75.bpl",
       "source": "yPositive-SIscaled75.bpl"
     },
     {
-      "name": "ZenoWithoutDivision.bpl...",
+      "name": "ZenoWithoutDivision.bpl",
       "source": "ZenoWithoutDivision.bpl"
     },
     {
       "name": "ZhuGuang.bpl",
       "source": "ZhuGuang.bpl"
-    },
-    {
-      "name": "ATVA2013-array-int.bpl...",
-      "source": "ATVA2013-array-int.bpl"
-    },
-    {
-      "name": "ATVA2013-array-real.bpl...",
-      "source": "ATVA2013-array-real.bpl"
-    },
-    {
-      "name": "ATVA2013-bound-int.bpl...",
-      "source": "ATVA2013-bound-int.bpl"
-    },
-    {
-      "name": "ATVA2013-bound-real.bpl...",
-      "source": "ATVA2013-bound-real.bpl"
-    },
-    {
-      "name": "ATVA2013-diff42-int.bpl...",
-      "source": "ATVA2013-diff42-int.bpl"
-    },
-    {
-      "name": "ATVA2013-diff42-real.bpl...",
-      "source": "ATVA2013-diff42-real.bpl"
-    },
-    {
-      "name": "ATVA2013-nonIntegral-int.bpl...",
-      "source": "ATVA2013-nonIntegral-int.bpl"
-    },
-    {
-      "name": "ATVA2013-nonIntegral-real.bpl...",
-      "source": "ATVA2013-nonIntegral-real.bpl"
-    },
-    {
-      "name": "ATVA2013-wild-int.bpl...",
-      "source": "ATVA2013-wild-int.bpl"
-    },
-    {
-      "name": "ATVA2013-wild-real.bpl...",
-      "source": "ATVA2013-wild-real.bpl"
-    },
-    {
-      "name": "ATVA2013-yPositive-int.bpl...",
-      "source": "ATVA2013-yPositive-int.bpl"
-    },
-    {
-      "name": "ATVA2013-yPositive-real.bpl...",
-      "source": "ATVA2013-yPositive-real.bpl"
-    },
-    {
-      "name": "ATVA2013-zeno-int.bpl...",
-      "source": "ATVA2013-zeno-int.bpl"
-    },
-    {
-      "name": "ATVA2013-zeno-real.bpl...",
-      "source": "ATVA2013-zeno-real.bpl"
-    },
-    {
-      "name": "Braverman-2006CAV-Ex1-real.bpl...",
-      "source": "Braverman-2006CAV-Ex1-real.bpl"
-    },
-    {
-      "name": "Braverman-2006CAV-Ex2-real.bpl...",
-      "source": "Braverman-2006CAV-Ex2-real.bpl"
-    },
-    {
-      "name": "ChenFlurMukhopadhyay-2012SAS-F...",
-      "source": "ChenFlurMukhopadhyay-2012SAS-Fig1.bpl"
-    },
-    {
-      "name": "CookSeeZuleger-2013TACAS-Fig3....",
-      "source": "CookSeeZuleger-2013TACAS-Fig3.bpl"
-    },
-    {
-      "name": "CookSeeZuleger-2013TACAS-Fig7a...",
-      "source": "CookSeeZuleger-2013TACAS-Fig7a.bpl"
-    },
-    {
-      "name": "CookSeeZuleger-2013TACAS-Fig7b...",
-      "source": "CookSeeZuleger-2013TACAS-Fig7b.bpl"
-    },
-    {
-      "name": "NoriSharma-2013FSE-Fig7.bpl...",
-      "source": "NoriSharma-2013FSE-Fig7.bpl"
-    },
-    {
-      "name": "TelAviv-AmirMinimum.bpl...",
-      "source": "TelAviv-AmirMinimum.bpl"
-    }
-  ],
-  "automataScript": [
-    {
-      "name": "beverageVendingMachine.ats...",
-      "source": "beverageVendingMachine.ats"
-    },
-    {
-      "name": "BuchiAutomata.ats",
-      "source": "BuchiAutomata.ats"
-    },
-    {
-      "name": "BuchiNestedWordAutomata.ats...",
-      "source": "BuchiNestedWordAutomata.ats"
-    },
-    {
-      "name": "FiniteAutomata.ats",
-      "source": "FiniteAutomata.ats"
-    },
-    {
-      "name": "ListsAndTrees.ats",
-      "source": "ListsAndTrees.ats"
-    },
-    {
-      "name": "LoopComplexity.ats",
-      "source": "LoopComplexity.ats"
-    },
-    {
-      "name": "McCarthy91.ats",
-      "source": "McCarthy91.ats"
-    },
-    {
-      "name": "MinimizeNwaPmaxSat.ats...",
-      "source": "MinimizeNwaPmaxSat.ats"
-    },
-    {
-      "name": "PetriNets.ats",
-      "source": "PetriNets.ats"
-    },
-    {
-      "name": "SemiDeterministicBuchiAutomata...",
-      "source": "SemiDeterministicBuchiAutomata.ats"
-    },
-    {
-      "name": "TheoretischeInformatik2017.ats...",
-      "source": "TheoretischeInformatik2017.ats"
-    },
-    {
-      "name": "TreeAutomata.ats",
-      "source": "TreeAutomata.ats"
-    }
-  ],
-  "boogieConcurrentTraceAbstr": [
-    {
-      "name": "Bakery.bpl",
-      "source": "Bakery.bpl"
-    },
-    {
-      "name": "Fischer.bpl",
-      "source": "Fischer.bpl"
-    },
-    {
-      "name": "FischerWithBug.bpl",
-      "source": "FischerWithBug.bpl"
-    },
-    {
-      "name": "ForkJoinExplained.bpl...",
-      "source": "ForkJoinExplained.bpl"
-    },
-    {
-      "name": "NonAtomicIncrement_2Threads.bp...",
-      "source": "NonAtomicIncrement_2Threads.bpl"
-    },
-    {
-      "name": "Peterson.bpl",
-      "source": "Peterson.bpl"
-    },
-    {
-      "name": "PetersonWithBug.bpl",
-      "source": "PetersonWithBug.bpl"
-    }
-  ],
-  "cReferee": [
-    {
-      "name": "2006CAV-GopanReps-Fig1.c...",
-      "source": "2006CAV-GopanReps-Fig1.c"
-    },
-    {
-      "name": "2007POPL-GulwaniJojic-Figure3....",
-      "source": "2007POPL-GulwaniJojic-Figure3.c"
     }
   ],
   "boogieReferee": [
     {
-      "name": "2019ProgVerif-Sheet10Ex04.bpl...",
+      "name": "2019ProgVerif-Sheet10Ex04.bpl",
       "source": "2019ProgVerif-Sheet10Ex04.bpl"
     },
     {
@@ -1089,11 +803,11 @@
       "source": "2019ProgVerif-Sheet12Ex05-SelectionSort.bpl"
     },
     {
-      "name": "ArrayInitialization01.bpl...",
+      "name": "ArrayInitialization01.bpl",
       "source": "ArrayInitialization01.bpl"
     },
     {
-      "name": "ArrayInitialization02.bpl...",
+      "name": "ArrayInitialization02.bpl",
       "source": "ArrayInitialization02.bpl"
     },
     {
@@ -1103,6 +817,262 @@
     {
       "name": "MultiplicationOfNaturalNumbers...",
       "source": "MultiplicationOfNaturalNumbers.bpl"
+    }
+  ],
+  "boogieTaipan": [
+    {
+      "name": "GoannaDoubleFreeWithoutPointer...",
+      "source": "GoannaDoubleFreeWithoutPointers.bpl"
+    },
+    {
+      "name": "LockingExample.bpl",
+      "source": "LockingExample.bpl"
+    }
+  ],
+  "cAutomizer": [
+    {
+      "name": "1997FMSD-Halbwachs.c",
+      "source": "1997FMSD-Halbwachs.c"
+    },
+    {
+      "name": "2001TACAS-BallPodelskiRajamani...",
+      "source": "2001TACAS-BallPodelskiRajamani.c"
+    },
+    {
+      "name": "CyclicBuffer.c",
+      "source": "CyclicBuffer.c"
+    },
+    {
+      "name": "FunctionPointers01.c",
+      "source": "FunctionPointers01.c"
+    },
+    {
+      "name": "GoannaDoubleFree.c",
+      "source": "GoannaDoubleFree.c"
+    },
+    {
+      "name": "GoannaDoubleFreeWithoutPointer...",
+      "source": "GoannaDoubleFreeWithoutPointers.c"
+    },
+    {
+      "name": "McCarthy91.c",
+      "source": "McCarthy91.c"
+    },
+    {
+      "name": "SAS09.c",
+      "source": "SAS09.c"
+    },
+    {
+      "name": "StructWithFunctionPointer.c",
+      "source": "StructWithFunctionPointer.c"
+    },
+    {
+      "name": "TerminatorRamsey.c",
+      "source": "TerminatorRamsey.c"
+    }
+  ],
+  "cBuchiAutomizer": [
+    {
+      "name": "MicrosoftZuneBug_false-termina...",
+      "source": "MicrosoftZuneBug_false-termination.c"
+    }
+  ],
+  "cKojak": [
+    {
+      "name": "1997FMSD-Halbwachs.c",
+      "source": "1997FMSD-Halbwachs.c"
+    },
+    {
+      "name": "2001TACAS-BallPodelskiRajamani...",
+      "source": "2001TACAS-BallPodelskiRajamani.c"
+    },
+    {
+      "name": "CyclicBuffer.c",
+      "source": "CyclicBuffer.c"
+    },
+    {
+      "name": "FunctionPointers01.c",
+      "source": "FunctionPointers01.c"
+    },
+    {
+      "name": "GoannaDoubleFree.c",
+      "source": "GoannaDoubleFree.c"
+    },
+    {
+      "name": "GoannaDoubleFreeWithoutPointer...",
+      "source": "GoannaDoubleFreeWithoutPointers.c"
+    },
+    {
+      "name": "McCarthy91.c",
+      "source": "McCarthy91.c"
+    },
+    {
+      "name": "SAS09.c",
+      "source": "SAS09.c"
+    },
+    {
+      "name": "StructWithFunctionPointer.c",
+      "source": "StructWithFunctionPointer.c"
+    },
+    {
+      "name": "TerminatorRamsey.c",
+      "source": "TerminatorRamsey.c"
+    }
+  ],
+  "cLassoRanker": [
+    {
+      "name": "Bangalore.c",
+      "source": "Bangalore.c"
+    },
+    {
+      "name": "Hammereisenbach-AlternatingBra...",
+      "source": "Hammereisenbach-AlternatingBranches_false-termination.c"
+    },
+    {
+      "name": "MultiphaseOnlyInThesis.c",
+      "source": "MultiphaseOnlyInThesis.c"
+    },
+    {
+      "name": "Schaafheim_false-termination.c",
+      "source": "Schaafheim_false-termination.c"
+    },
+    {
+      "name": "SyntaxSupportBitwiseOperations...",
+      "source": "SyntaxSupportBitwiseOperations01.c"
+    },
+    {
+      "name": "Vienna.c",
+      "source": "Vienna.c"
+    },
+    {
+      "name": "Waldkirch.c",
+      "source": "Waldkirch.c"
+    }
+  ],
+  "cLTLAutomizer": [
+    {
+      "name": "coolant_basis_1_neg.c",
+      "source": "coolant_basis_1_neg.c"
+    },
+    {
+      "name": "coolant_basis_1_safe_sfty.c",
+      "source": "coolant_basis_1_safe_sfty.c"
+    },
+    {
+      "name": "coolant_basis_1_unsafe_sfty.c",
+      "source": "coolant_basis_1_unsafe_sfty.c"
+    },
+    {
+      "name": "coolant_basis_2_neg.c",
+      "source": "coolant_basis_2_neg.c"
+    },
+    {
+      "name": "coolant_basis_2_safe_liveness....",
+      "source": "coolant_basis_2_safe_liveness.c"
+    },
+    {
+      "name": "coolant_basis_2_unsafe_livenes...",
+      "source": "coolant_basis_2_unsafe_liveness.c"
+    },
+    {
+      "name": "coolant_basis_3_safe_sftyliven...",
+      "source": "coolant_basis_3_safe_sftyliveness.c"
+    },
+    {
+      "name": "coolant_basis_3_unsafe_sftyliv...",
+      "source": "coolant_basis_3_unsafe_sftyliveness.c"
+    },
+    {
+      "name": "coolant_basis_4_1_unsafe_sftyl...",
+      "source": "coolant_basis_4_1_unsafe_sftyliveness.c"
+    },
+    {
+      "name": "coolant_basis_4_2_unsafe_sftyl...",
+      "source": "coolant_basis_4_2_unsafe_sftyliveness.c"
+    },
+    {
+      "name": "coolant_basis_4_neg.c",
+      "source": "coolant_basis_4_neg.c"
+    },
+    {
+      "name": "coolant_basis_4_safe_sftyliven...",
+      "source": "coolant_basis_4_safe_sftyliveness.c"
+    },
+    {
+      "name": "coolant_basis_4_unsafe_sftyliv...",
+      "source": "coolant_basis_4_unsafe_sftyliveness.c"
+    },
+    {
+      "name": "coolant_basis_5_neg.c",
+      "source": "coolant_basis_5_neg.c"
+    },
+    {
+      "name": "coolant_basis_5_safe_sftyliven...",
+      "source": "coolant_basis_5_safe_sftyliveness.c"
+    },
+    {
+      "name": "coolant_basis_5_unsafe_sftyliv...",
+      "source": "coolant_basis_5_unsafe_sftyliveness.c"
+    },
+    {
+      "name": "coolant_basis_6_safe_sftyliven...",
+      "source": "coolant_basis_6_safe_sftyliveness.c"
+    },
+    {
+      "name": "coolant_basis_6_unsafe_sftyliv...",
+      "source": "coolant_basis_6_unsafe_sftyliveness.c"
+    }
+  ],
+  "cReferee": [
+    {
+      "name": "2006CAV-GopanReps-Fig1.c",
+      "source": "2006CAV-GopanReps-Fig1.c"
+    },
+    {
+      "name": "2007POPL-GulwaniJojic-Figure3....",
+      "source": "2007POPL-GulwaniJojic-Figure3.c"
+    }
+  ],
+  "cTaipan": [
+    {
+      "name": "1997FMSD-Halbwachs.c",
+      "source": "1997FMSD-Halbwachs.c"
+    },
+    {
+      "name": "2001TACAS-BallPodelskiRajamani...",
+      "source": "2001TACAS-BallPodelskiRajamani.c"
+    },
+    {
+      "name": "CyclicBuffer.c",
+      "source": "CyclicBuffer.c"
+    },
+    {
+      "name": "FunctionPointers01.c",
+      "source": "FunctionPointers01.c"
+    },
+    {
+      "name": "GoannaDoubleFree.c",
+      "source": "GoannaDoubleFree.c"
+    },
+    {
+      "name": "GoannaDoubleFreeWithoutPointer...",
+      "source": "GoannaDoubleFreeWithoutPointers.c"
+    },
+    {
+      "name": "McCarthy91.c",
+      "source": "McCarthy91.c"
+    },
+    {
+      "name": "SAS09.c",
+      "source": "SAS09.c"
+    },
+    {
+      "name": "StructWithFunctionPointer.c",
+      "source": "StructWithFunctionPointer.c"
+    },
+    {
+      "name": "TerminatorRamsey.c",
+      "source": "TerminatorRamsey.c"
     }
   ],
   "smtEliminator": [

@@ -528,7 +528,8 @@ function set_available_code_samples(worker_id) {
 
   try {
     _CONFIG.code_examples[worker_id].forEach(function (example) {
-        example_entries += '<a class="dropdown-item sample-selection" href="#" data-source="' +  example.source + '">' + example.name + '</a>';
+        example_entries += '<a class="dropdown-item sample-selection" href="#" data-source="' +
+          worker_id + '/' + example.source + '">' + example.name + '</a>';
     });
   } catch (e) {
     console.log('Could set code examples:');

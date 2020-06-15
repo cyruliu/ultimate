@@ -1,6 +1,12 @@
 This is the **Ultimate** framework website. It provides a front-end for the Ultimate framework web API implemented by WebBackend.
 It needs access to a running WebBackend applications API to run Ultimate jobs.
 
+# Glossary
+* **Tool**: A ultimate tool, like for example "ULTIMATE Automizer". It is defined in the config and holds a unique
+ tool.id.
+* **Worker**: Here a selected tool + selected language. In ultimate also called a toolchain. It is defined in the
+ configs and holds a unique worker.id.
+
 # Configuration and setup.
 All configuration is set in `config/config.js`.
 * Copy [config/config.dist.js](config/config.dist.js) to `config/config.js`.
@@ -11,8 +17,14 @@ For each worker in `config.tools.worker` a toolchain named `<worker.id>.xml` mus
 /ultimate_toolchain_xmls`. This toolchain XML can be edited to alter the toolchain.
 
 ## Code Examples
-Code examples can be copied before building with Maven using the [build_examples.py](build_examples.py) script in `trunk/source/WebsiteStatic/build_examples.py`. 
-To add new examples edit the `tool_examples_map` dictionary in this file accordingly.
+All code examples for a specific worker are stored in `config/code_examples/<worker.id>`.
+
+To **add or alter examples**:
+1. Copy or edit the example in `config/code_examples/<worker.id>/<example_name>`.
+2. Go to `config/code_examples` and run `refresh_index.py`
+
+To recreate the initial examples available, go to `config/code_examples` and run `copy_initial_examples.py` and then
+ `refresh_index.py`.
 
 ## Tool details page
 Each tool is associated with a details page. To alter its content, edit the page matching the `tool_id` in the
