@@ -1,5 +1,8 @@
 package de.uni_freiburg.informatik.ultimate.web.backend;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -14,6 +17,7 @@ import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
+import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.resource.PathResource;
 
 
@@ -28,7 +32,8 @@ public class WebBackend implements IApplication {
 	@Override
 	public Object start(final IApplicationContext context) throws Exception {
 		Config.load();
-		
+
+		initLogging();        
 		initJettyServer();
 
 		mJettyServer.start();
@@ -43,6 +48,22 @@ public class WebBackend implements IApplication {
 			mJettyServer.stop();
 		} catch (final Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void initLogging() {
+		// Set log level
+		System.setProperty("org.eclipse.jetty.LEVEL", Config.LOG_LEVEL);
+		
+		// Redirect logging to file.
+        FileOutputStream outStream;
+		try {
+			outStream = new FileOutputStream(Config.LOG_FILE_PATH, true);
+			PrintStream logStream = new PrintStream(outStream);
+			System.setOut(logStream);
+	        System.setErr(logStream);
+		} catch (FileNotFoundException e) {
+			Log.getRootLogger().warn("Not able to log to '" + Config.LOG_FILE_PATH + "'");
 		}
 	}
 

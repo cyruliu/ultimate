@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.jetty.util.log.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,9 +63,9 @@ public class UserSettingsWhitelist {
 		try (Stream<String> lines = Files.lines(Paths.get(filePath))) {
 			String jsonString = lines.collect(Collectors.joining());
 			mJSONWhitelist = new JSONObject(jsonString);
-			System.out.println("Loaded User settings whitelist.");
+			Log.getRootLogger().info("Loaded User settings whitelist.");
         } catch (IOException e) {
-        	System.out.println("Could not load user settings whitelist. Skipping.");
+        	Log.getRootLogger().warn("Could not load user settings whitelist. Skipping.");
             e.printStackTrace();
         } catch (JSONException e) {
 			e.printStackTrace();

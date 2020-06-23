@@ -6,6 +6,8 @@ Goto `trunk/source/BA_MavenParentUltimate` run `mvn clean install -P materialize
 After a successful build, goto `trunk/source/BA_WebBackend`. The artifacts to run and configure the application are in `./target/products`, as well as a copy of this README.md.
 
 There are two main artifacts. The WebBackend (described by this README) and the front-end (in the folder WebsiteStatic).
+* **WebsiteStatic** is a standalone frontend supposed to be served by a webserver (e.g. Apache or Nginx). It is plain copy of the `trunk/source/WebsiteStatic` folder. See [trunk/source/WebsiteStatic/README.md](../WebsiteStatic/README.md) for documantation.
+* **WebBackend** contains the Backend (this project). It runs the ultimate framework and listens to incoming API calls from the frontend.
 
 # Running the Ultimate web-service together with the front-end
 
@@ -65,6 +67,11 @@ A setting "`SETTING_FOO`" in `web.config.properties` can be overridden via VM ar
 	SERVE_WEBSITE=True
 	FRONTEND_PATH=C:\\path\\to\\WebsiteStatic
 	FRONTEND_ROUTE=/website
+	
+	# LOG_FILE_PATH (string) .. : Absolute (or relative from java.class.path) path to the log file.
+    # LOG_LEVEL (string) ...... : Logging verbosity. Choose from: ALL, DEBUG, INFO, WARN, OFF
+    LOG_FILE_PATH=C:\\path\\to\\var\\log\\logfile.log
+    LOG_LEVEL=INFO
 
 ## Whitelist for user settings
 User settings can be allowed per plugin and key.

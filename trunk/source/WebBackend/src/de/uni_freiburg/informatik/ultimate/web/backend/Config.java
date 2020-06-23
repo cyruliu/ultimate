@@ -8,6 +8,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.jetty.util.log.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,10 +46,13 @@ public class Config {
 	public static String BACKEND_ROUTE = "/api";
 	public static String SETTINGS_WHITELIST = "settings_whitelist.json";
 	public static UserSettingsWhitelist USER_SETTINGS_WHITELIST;
+	public static String LOG_FILE_PATH = "ultimate_web_backend.log";
+	public static String LOG_LEVEL = "INFO";
 	
-	private static Properties appSettings = new Properties();
 	private final static String settingsFile = "web.config.properties";
 	private final static String propertyPrefix = "WebBackend.";
+
+	private static Properties appSettings = new Properties();
 
 	/**
 	 * Load settings from web.config.properties file
@@ -64,17 +68,15 @@ public class Config {
 	private static void loadSettingsFile() {
 		try {
 			final String settingsFilePath = loadString("SETTINGS_FILE", settingsFile);
-			System.out.println("Try loading settings file from: " + settingsFilePath);
+			Log.getRootLogger().info("Try loading settings file from: " + settingsFilePath);
 			final FileInputStream fileInputStream = new FileInputStream(settingsFilePath);
 			appSettings.load(fileInputStream);
 			fileInputStream.close();
-
-			if (DEBUG) {
-				System.out.println("Settings file successfuly loaded.");
-			}
+			
+			Log.getRootLogger().info("Settings file successfuly loaded.");
 		} catch (final IOException e) {
-			System.out.println("Could not load settings file. Using defaults.");
-			System.out.println(e.getMessage());
+			Log.getRootLogger().warn("Could not load settings file. Using defaults.");
+			Log.getRootLogger().warn(e.getMessage());
 		}
 	}
 
@@ -82,7 +84,6 @@ public class Config {
 	 * Load available settings. Overrides the defaults by the results if any.
 	 */
 	private static void loadSettings() {
-		DEBUG = loadBoolean("DEBUG", DEBUG);
 		SERVE_WEBSITE = loadBoolean("SERVE_WEBSITE", SERVE_WEBSITE);
 		PORT = loadInteger("PORT", PORT);
 		FRONTEND_PATH = loadString("FRONTEND_PATH", FRONTEND_PATH);
@@ -90,6 +91,8 @@ public class Config {
 		BACKEND_ROUTE = loadString("BACKEND_ROUTE", BACKEND_ROUTE);
 		SETTINGS_WHITELIST = loadString("SETTINGS_WHITELIST", SETTINGS_WHITELIST);
 		USER_SETTINGS_WHITELIST = new UserSettingsWhitelist(loadString("SETTINGS_WHITELIST", SETTINGS_WHITELIST));
+		LOG_FILE_PATH = loadString("LOG_FILE_PATH", LOG_FILE_PATH);
+		LOG_LEVEL = loadString("LOG_LEVEL", LOG_LEVEL);
 	}
 
 
