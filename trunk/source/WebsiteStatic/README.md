@@ -2,10 +2,13 @@ This is the **Ultimate** framework website. It provides a front-end for the Ulti
 It needs access to a running WebBackend applications API to run Ultimate jobs.
 
 # Glossary
-* **Tool**: A ultimate tool, like for example "ULTIMATE Automizer". It is defined in the config and holds a unique
- tool.id.
-* **Worker**: Here a selected tool + selected language. In ultimate also called a toolchain. It is defined in the
- configs and holds a unique worker.id.
+* **Tool**: An ultimate tool, for example "ULTIMATE Automizer".
+  * Defined in [config.js](config/config.js) -> tools.
+  * Assigned to a unique `tool.id`.
+* **Worker**: Here a selected tool + selected language. In ultimate also called a toolchain.
+  * Defined in [config.js](config/config.js)
+  * Assigned to a unique `worker.id`.
+  * Assigned to a toolchain XML in [ultimate_toolchain_xmls](config/ultimate_toolchain_xmls) named `<worker.id>.xml`
 
 # Configuration and setup.
 All configuration is set in `config/config.js`.
@@ -13,14 +16,14 @@ All configuration is set in `config/config.js`.
 * Edit `config/config.js` to your needs. The `config/config.dist.js` file is commented to guide the configuration.
 
 ## Toolchain configuration.
-For each worker in `config.tools.worker` a toolchain named `<worker.id>.xml` must be available in `config
-/ultimate_toolchain_xmls`. This toolchain XML can be edited to alter the toolchain.
+For each worker in `config.tools.worker` a toolchain named `<worker.id>.xml` must be available in
+`config/ultimate_toolchain_xmls`. This toolchain XML can be edited to alter the toolchain.
 
 ## Code Examples
 All code examples for a specific worker are stored in `config/code_examples/<worker.id>`.
 
 To **add or alter examples**:
-1. Copy or edit the example in `config/code_examples/<worker.id>/<example_name>`.
+1. Copy or edit one example in `config/code_examples/<worker.id>/<example_name>`.
 2. Go to `config/code_examples` and run `refresh_index.py`
 
 To recreate the initial examples available, go to `config/code_examples` and run `copy_initial_examples.py` and then

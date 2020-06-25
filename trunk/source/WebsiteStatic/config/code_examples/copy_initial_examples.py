@@ -18,11 +18,12 @@ HERE = osp.abspath(osp.dirname(__file__))
 PROJECT_ROOT = osp.join(HERE, '..', '..', '..', '..')
 EXAMPLES_DIR = osp.join(PROJECT_ROOT, 'examples')
 
+
 tool_examples_map = {
-  'boogieAutomizer': [
+  'boogieAutomizer': [  # The worker.id as defined in config.js
     {
-      'path': osp.join(EXAMPLES_DIR, 'programs', 'toy', 'showcase'),
-      'pattern': '*.bpl'
+      'path': osp.join(EXAMPLES_DIR, 'programs', 'toy', 'showcase'),  # path to a folder containing examples.
+      'pattern': '*.bpl'  # File name pattern (regex). Matches will be included.
     }
   ],
   'cAutomizer': [
