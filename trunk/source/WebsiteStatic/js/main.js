@@ -35,7 +35,7 @@ function render_tool_page(tool_id) {
  * Fetches the backend "ultimate" version and displays it in the settings menu.
  */
 function load_backend_version() {
-    $.get(_CONFIG.backend.web_bridge_url, "version", function (response) {
+    $.get(_CONFIG.backend.web_bridge_url + "/version", function (response) {
         try {
             $('#version_info_text').html(
                 "Using ultimate version: " +

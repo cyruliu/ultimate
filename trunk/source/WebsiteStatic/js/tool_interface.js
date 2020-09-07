@@ -354,6 +354,20 @@ function add_results_to_editor(result) {
   $('.toast').toast('show');
 }
 
+/**
+ * Poll running job for results every 3 seconds.
+ * Polling stops once there are results.
+ */
+function pollResults() {
+    $.get(_CONFIG.backend.web_bridge_url + '/job/' + localStorage.getItem('requestId') , function (response) {
+      if (response.status === 'done') {
+        add_results_to_editor(response);
+        set_execute_spinner(false);
+      } else {
+        setTimeout(pollResults, 3000);
+      }
+    });
+}
 
 /**
  * Initiate a ultimate run and process the result.
@@ -374,12 +388,10 @@ function run_ultimate_task(settings) {
   }
 
   $.post(_CONFIG.backend.web_bridge_url, settings, function (response) {
-    set_execute_spinner(false);
-    add_results_to_editor(response);
+    localStorage.setItem('requestId', response.requestId);
+    pollResults();
   }).fail(function () {
-    alert("Could not fetch results. Server error.");
-  }).always(function () {
-    set_execute_spinner(false);
+    alert("Could not initiate run. Server error.");
   });
 }
 

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,11 +15,13 @@ public class Request {
 	private final Map<String, String[]> mParameterList;
 	private final ServletLogger mLogger;
 	private final HttpServletRequest mRequest;
+	private final String mId;
 
 	Request(final HttpServletRequest request, final ServletLogger logger) {
 		mLogger = logger;
 		mParameterList = extractParameter(request);
 		mRequest = request;
+		mId = getId();
 	}
 
 	private Map<String, String[]> extractParameter(final HttpServletRequest request) {
@@ -50,12 +53,24 @@ public class Request {
 		return paramList;
 	}
 
+	private String getId() {
+		if (this.getParameterList().containsKey("requestId")) {
+			return getSingleParameter("requestId");
+		} else {
+			return mRequest.getSession().getId();
+		}
+	}
+
 	public ServletLogger getLogger() {
 		return mLogger;
 	}
 
 	public String getRequestId() {
-		return mRequest.getSession().getId();
+		return mId;
+	}
+	
+	public HttpSession getSession() {
+		return mRequest.getSession();
 	}
 
 	public Map<String, String[]> getParameterList() {

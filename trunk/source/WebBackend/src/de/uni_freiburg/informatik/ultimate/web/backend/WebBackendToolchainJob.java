@@ -1,6 +1,11 @@
 package de.uni_freiburg.informatik.ultimate.web.backend;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -24,13 +29,17 @@ public class WebBackendToolchainJob extends DefaultToolchainJob {
 	private JSONObject mResult;
 	private ServletLogger mLogger;
 	private Request mRequest;
+	private File mToolchainFile;
+	private String mId;
 
 	public WebBackendToolchainJob(String name, ICore<RunDefinition> core, IController<RunDefinition> controller,
-			ServletLogger logger, File[] input, JSONObject result, Request request) {
+			ServletLogger logger, File[] input, JSONObject result, Request request, File toolchainFile, String id) {
 		super(name, core, controller, logger, input);
 		mResult = result;
 		mLogger = logger;
 		mRequest = request;
+		mToolchainFile = toolchainFile;
+		mId = id;
 	}
 	
 	@Override
@@ -64,6 +73,7 @@ public class WebBackendToolchainJob extends DefaultToolchainJob {
 
 			return convert(mToolchain.processToolchain(tpm));
 		} catch (final Throwable e) {
+			mLogger.log("Error running the Toolchain: " + e.getMessage());
 			return handleException(e);
 		} finally {
 			tpm.done();
@@ -79,6 +89,8 @@ public class WebBackendToolchainJob extends DefaultToolchainJob {
 			try {
 				UltimateResultProcessor.processUltimateResults(
 						mLogger, mToolchain.getCurrentToolchainData().getServices(), mResult);
+				cleanupTempFiles();
+				storeResults();
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -87,6 +99,42 @@ public class WebBackendToolchainJob extends DefaultToolchainJob {
 		default:
 			return super.convert(result);
 		}
+	}
+	
+	@Override
+    public boolean belongsTo(Object family) {
+       return family == "WebBackendToolchainJob";
+    }
+	
+	private void storeResults() {
+		try {
+			JobResult jobResult = new JobResult(mId);
+			mResult.put("status", "done");
+			jobResult.setJson(mResult);
+			jobResult.store();
+            mLogger.log("Stored tollchain result to: " + jobResult.getFilePath()); 
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+	}
+
+	private void cleanupTempFiles() {
+		final File logDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "log" + File.separator);
+		if (!logDir.exists()) {
+			logDir.mkdir();
+		}
+		mLogger.log("Moving input, setting and toolchain file to " + logDir.getAbsoluteFile());
+		for (int i = 0; i < mInputFiles.length; i++) {
+			File file = mInputFiles[i];
+			file.renameTo(new File(logDir, file.getName()));
+		}
+		if (mToolchainFile != null) {
+			mToolchainFile.renameTo(new File(logDir, mToolchainFile.getName()));
+		}
+	}
+
+	public String getId() {
+		return mId;
 	}
 
 }

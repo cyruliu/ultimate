@@ -4,15 +4,22 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Dictionary;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.jobs.IJobManager;
+import org.eclipse.core.runtime.jobs.Job;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osgi.framework.Bundle;
@@ -70,16 +77,13 @@ public class UltimateAPIServlet extends HttpServlet implements ICore<RunDefiniti
 			throws ServletException, IOException {
 		mLogger.logDebug("Connection from " + request.getRemoteAddr() + ", GET: " + request.getQueryString());
 		
-		if (request.getQueryString() != null) {
-			processAPIGetRequest(request, response);
-		}
+		processAPIGetRequest(request, response);
 	}
 
 	@Override
 	protected void doPost(final HttpServletRequest request, final HttpServletResponse response)
 			throws ServletException, IOException {
 		mLogger.logDebug("Connection from " + request.getRemoteAddr() + ", POST: " + request.getRequestURI());
-		
 		final ServletLogger sessionLogger = new ServletLogger(this, request.getSession().getId(), DEBUG);
 		final Request internalRequest = new Request(request, sessionLogger);
 		
@@ -89,14 +93,25 @@ public class UltimateAPIServlet extends HttpServlet implements ICore<RunDefiniti
 	
 	private void processAPIGetRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		final PrintWriter responseWriter = prepareJSONResponse(response);
-		final String query = request.getQueryString();
+		
 		JSONObject jsonResult = new JSONObject();
+		// Get the URL parts. A request url might look like /api/job/job_id.
+		// urlParts = {"", "job", "job_id"} in this example.
+		String[] urlParts = (request.getPathInfo() != null) ? request.getPathInfo().split("/") : null;
+		// resource = "job" in this example.
+		String resource = (urlParts != null) ? urlParts[1] : "";  
 		
 		try {
-			switch (query) {
+			switch (resource) {
 			case "version":
-					jsonResult.put("ultimate_version", this.getUltimateVersionString());
+				jsonResult.put("ultimate_version", this.getUltimateVersionString());
 				break;
+			case "job":
+				String jobId = urlParts[2];
+				JobResult jobResult = new JobResult(jobId);
+				jobResult.load();
+				jsonResult = jobResult.getJson();
+			break;
 			default:
 				jsonResult.put("error", "unknown request.");
 				break;
@@ -171,6 +186,8 @@ public class UltimateAPIServlet extends HttpServlet implements ICore<RunDefiniti
 			final String action = internalRequest.getSingleParameter("action");
 			if (action.equals("execute")) {
 				final JSONObject json = new JSONObject();
+				json.put("requestId", internalRequest.getRequestId());
+				json.put("status", "creating");
 				final UltimateAPIController controller = new UltimateAPIController(internalRequest, json);				
 				int status = controller.init(this);
 				mToolchainManager = new ToolchainManager(mLoggingService, mPluginFactory, controller);
@@ -178,12 +195,12 @@ public class UltimateAPIServlet extends HttpServlet implements ICore<RunDefiniti
 					controller.run();
 				}
 				mToolchainManager.close();
-
 				return json;
 			} else {
 				internalRequest.getLogger().logDebug("Don't know how to handle action: " + action);
 				final JSONObject json = new JSONObject();
 				json.put("error", "Invalid request: Unknown `action` parameter ( " + action + ").");
+
 				return json;
 			}
 		} catch (IllegalArgumentException e) {

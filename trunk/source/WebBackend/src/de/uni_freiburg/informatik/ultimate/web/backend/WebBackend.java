@@ -13,6 +13,7 @@ import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -74,6 +75,7 @@ public class WebBackend implements IApplication {
 		mJettyServer = new Server(Config.PORT);
 		final ContextHandlerCollection contexts = new ContextHandlerCollection();
 		mJettyServer.setHandler(contexts);
+		
 
 		// Serve the website (front-end) as static content.
 		if (Config.SERVE_WEBSITE) {
@@ -88,7 +90,7 @@ public class WebBackend implements IApplication {
 		// Enable CORS to allow ultimate back-end/front-end running on a separate port and domain.
 		enableCorsOnServletContextHandler(servlets);
 		// Add the API servlet.
-		servlets.addServlet(new ServletHolder(new UltimateAPIServlet()), Config.BACKEND_ROUTE);
+		servlets.addServlet(new ServletHolder(new UltimateAPIServlet()), Config.BACKEND_ROUTE + "/*");
 	}
 
 	/**

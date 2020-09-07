@@ -55,9 +55,14 @@ public class UltimateAPIController implements IUltimatePlugin, IController<RunDe
 		try {
 			WebBackendToolchainJob job = new WebBackendToolchainJob(
 					"WebBackendToolchainJob for request " + mRequest.getRequestId(), 
-					mCore, this, mLogger, new File[] { mInputFile }, mResult, mRequest);
+					mCore, this, mLogger, new File[] { mInputFile }, mResult, mRequest, mToolchainFile,
+					mRequest.getRequestId());
+			mResult.put("requestId", mRequest.getRequestId());
 			job.schedule();
-			job.join();
+			mResult.put("status", "scheduled");
+			JobResult jobResult = new JobResult(mRequest.getRequestId());
+			jobResult.setJson(mResult);
+			jobResult.store();
 		} catch (final Throwable t) {
 			mLogger.log("Failed to run Ultimate.");
 			try {
@@ -67,8 +72,6 @@ public class UltimateAPIController implements IUltimatePlugin, IController<RunDe
 					e.printStackTrace();
 				}
 			}
-		} finally {
-			postProcessTemporaryFiles();
 		}
 	}
 	
@@ -255,23 +258,6 @@ public class UltimateAPIController implements IUltimatePlugin, IController<RunDe
 	private void setToolchainFile(Request internalRequest, String timestamp) throws IOException {
 		final String ultimate_toolchain_xml = internalRequest.getSingleParameter("ultimate_toolchain_xml");
 		mToolchainFile = writeTemporaryFile(timestamp + "_toolchain", ultimate_toolchain_xml, ".xml");
-	}
-
-	/**
-	 * Move the temporary files to the "log dir" (log folder in the temp dir).
-	 */
-	private void postProcessTemporaryFiles() {
-		final File logDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "log" + File.separator);
-		if (!logDir.exists()) {
-			logDir.mkdir();
-		}
-		mLogger.log("Moving input, setting and toolchain file to " + logDir.getAbsoluteFile());
-		if (mInputFile != null) {
-			mInputFile.renameTo(new File(logDir, mInputFile.getName()));
-		}
-		if (mToolchainFile != null) {
-			mToolchainFile.renameTo(new File(logDir, mToolchainFile.getName()));
-		}
 	}
 
 	/**
