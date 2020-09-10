@@ -93,7 +93,6 @@ public class UltimateAPIServlet extends HttpServlet implements ICore<RunDefiniti
 	
 	private void processAPIGetRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		final PrintWriter responseWriter = prepareJSONResponse(response);
-		
 		JSONObject jsonResult = new JSONObject();
 		// Get the URL parts. A request url might look like /api/job/job_id.
 		// urlParts = {"", "job", "job_id"} in this example.
@@ -107,11 +106,20 @@ public class UltimateAPIServlet extends HttpServlet implements ICore<RunDefiniti
 				jsonResult.put("ultimate_version", this.getUltimateVersionString());
 				break;
 			case "job":
+				String jobAction = (urlParts.length >= 2) ? urlParts[2] : "";
+				
 				String jobId = urlParts[2];
 				JobResult jobResult = new JobResult(jobId);
 				jobResult.load();
 				jsonResult = jobResult.getJson();
-			break;
+				break;
+			case "jobs":
+				Job[] jobs = getPendingToolchainJobs();
+				for (int i = 0; i < jobs.length; i++) {
+					WebBackendToolchainJob job = (WebBackendToolchainJob) jobs[i];
+					String theID = job.getId();
+				}
+				break;
 			default:
 				jsonResult.put("error", "unknown request.");
 				break;
@@ -208,6 +216,26 @@ public class UltimateAPIServlet extends HttpServlet implements ICore<RunDefiniti
 			json.put("error", "Invalid request: " + e.getMessage());
 			return json;
 		}
+	}
+	
+	private boolean cancelToolchainJob(String jobId) {
+		Job[] jobs = getPendingToolchainJobs();
+		for (int i = 0; i < jobs.length; i++) {
+			Job job = jobs[i];
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Toolchain jobs (by family "WebBackendToolchainJob") running or queued.
+	 * @return
+	 */
+	private Job[] getPendingToolchainJobs() {
+		IJobManager jobManager = Job.getJobManager();
+		Job[] jobs = jobManager.find("WebBackendToolchainJob");
+
+		return jobs;
 	}
 
 	/***************************** ICore Implementation *********************/
