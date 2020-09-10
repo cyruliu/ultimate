@@ -1,11 +1,7 @@
 package de.uni_freiburg.informatik.ultimate.web.backend;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.util.concurrent.CountDownLatch;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -20,28 +16,29 @@ import de.uni_freiburg.informatik.ultimate.core.coreplugin.toolchain.DefaultTool
 import de.uni_freiburg.informatik.ultimate.core.lib.toolchain.RunDefinition;
 import de.uni_freiburg.informatik.ultimate.core.model.IController;
 import de.uni_freiburg.informatik.ultimate.core.model.ICore;
+import de.uni_freiburg.informatik.ultimate.core.model.IToolchain.ReturnCode;
 import de.uni_freiburg.informatik.ultimate.core.model.IToolchainData;
 import de.uni_freiburg.informatik.ultimate.core.model.IToolchainProgressMonitor;
-import de.uni_freiburg.informatik.ultimate.core.model.IToolchain.ReturnCode;
 
 public class WebBackendToolchainJob extends DefaultToolchainJob {
 
-	private JSONObject mResult;
-	private ServletLogger mLogger;
-	private Request mRequest;
-	private File mToolchainFile;
-	private String mId;
+	private final JSONObject mResult;
+	private final ServletLogger mServletLogger;
+	private final Request mRequest;
+	private final File mToolchainFile;
+	private final String mId;
 
-	public WebBackendToolchainJob(String name, ICore<RunDefinition> core, IController<RunDefinition> controller,
-			ServletLogger logger, File[] input, JSONObject result, Request request, File toolchainFile, String id) {
+	public WebBackendToolchainJob(final String name, final ICore<RunDefinition> core,
+			final IController<RunDefinition> controller, final ServletLogger logger, final File[] input,
+			final JSONObject result, final Request request, final File toolchainFile, final String id) {
 		super(name, core, controller, logger, input);
 		mResult = result;
-		mLogger = logger;
+		mServletLogger = logger;
 		mRequest = request;
 		mToolchainFile = toolchainFile;
 		mId = id;
 	}
-	
+
 	@Override
 	protected IStatus run(final IProgressMonitor monitor) {
 		final IToolchainProgressMonitor tpm = RcpProgressMonitorWrapper.create(monitor);
@@ -61,7 +58,7 @@ public class WebBackendToolchainJob extends DefaultToolchainJob {
 
 			final IToolchainData<RunDefinition> chain = mToolchain.makeToolSelection(tpm);
 			if (chain == null) {
-				mLogger.fatal("Toolchain selection failed, aborting...");
+				mServletLogger.fatal("Toolchain selection failed, aborting...");
 				return new Status(IStatus.CANCEL, Activator.PLUGIN_ID, IStatus.CANCEL, "Toolchain selection canceled",
 						null);
 			}
@@ -73,25 +70,25 @@ public class WebBackendToolchainJob extends DefaultToolchainJob {
 
 			return convert(mToolchain.processToolchain(tpm));
 		} catch (final Throwable e) {
-			mLogger.log("Error running the Toolchain: " + e.getMessage());
+			mServletLogger.log("Error running the Toolchain: " + e.getMessage());
 			return handleException(e);
 		} finally {
 			tpm.done();
 			releaseToolchain();
 		}
 	}
-	
+
 	@Override
 	protected IStatus convert(final ReturnCode result) {
 		switch (result) {
 		case Ok:
 		case Cancel:
 			try {
-				UltimateResultProcessor.processUltimateResults(
-						mLogger, mToolchain.getCurrentToolchainData().getServices(), mResult);
+				UltimateResultProcessor.processUltimateResults(mServletLogger,
+						mToolchain.getCurrentToolchainData().getServices(), mResult);
 				cleanupTempFiles();
 				storeResults();
-			} catch (JSONException e) {
+			} catch (final JSONException e) {
 				e.printStackTrace();
 			}
 			return Status.OK_STATUS;
@@ -100,22 +97,22 @@ public class WebBackendToolchainJob extends DefaultToolchainJob {
 			return super.convert(result);
 		}
 	}
-	
+
 	@Override
-    public boolean belongsTo(Object family) {
-       return family == "WebBackendToolchainJob";
-    }
-	
+	public boolean belongsTo(final Object family) {
+		return family == "WebBackendToolchainJob";
+	}
+
 	private void storeResults() {
 		try {
-			JobResult jobResult = new JobResult(mId);
+			final JobResult jobResult = new JobResult(mId);
 			mResult.put("status", "done");
 			jobResult.setJson(mResult);
 			jobResult.store();
-            mLogger.log("Stored tollchain result to: " + jobResult.getFilePath()); 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+			mServletLogger.log("Stored tollchain result to: " + jobResult.getFilePath());
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	private void cleanupTempFiles() {
@@ -123,9 +120,9 @@ public class WebBackendToolchainJob extends DefaultToolchainJob {
 		if (!logDir.exists()) {
 			logDir.mkdir();
 		}
-		mLogger.log("Moving input, setting and toolchain file to " + logDir.getAbsoluteFile());
+		mServletLogger.log("Moving input, setting and toolchain file to " + logDir.getAbsoluteFile());
 		for (int i = 0; i < mInputFiles.length; i++) {
-			File file = mInputFiles[i];
+			final File file = mInputFiles[i];
 			file.renameTo(new File(logDir, file.getName()));
 		}
 		if (mToolchainFile != null) {
@@ -135,6 +132,10 @@ public class WebBackendToolchainJob extends DefaultToolchainJob {
 
 	public String getId() {
 		return mId;
+	}
+
+	public CountDownLatch cancelToolchain() {
+		return mServices.getProgressMonitorService().cancelToolchain();
 	}
 
 }
