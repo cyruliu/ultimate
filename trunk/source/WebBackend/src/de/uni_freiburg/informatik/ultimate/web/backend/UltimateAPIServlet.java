@@ -3,18 +3,12 @@ package de.uni_freiburg.informatik.ultimate.web.backend;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Dictionary;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.runtime.Platform;
@@ -40,6 +34,8 @@ import de.uni_freiburg.informatik.ultimate.core.model.preferences.IPreferenceIni
 import de.uni_freiburg.informatik.ultimate.core.model.preferences.IPreferenceProvider;
 import de.uni_freiburg.informatik.ultimate.core.model.services.ILoggingService;
 import de.uni_freiburg.informatik.ultimate.util.CoreUtil;
+import de.uni_freiburg.informatik.ultimate.web.backend.util.APIResponse;
+import de.uni_freiburg.informatik.ultimate.web.backend.util.GetAPIrequest;
 
 
 public class UltimateAPIServlet extends HttpServlet implements ICore<RunDefinition>, IUltimatePlugin {
@@ -92,47 +88,56 @@ public class UltimateAPIServlet extends HttpServlet implements ICore<RunDefiniti
 	
 	
 	private void processAPIGetRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		final PrintWriter responseWriter = prepareJSONResponse(response);
-		JSONObject jsonResult = new JSONObject();
-		// Get the URL parts. A request url might look like /api/job/job_id.
-		// urlParts = {"", "job", "job_id"} in this example.
-		String[] urlParts = (request.getPathInfo() != null) ? request.getPathInfo().split("/") : null;
-		// resource = "job" in this example.
-		String resource = (urlParts != null) ? urlParts[1] : "";  
+		GetAPIrequest apiRequest = new GetAPIrequest(request);
+		APIResponse apiResponse = new APIResponse(response);
 		
 		try {
-			switch (resource) {
-			case "version":
-				jsonResult.put("ultimate_version", this.getUltimateVersionString());
+			switch (apiRequest.ressourceType) {
+			case VERSION:
+				apiResponse.put("ultimate_version", this.getUltimateVersionString());
 				break;
-			case "job":
-				String jobAction = (urlParts.length >= 2) ? urlParts[2] : "";
-				
-				String jobId = urlParts[2];
-				JobResult jobResult = new JobResult(jobId);
-				jobResult.load();
-				jsonResult = jobResult.getJson();
-				break;
-			case "jobs":
-				Job[] jobs = getPendingToolchainJobs();
-				for (int i = 0; i < jobs.length; i++) {
-					WebBackendToolchainJob job = (WebBackendToolchainJob) jobs[i];
-					String theID = job.getId();
-				}
+			case JOB:
+				handleJobGetRequest(apiRequest, apiResponse);
 				break;
 			default:
-				jsonResult.put("error", "unknown request.");
+				apiResponse.setStatusError();
+				apiResponse.setMessage("unknown request.");
 				break;
 			}
-			jsonResult.write(responseWriter);
+			apiResponse.write();
 		} catch (Exception e) {
-			final String message = "{\"error\" : \"Invalid request: " + e.getMessage() + " \"}";
-			responseWriter.print(message);
-			mLogger.logDebug(message);
-			
+			apiResponse.invalidRequest(e.getMessage());
 			if (DEBUG) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	private void handleJobGetRequest(GetAPIrequest apiRequest, APIResponse apiResponse) 
+			throws JSONException, IOException {
+		if (apiRequest.urlParts.length < 4) {
+			apiResponse.setStatusError();
+			apiResponse.setMessage("No JobId provided.");
+			return;
+		}
+		
+		String jobId = apiRequest.urlParts[3];
+		
+		switch (apiRequest.taskType) {
+		case GET:
+			JobResult jobResult = new JobResult(jobId);
+			jobResult.load();
+			apiResponse.mergeJSON(jobResult.getJson());
+			break;
+		case DELETE:
+			boolean canceled = cancelToolchainJob(jobId);
+			String message = (canceled) ? "Job " + jobId + " canceled." : "No unfinished job " + jobId + " found."; 
+			apiResponse.setMessage(message);
+			break;
+		default:
+			apiResponse.setStatusError();
+			apiResponse.setMessage("Task not supported for ressource " + apiRequest.ressourceType);
+			break;
 		}
 	}
 
@@ -144,41 +149,25 @@ public class UltimateAPIServlet extends HttpServlet implements ICore<RunDefiniti
 	 * @param responseWriter
 	 */
 	private void processAPIPostRequest(Request internalRequest, HttpServletResponse response) throws IOException {
-		final PrintWriter responseWriter = prepareJSONResponse(response);
+		APIResponse apiResponse = new APIResponse(response);
 		
 		try {
-			mLogger.logDebug("Process API request.");
-			JSONObject jsonResult = new JSONObject();
+			mLogger.logDebug("Process API POST request.");
+
 			if (internalRequest.getParameterList().containsKey("action")) {
 				mLogger.logDebug("Initiate ultimate run for request: " + internalRequest.toString());
-				jsonResult = initiateUltimateRun(internalRequest);
+				apiResponse.mergeJSON(initiateUltimateRun(internalRequest));
 			} else {
-				jsonResult.put("error", "Invalid request: Missing `action` parameter.");
+				apiResponse.setStatusError();
+				apiResponse.setMessage("Invalid request: Missing `action` parameter.");
 			}
-			jsonResult.write(responseWriter);
+			apiResponse.write();
 		} catch (final JSONException e) {
-			final String message = "{\"error\" : \"Invalid request: " + e.getMessage() + " \"}";
-			responseWriter.print(message);
-			internalRequest.getLogger().logDebug(message);
-			
+			apiResponse.invalidRequest(e.getMessage());
 			if (DEBUG) {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	/**
-	 * Set response headers for JSON. Return writer.
-	 * @param response
-	 * @return
-	 * @throws IOException
-	 */
-	private PrintWriter prepareJSONResponse(HttpServletResponse response) throws IOException {
-		// Set response type to JSON.
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		
-		return response.getWriter();
 	}
 
 	/**
@@ -221,14 +210,17 @@ public class UltimateAPIServlet extends HttpServlet implements ICore<RunDefiniti
 	private boolean cancelToolchainJob(String jobId) {
 		Job[] jobs = getPendingToolchainJobs();
 		for (int i = 0; i < jobs.length; i++) {
-			Job job = jobs[i];
+			WebBackendToolchainJob job = (WebBackendToolchainJob) jobs[i];
+			if (job.getId().equals(jobId)) {
+				job.cancelToolchain();
+				return true;
+			}
 		}
-		
-		return true;
+		return false;
 	}
 	
 	/**
-	 * Toolchain jobs (by family "WebBackendToolchainJob") running or queued.
+	 * Jobs (by family "WebBackendToolchainJob") running or queued.
 	 * @return
 	 */
 	private Job[] getPendingToolchainJobs() {

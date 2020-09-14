@@ -39,9 +39,14 @@ public class JobResult {
 	}
 	
 	public void load() throws JSONException, IOException {
-        byte[] encoded = Files.readAllBytes(Paths.get(getFilePath()));
-        String resultString = new String(encoded);
-        mJsonResult = new JSONObject(resultString);
+		try {
+			byte[] encoded = Files.readAllBytes(Paths.get(getFilePath()));
+	        String resultString = new String(encoded);
+	        mJsonResult = new JSONObject(resultString);
+		} catch (IOException e) {
+			mJsonResult = new JSONObject();
+			mJsonResult.put("error", "Job not found.");
+		}
 	}
 	
 	public JSONObject getJson() {

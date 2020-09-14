@@ -354,19 +354,25 @@ function add_results_to_editor(result) {
   $('.toast').toast('show');
 }
 
+
+function Sleep(milliseconds) {
+ return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+
 /**
  * Poll running job for results every 3 seconds.
  * Polling stops once there are results.
  */
-function pollResults() {
-    $.get(_CONFIG.backend.web_bridge_url + '/job/' + localStorage.getItem('requestId') , function (response) {
-      if (response.status === 'done') {
-        add_results_to_editor(response);
-        set_execute_spinner(false);
-      } else {
-        setTimeout(pollResults, 3000);
-      }
-    });
+async function pollResults() {
+  await Sleep(1000);
+  $.get(_CONFIG.backend.web_bridge_url + '/job/get/' + localStorage.getItem('requestId'), function (response) {
+    if (response.status === 'done') {
+      add_results_to_editor(response);
+      set_execute_spinner(false);
+    } else {
+      setTimeout(pollResults, 3000);
+    }
+  });
 }
 
 /**
