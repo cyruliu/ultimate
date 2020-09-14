@@ -131,6 +131,7 @@ public class UltimateAPIServlet extends HttpServlet implements ICore<RunDefiniti
 			break;
 		case DELETE:
 			boolean canceled = cancelToolchainJob(jobId);
+			if (!canceled) apiResponse.setStatusError();
 			String message = (canceled) ? "Job " + jobId + " canceled." : "No unfinished job " + jobId + " found."; 
 			apiResponse.setMessage(message);
 			break;

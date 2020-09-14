@@ -175,6 +175,21 @@ function init_interface_controls () {
     }
   });
 
+  // Handle click on "Cancel run!"
+  $('#navbar_cancel_interface').on({
+    click: function () {
+      clear_messages();
+      try {
+        set_canceling_spinner(true);
+        stop_ultimate_toolchain_job(localStorage.getItem('requestId'));
+      } catch (e) {
+        alert('Could not cancel Ultimate: ' + e.message);
+        console.log(e);
+        set_execute_spinner(false);
+      }
+    }
+  });
+
   // Highlight code by message click.
   $(document).on({
     click: function () {
@@ -363,15 +378,23 @@ function Sleep(milliseconds) {
  * Poll running job for results every 3 seconds.
  * Polling stops once there are results.
  */
-async function pollResults() {
-  await Sleep(1000);
+function poll_results() {
   $.get(_CONFIG.backend.web_bridge_url + '/job/get/' + localStorage.getItem('requestId'), function (response) {
     if (response.status === 'done') {
       add_results_to_editor(response);
       set_execute_spinner(false);
     } else {
-      setTimeout(pollResults, 3000);
+      setTimeout(poll_results, 3000);
     }
+  });
+}
+
+/**
+ * Stops a running toolchain job.
+ * @param job_jd
+ */
+function stop_ultimate_toolchain_job(job_jd) {
+  $.get(_CONFIG.backend.web_bridge_url + '/job/delete/' + job_jd, function (response) {
   });
 }
 
@@ -395,9 +418,11 @@ function run_ultimate_task(settings) {
 
   $.post(_CONFIG.backend.web_bridge_url, settings, function (response) {
     localStorage.setItem('requestId', response.requestId);
-    pollResults();
+    localStorage.setItem('pollingActive', "1");
+    poll_results();
   }).fail(function () {
     alert("Could not initiate run. Server error.");
+    set_execute_spinner(false);
   });
 }
 
@@ -664,10 +689,7 @@ function set_available_frontend_settings(language) {
   $('.custom-range').on('input change', function () {
     $(this).siblings('.slider-output').html('Value: ' + $(this).val());
   });
-
-
 }
-
 
 /**
  * Set (activete == true) or unset the spinner indicating the results are being fetched.
@@ -675,11 +697,29 @@ function set_available_frontend_settings(language) {
  */
 function set_execute_spinner(activate) {
   let exec_button = $('#navbar_execute_interface');
+  let cancel_button = $('#navbar_cancel_interface');
   if (activate) {
+    cancel_button.removeClass('hidden');
     exec_button.html(
       '<span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span> Executing ...'
     );
   } else {
     exec_button.html('Execute');
+    set_canceling_spinner(false);
+    cancel_button.addClass('hidden');
+  }
+}
+
+function set_canceling_spinner(activate) {
+  let cancel_button = $('#navbar_cancel_interface');
+  let exec_button = $('#navbar_execute_interface');
+  if (activate) {
+    exec_button.addClass('hidden');
+    cancel_button.html(
+      '<span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Canceling ... '
+    );
+  } else {
+    exec_button.removeClass('hidden');
+    cancel_button.html('Cancel run!');
   }
 }
