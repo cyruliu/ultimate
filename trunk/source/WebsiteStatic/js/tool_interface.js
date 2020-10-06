@@ -701,7 +701,7 @@ function set_execute_spinner(activate) {
   if (activate) {
     cancel_button.removeClass('hidden');
     exec_button.html(
-      '<span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span> Executing ...'
+      '<span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span> Running ...'
     );
   } else {
     exec_button.html('Execute');
@@ -720,6 +720,6 @@ function set_canceling_spinner(activate) {
     );
   } else {
     exec_button.removeClass('hidden');
-    cancel_button.html('Cancel run!');
+    cancel_button.html('(Click to cancel)');
   }
 }
