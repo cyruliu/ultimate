@@ -1,4 +1,4 @@
-package de.uni_freiburg.informatik.ultimate.web.backend;
+package de.uni_freiburg.informatik.ultimate.web.backend.util;
 
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
@@ -93,6 +93,8 @@ public class WebBackendToolchainJob extends DefaultToolchainJob {
 			}
 			return Status.OK_STATUS;
 		case Error:
+			cleanupTempFiles();
+			storeResults();
 		default:
 			return super.convert(result);
 		}

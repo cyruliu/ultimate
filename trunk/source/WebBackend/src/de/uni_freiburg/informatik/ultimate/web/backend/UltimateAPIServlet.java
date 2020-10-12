@@ -36,6 +36,10 @@ import de.uni_freiburg.informatik.ultimate.core.model.services.ILoggingService;
 import de.uni_freiburg.informatik.ultimate.util.CoreUtil;
 import de.uni_freiburg.informatik.ultimate.web.backend.util.APIResponse;
 import de.uni_freiburg.informatik.ultimate.web.backend.util.GetAPIrequest;
+import de.uni_freiburg.informatik.ultimate.web.backend.util.JobResult;
+import de.uni_freiburg.informatik.ultimate.web.backend.util.Request;
+import de.uni_freiburg.informatik.ultimate.web.backend.util.ServletLogger;
+import de.uni_freiburg.informatik.ultimate.web.backend.util.WebBackendToolchainJob;
 
 
 public class UltimateAPIServlet extends HttpServlet implements ICore<RunDefinition>, IUltimatePlugin {
@@ -76,6 +80,9 @@ public class UltimateAPIServlet extends HttpServlet implements ICore<RunDefiniti
 		processAPIGetRequest(request, response);
 	}
 
+	/**
+	 * Process POST requests
+	 */
 	@Override
 	protected void doPost(final HttpServletRequest request, final HttpServletResponse response)
 			throws ServletException, IOException {
@@ -143,8 +150,8 @@ public class UltimateAPIServlet extends HttpServlet implements ICore<RunDefiniti
 	}
 
 	/**
-	 * Pass the Request to initiateUltimateRun.
-	 * Write results to responseWriter.
+	 * Handle POST request. 
+	 * Write result to HttpServletResponse via APIResponse.
 	 * 
 	 * @param internalRequest
 	 * @param responseWriter

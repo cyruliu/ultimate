@@ -1,4 +1,4 @@
-package de.uni_freiburg.informatik.ultimate.web.backend;
+package de.uni_freiburg.informatik.ultimate.web.backend.util;
 
 import java.io.IOException;
 import java.util.Enumeration;
@@ -17,7 +17,7 @@ public class Request {
 	private final HttpServletRequest mRequest;
 	private final String mId;
 
-	Request(final HttpServletRequest request, final ServletLogger logger) {
+	public Request(final HttpServletRequest request, final ServletLogger logger) {
 		mLogger = logger;
 		mParameterList = extractParameter(request);
 		mRequest = request;

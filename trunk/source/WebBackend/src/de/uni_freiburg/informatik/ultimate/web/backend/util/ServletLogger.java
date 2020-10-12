@@ -1,4 +1,4 @@
-package de.uni_freiburg.informatik.ultimate.web.backend;
+package de.uni_freiburg.informatik.ultimate.web.backend.util;
 
 import javax.servlet.http.HttpServlet;
 

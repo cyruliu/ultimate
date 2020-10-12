@@ -3,7 +3,7 @@
  * and easily sent via JSON and interpreted with JS. This means i.e. you should
  * avoid complex data structures in this class!
  */
-package de.uni_freiburg.informatik.ultimate.web.backend;
+package de.uni_freiburg.informatik.ultimate.web.backend.util;
 
 /**
  * @author Markus Lindenmann

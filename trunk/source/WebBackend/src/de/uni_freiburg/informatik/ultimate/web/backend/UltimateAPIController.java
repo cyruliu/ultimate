@@ -30,6 +30,10 @@ import de.uni_freiburg.informatik.ultimate.core.model.preferences.IPreferenceIni
 import de.uni_freiburg.informatik.ultimate.core.model.results.IResult;
 import de.uni_freiburg.informatik.ultimate.core.model.services.IUltimateServiceProvider;
 import de.uni_freiburg.informatik.ultimate.util.CoreUtil;
+import de.uni_freiburg.informatik.ultimate.web.backend.util.JobResult;
+import de.uni_freiburg.informatik.ultimate.web.backend.util.Request;
+import de.uni_freiburg.informatik.ultimate.web.backend.util.ServletLogger;
+import de.uni_freiburg.informatik.ultimate.web.backend.util.WebBackendToolchainJob;
 
 public class UltimateAPIController implements IUltimatePlugin, IController<RunDefinition> {
 	
@@ -51,7 +55,6 @@ public class UltimateAPIController implements IUltimatePlugin, IController<RunDe
 	
 	public void run() {
 		// TODO: Allow timeout to be set in the API request and use it.
-		final long timeout = Math.min(TIMEOUT, TIMEOUT);
 		try {
 			WebBackendToolchainJob job = new WebBackendToolchainJob(
 					"WebBackendToolchainJob for request " + mRequest.getRequestId(), 
