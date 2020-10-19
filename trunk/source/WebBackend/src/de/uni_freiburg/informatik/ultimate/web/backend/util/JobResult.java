@@ -38,7 +38,7 @@ public class JobResult {
         writer.close();
 	}
 	
-	public void load() throws JSONException, IOException {
+	public void load() throws JSONException, IOException, IllegalArgumentException {
 		try {
 			byte[] encoded = Files.readAllBytes(Paths.get(getFilePath()));
 	        String resultString = new String(encoded);
@@ -46,6 +46,7 @@ public class JobResult {
 		} catch (IOException e) {
 			mJsonResult = new JSONObject();
 			mJsonResult.put("error", "Job not found.");
+			throw new IllegalArgumentException("Job id not found.");
 		}
 	}
 	
