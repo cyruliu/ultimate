@@ -80,6 +80,7 @@ public class WebBackend implements IApplication {
 		// Serve the website (front-end) as static content.
 		if (Config.SERVE_WEBSITE) {
 			addStaticPathToContext(contexts, Paths.get(Config.FRONTEND_PATH), Config.FRONTEND_ROUTE);
+			Log.getRootLogger().info("Serving frontend (" + Paths.get(Config.FRONTEND_PATH) +") at route: " + Config.FRONTEND_ROUTE);
 		}
 
 		// Serve the API.
@@ -91,6 +92,7 @@ public class WebBackend implements IApplication {
 		enableCorsOnServletContextHandler(servlets);
 		// Add the API servlet.
 		servlets.addServlet(new ServletHolder(new UltimateAPIServlet()), Config.BACKEND_ROUTE + "/*");
+		Log.getRootLogger().info("Serving api at route: " + Config.BACKEND_ROUTE);
 	}
 
 	/**
