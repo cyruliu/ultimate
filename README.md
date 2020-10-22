@@ -1,4 +1,5 @@
 # Ultimate
+## Abstaction for bitwise expressions.
 [![Build Status Jenkins](https://monteverdi.informatik.uni-freiburg.de/ci/buildStatus/icon?job=Ultimate%20(GitHub))](https://monteverdi.informatik.uni-freiburg.de/ci/job/Ultimate%20(GitHub)/)
 [![Build Status](https://travis-ci.org/ultimate-pa/ultimate.svg)](https://travis-ci.org/ultimate-pa/ultimate)
 [![LGPL License](https://img.shields.io/badge/license-LGPLv3+LE-brightgreen.svg)](https://github.com/ultimate-pa/ultimate/wiki/License)
