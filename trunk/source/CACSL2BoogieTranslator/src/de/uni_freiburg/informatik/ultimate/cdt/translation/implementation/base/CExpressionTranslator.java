@@ -49,9 +49,9 @@ import de.uni_freiburg.informatik.ultimate.boogie.ast.AssumeStatement;
 import de.uni_freiburg.informatik.ultimate.boogie.ast.BinaryExpression;
 import de.uni_freiburg.informatik.ultimate.boogie.ast.BinaryExpression.Operator;
 import de.uni_freiburg.informatik.ultimate.boogie.ast.BooleanLiteral;
-import de.uni_freiburg.informatik.ultimate.boogie.ast.Expression;
 import de.uni_freiburg.informatik.ultimate.boogie.ast.IfStatement;
 import de.uni_freiburg.informatik.ultimate.boogie.ast.LeftHandSide;
+import de.uni_freiburg.informatik.ultimate.boogie.ast.Expression;
 import de.uni_freiburg.informatik.ultimate.boogie.ast.Statement;
 import de.uni_freiburg.informatik.ultimate.boogie.ast.StructAccessExpression;
 import de.uni_freiburg.informatik.ultimate.boogie.ast.UnaryExpression;
@@ -571,10 +571,11 @@ public class CExpressionTranslator {
 		left = newOps.getFirst();
 		right = newOps.getSecond();
 		final CPrimitive typeOfResult = (CPrimitive) left.getLrValue().getCType().getUnderlyingType();
-		assert typeOfResult.equals(left.getLrValue().getCType().getUnderlyingType());
+		assert typeOfResult.equals(left.getLrValue().getCType().getUnderlyingType());	
 		final Expression expr = mExpressionTranslation.constructBinaryBitwiseExpression(loc, op,
 				left.getLrValue().getValue(), typeOfResult, right.getLrValue().getValue(), typeOfResult, hook);
 		final RValue rval = new RValue(expr, typeOfResult, false, false);
+		//Cyrus: For the bitwise abstraction here, we construct a different @ expr, then build a non-bitwise expression..
 		switch (op) {
 		case IASTBinaryExpression.op_binaryAnd:
 		case IASTBinaryExpression.op_binaryXor:
@@ -584,6 +585,22 @@ public class CExpressionTranslator {
 		case IASTBinaryExpression.op_binaryOrAssign: {
 			return new ExpressionResultBuilder().addAllExceptLrValue(left, right).setLrValue(rval).build();
 		}
+//		switch (op) {
+//		case IASTBinaryExpression.op_binaryAnd:
+//			if (lType.isConst() && (left.getLrValue().getValue() instanceof IntegerLiteral)) {
+//				
+//			} else if (rType.isConst()) {
+//				
+//			} else {
+//				return new ExpressionResultBuilder().addAllExceptLrValue(left, right).setLrValue(rval).build();
+//			}
+//		case IASTBinaryExpression.op_binaryXor:
+//		case IASTBinaryExpression.op_binaryOr:
+//		case IASTBinaryExpression.op_binaryAndAssign:
+//		case IASTBinaryExpression.op_binaryXorAssign:
+//		case IASTBinaryExpression.op_binaryOrAssign: {
+//			return new ExpressionResultBuilder().addAllExceptLrValue(left, right).setLrValue(rval).build();
+//		}
 		default:
 			throw new AssertionError("no bitwise arithmetic operation " + op);
 		}
