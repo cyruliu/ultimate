@@ -165,8 +165,20 @@ public class IntegerTranslation extends ExpressionTranslation {
 		switch (op) {
 		case IASTBinaryExpression.op_binaryAnd:
 		case IASTBinaryExpression.op_binaryAndAssign:
-			funcname = "bitwiseAnd";
-			break;
+			System.out.println("----Cyrus: "+ typeLeft.toString() + "------value:" + left.toString());
+			System.out.println("----Cyrus: "+ typeRight.toString() + "------value:" + right.toString());
+			if (left instanceof IntegerLiteral) {
+				return right;
+			} else if (right instanceof IntegerLiteral) {
+				String constValue = ((IntegerLiteral) right).getValue();
+				System.out.println("Right side constant value:" + constValue);
+				if (constValue == "1") return left;
+				funcname = "bitwiseAnd";
+				break;
+			} else {
+				funcname = "bitwiseAnd";
+				break;
+			}
 		case IASTBinaryExpression.op_binaryOr:
 		case IASTBinaryExpression.op_binaryOrAssign:
 			funcname = "bitwiseOr";
