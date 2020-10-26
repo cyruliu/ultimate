@@ -140,6 +140,10 @@ public class QuantifierEliminationTest {
 		mCsvWriter.reportTestFinished();
 	}
 
+	public static Sort getBv32(final Script script) {
+		return SmtSortUtils.getBitvectorSort(script, BigInteger.valueOf(32));
+	}
+
 	@Test
 	public void prenexQuantifiedCapture() {
 		final Term seventeen = mScript.numeral(BigInteger.valueOf(17));
@@ -857,6 +861,14 @@ public class QuantifierEliminationTest {
 	}
 
 	@Test
+	public void derBitvectorFail01() {
+		final FunDecl[] funDecls = { new FunDecl(QuantifierEliminationTest::getBv32, "~g~0", "main_~a~0") };
+		final String inputSTR = "(forall ((v_~g~0_24 (_ BitVec 32))) (or (not (= ~g~0 (bvadd v_~g~0_24 (_ bv4294967295 32)))) (= (bvadd main_~a~0 (_ bv1 32)) v_~g~0_24)))";
+		final String expectedResult = "(= (bvadd main_~a~0 (_ bv1 32)) (bvadd ~g~0 (_ bv1 32)))";
+		runQuantifierPusherTest(funDecls, inputSTR, expectedResult, true, mServices, mLogger, mMgdScript, mCsvWriter);
+	}
+
+	@Test
 	public void tirExistsStrict() {
 		final FunDecl[] funDecls = { new FunDecl(SmtSortUtils::getIntSort, "lo", "hi") };
 		final String inputSTR = "(exists ((x Int)) (and (> x lo) (< x hi)))";
@@ -945,6 +957,16 @@ public class QuantifierEliminationTest {
 	}
 
 	@Test
+	public void bvultTIR() {
+		final Sort bvSort = SmtSortUtils.getBitvectorSort(mScript, 8);
+		mScript.declareFun("lo", new Sort[0], bvSort);
+		mScript.declareFun("hi", new Sort[0], bvSort);
+		final String inputSTR = "(exists ((x (_ BitVec 8))) (and (bvule x hi ) (bvule lo x)))";
+		final String expectedResult = "(bvule lo hi)";
+		runQuantifierPusherTest(inputSTR, expectedResult, true, mServices, mLogger, mMgdScript, mCsvWriter);
+	}
+
+	@Test
 	public void greaterTIRNegativeCoef() {
 		final Sort intSort = SmtSortUtils.getIntSort(mMgdScript);
 		mScript.declareFun("lo", new Sort[0], intSort);
@@ -1025,6 +1047,13 @@ public class QuantifierEliminationTest {
 		final String expextedResultAsString = "(= a 0)";
 		runQuantifierPusherTest(new FunDecl[] { funDecl }, formulaAsString, expextedResultAsString, true, mServices,
 				mLogger, mMgdScript, mCsvWriter);
+	}
+
+	@Test
+	public void omegaTestRequired01() {
+		final FunDecl[] funDecls = { new FunDecl(SmtSortUtils::getIntSort, "c") };
+		final String formulaAsString = "(exists ((x Int) ) (and (<= (* 256 x) 93) (<= (+ c 7) (* 256 x))))";
+		runQuantifierPusherTest(funDecls, formulaAsString, "(<= c 7)", true, mServices, mLogger, mMgdScript, mCsvWriter);
 	}
 
 	@Test
